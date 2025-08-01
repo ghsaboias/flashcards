@@ -1,0 +1,1 @@
+I want to greet each person in my names list. How do I do something for each item?,names.each do |name|,4,3,7

@@ -1,0 +1,61 @@
+I want to see what my code does step by step. How do I add notes that Ruby ignores?,# This is a comment,10,1,11
+I want to show text to the user. What Ruby command displays text?,puts,11,0,11
+I want to ask the user for their name and store their response. What gets user input?,gets.chomp,8,3,11
+I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?,name = value,7,5,12
+I want some information that never changes in my program. How do I create a fixed value?,CONSTANT_NAME = value,8,3,11
+I want to write multi-line comments in Ruby. How do I do this?,=begin and =end,4,2,6
+I want to check what Ruby version I'm running. What command shows this?,ruby --version or ruby -v,3,1,4
+I want to run a Ruby file from the command line. What's the command?,ruby filename.rb,2,2,4
+I want to print something without a newline. What command does this?,print,3,1,4
+I want to print with formatted output like printf. What's Ruby's version?,printf,3,1,4
+I want to show the output with line numbers. What method does this?,p,2,2,4
+I want to inspect an object's details. What method shows everything?,inspect,4,2,6
+I want to add numbers together. What's the addition operator?,+,4,0,4
+I want to subtract numbers. What's the subtraction operator?,-,4,0,4
+I want to multiply numbers. What's the multiplication operator?,*,4,0,4
+I want to divide numbers. What's the division operator?,/,4,0,4
+I want to find the remainder after division. What's the modulo operator?,%,4,0,4
+I want to raise a number to a power. What's the exponentiation operator?,**,3,1,4
+I want to check if two values are equal. What's the equality operator?,==,3,1,4
+I want to check if two values are not equal. What's the inequality operator?,!=,3,1,4
+I want to check if one value is greater than another. What's the operator?,>,3,1,4
+I want to check if one value is less than another. What's the operator?,<,4,0,4
+I want to check if one value is greater than or equal. What's the operator?,>=,4,0,4
+I want to check if one value is less than or equal. What's the operator?,<=,4,0,4
+I want to combine two conditions with AND logic. What's the operator?,&& or and,3,1,4
+I want to combine two conditions with OR logic. What's the operator?,|| or or,4,0,4
+I want to negate a boolean condition. What's the NOT operator?,! or not,3,1,4
+I want to assign a value to a variable. What's the assignment operator?,=,4,0,4
+I want to add to a variable's current value. What's the shorthand?,+= or variable = variable +,4,2,6
+I want to subtract from a variable's current value. What's the shorthand?,-=,3,1,4
+I want to multiply a variable by a value. What's the shorthand?,*=,3,1,4
+I want to divide a variable by a value. What's the shorthand?,/=,4,2,6
+I want to check what type of object I have. What method tells me this?,class,5,5,10
+I want to see if an object is a specific type. What method checks this?,is_a? or kind_of?,5,3,8
+I want to see what methods an object has. What method lists them?,methods,2,2,4
+I want to check if an object responds to a method. What method checks this?,respond_to?,4,2,6
+I want to convert something to a string. What method does this?,to_s,4,0,4
+I want to convert something to an integer. What method does this?,to_i,4,0,4
+I want to convert something to a float. What method does this?,to_f,4,0,4
+I want to convert something to an array. What method does this?,to_a,3,1,4
+I want to see the unique ID of an object. What method shows this?,object_id,4,2,6
+I want to create a variable that starts with lowercase. What's this called?,local variable,3,1,4
+I want to create a variable that starts with @. What's this called?,instance variable,9,7,16
+I want to create a variable that starts with @@. What's this called?,class variable,7,5,12
+I want to create a variable that starts with $. What's this called?,global variable,3,1,4
+I want to create true and false values. What are these called?,booleans,3,1,4
+I want to represent nothing or empty. What value represents this?,nil,4,0,4
+I want to check if something is true or false. What method checks this?,nil? or !nil?,4,2,6
+I want to use different number bases. How do I write binary numbers?,0b prefix (0b1010),4,2,6
+I want to use different number bases. How do I write octal numbers?,0 prefix (0755),5,3,8
+I want to use different number bases. How do I write hexadecimal numbers?,0x prefix (0xFF),3,3,6
+I want to make numbers more readable. How do I add separators?,_ underscore (1_000_000),4,2,6
+I want to create a string with single quotes. When do I use this?,single quotes for literal strings,3,1,4
+I want to create a string with double quotes. When do I use this?,double quotes for interpolation,3,3,6
+I want to include a quote inside a string. How do I escape it?,backslash single-quote or backslash double-quote,1,3,4
+I want to include a newline in a string. How do I add it?,\n,3,1,4
+I want to include a tab in a string. How do I add it?,\t,3,1,4
+I want to include a backslash in a string. How do I escape it?,\\,4,0,4
+I want to exit my Ruby program early. What command stops execution?,exit,3,1,4
+I want to pause execution and read user input. What gets a single character?,getc,4,2,6
+I want to get multiple lines of input until EOF. What method does this?,readlines,4,2,6

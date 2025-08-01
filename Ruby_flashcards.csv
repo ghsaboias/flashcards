@@ -1,0 +1,20 @@
+I want to greet each person in my names list. How do I do something for each item?,names.each do |name|,7,3,10
+I want to see what my code does step by step. How do I add notes that Ruby ignores?,# This is a comment,9,1,10
+I want to show text to the user. What Ruby command displays text?,puts,10,0,10
+I want to ask the user for their name and store their response. What gets user input?,gets.chomp,7,3,10
+I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?,name = value,7,3,10
+I want some information that never changes in my program. How do I create a fixed value?,CONSTANT_NAME = value,8,2,10
+I want to store multiple names like Alice Bob Carol. What holds a list of items?,[],10,0,10
+I have names = [Alice Bob]. How do I add Carol to this list?,names << Carol or names.push(Carol),7,3,10
+I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?,ages.select,9,1,10
+I want to store person info like name and age together. What holds key-value pairs?,{},10,0,10
+I have person = {name: Alice age: 25}. How do I get Alice's age?,person[:age],7,3,10
+I want to check if something exists before using it. How do I test if a variable has no value?,variable.nil?,9,1,10
+I'm writing person.name but person might be nil. How do I avoid crashes?,person&.name,9,1,10
+I have name = Alice. How do I show Hello Alice using the stored name?,puts with #{name},7,3,10
+Sometimes my program crashes. How do I handle errors gracefully?,begin rescue end,8,2,10
+I keep writing the same code over and over. How do I create a reusable piece of code?,def method_name,6,4,10
+I made a method called greet_user. How do I use (call) this method?,greet_user,10,0,10
+I want my greet method to work with any name. How do I pass information to a method?,def greet(name),7,3,10
+I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?,def method(required optional = default),7,4,11
+My program is getting long. How do I group related code together?,class ClassName,8,2,10

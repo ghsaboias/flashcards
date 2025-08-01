@@ -1,0 +1,787 @@
+--- SESSION START: 2025-08-01 14:56:06 | Set: Javascript | Type: Review All ---
+[INCORRECT] Q: What is the syntax for declaring a variable in JavaScript? (Your Answer: push())
+[INCORRECT] Q: How do you create a function in JavaScript? (Your Answer: 6)
+--- SESSION START: 2025-08-01 14:57:32 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: What is the command to print a string in Ruby?
+[CORRECT] Q: How do you define a method in Ruby?
+[CORRECT] Q: How do you create a single-line comment in Ruby?
+[CORRECT] Q: What is the keyword to create a class in Ruby?
+[INCORRECT] Q: How do you create an array in Ruby? (Your Answer: [] or Array.[])
+--- SESSION END: 4/5 correct ---
+
+--- SESSION START: 2025-08-01 15:02:08 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: What is the command to print a string in Ruby?
+[CORRECT] Q: How do you define a method in Ruby?
+[CORRECT] Q: How do you create a single-line comment in Ruby?
+[CORRECT] Q: What is the keyword to create a class in Ruby?
+[CORRECT] Q: How do you create an array in Ruby?
+[INCORRECT] Q: What is the syntax for keyword arguments in Ruby 3.x? (Your Answer: (name=var))
+[INCORRECT] Q: How do you use pattern matching in Ruby 3.x? (Your Answer: /!)
+[INCORRECT] Q: What is the rightward assignment operator in Ruby 3.x? (Your Answer: ->)
+[INCORRECT] Q: How do you define endless methods in Ruby 3.x? (Your Answer: end;;)
+[INCORRECT] Q: What are Ruby 3.x numbered parameters for blocks? (Your Answer: flb)
+[INCORRECT] Q: How do you create a hash in Ruby? (Your Answer: hash[key])
+[INCORRECT] Q: What method converts a string to an integer? (Your Answer: str)
+[CORRECT] Q: What method converts a string to a float?
+[CORRECT] Q: What method converts an object to a string?
+[INCORRECT] Q: How do you create a range in Ruby? (Your Answer: [range(x)])
+[INCORRECT] Q: What is the difference between .. and ... in ranges? (Your Answer: incluive)
+[INCORRECT] Q: How do you create a symbol in Ruby? (Your Answer: smb)
+--- SESSION START: 2025-08-01 15:08:01 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[INCORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores? (Your Answer: #)
+[INCORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data? (Your Answer: )
+[INCORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name? (Your Answer: puts name)
+[INCORRECT] Q: I want to ask the user for their name and store their response. What gets user input? (Your Answer: chomp)
+[INCORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code? (Your Answer: def method_name ... end)
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[INCORRECT] Q: I want my greet method to work with any name. How do I pass information to a method? (Your Answer: def greet_user(:name):)
+[INCORRECT] Q: My program is getting long. How do I group related code together? (Your Answer: {})
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[INCORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list? (Your Answer: names.add(Carol))
+[INCORRECT] Q: I want to greet each person in my names list. How do I do something for each item? (Your Answer: names.for_each)
+[INCORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list? (Your Answer: ages.(>30))
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[INCORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age? (Your Answer: person.age)
+[INCORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully? (Your Answer: end)
+[INCORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value? (Your Answer: if)
+[INCORRECT] Q: I want some information that never changes in my program. How do I create a fixed value? (Your Answer: name)
+[INCORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes? (Your Answer: if (nil)
+[INCORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional? (Your Answer: :al)
+--- SESSION END: 4/20 correct ---
+
+--- SESSION START: 2025-08-01 15:13:55 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[INCORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name? (Your Answer: puts #{name})
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[INCORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code? (Your Answer: def Class)
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[INCORRECT] Q: I want my greet method to work with any name. How do I pass information to a method? (Your Answer: greet(:arg) or greet.arg)
+[INCORRECT] Q: My program is getting long. How do I group related code together? (Your Answer: class)
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[INCORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list? (Your Answer: names.push(Carol) or names)
+[INCORRECT] Q: I want to greet each person in my names list. How do I do something for each item? (Your Answer: names.each or names.()
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[INCORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age? (Your Answer: person.age)
+[CORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[INCORRECT] Q: I want some information that never changes in my program. How do I create a fixed value? (Your Answer: CONSTANT_VALUE = value)
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[INCORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional? (Your Answer: f)
+--- SESSION END: 11/20 correct ---
+
+--- SESSION START: 2025-08-01 15:19:29 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[INCORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name? (Your Answer: puts Hello name)
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[CORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code?
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[CORRECT] Q: I want my greet method to work with any name. How do I pass information to a method?
+[CORRECT] Q: My program is getting long. How do I group related code together?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[INCORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list? (Your Answer: names.push(Alice) or names << Alice)
+[INCORRECT] Q: I want to greet each person in my names list. How do I do something for each item? (Your Answer: names.each or names do)
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[INCORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age? (Your Answer: person.age)
+[CORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[INCORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional? (Your Answer: def method_name(required optional = default))
+--- SESSION END: 15/20 correct ---
+
+--- SESSION START: 2025-08-01 15:25:49 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[INCORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data? (Your Answer: value = name)
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[CORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code?
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[INCORRECT] Q: I want my greet method to work with any name. How do I pass information to a method? (Your Answer: def method_name(name))
+[CORRECT] Q: My program is getting long. How do I group related code together?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I want to greet each person in my names list. How do I do something for each item?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[CORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?
+--- SESSION END: 18/20 correct ---
+
+--- SESSION START: 2025-08-01 15:29:50 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[CORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code?
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[CORRECT] Q: I want my greet method to work with any name. How do I pass information to a method?
+[CORRECT] Q: My program is getting long. How do I group related code together?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I want to greet each person in my names list. How do I do something for each item?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[CORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?
+--- SESSION END: 20/20 correct ---
+
+--- SESSION START: 2025-08-01 15:34:20 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[INCORRECT] Q: I want to ask the user for their name and store their response. What gets user input? (Your Answer: value = name)
+[CORRECT] Q: I want my greet method to work with any name. How do I pass information to a method?
+[CORRECT] Q: I want to greet each person in my names list. How do I do something for each item?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code?
+[CORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[INCORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data? (Your Answer: value = name)
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: My program is getting long. How do I group related code together?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully?
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+--- SESSION END: 18/20 correct ---
+
+--- SESSION START: 2025-08-01 16:14:07 | Set: Ruby | Type: Review All ---
+--- SESSION START: 2025-08-01 16:15:00 | Set: Ruby | Type: Review All ---
+--- SESSION START: 2025-08-01 16:22:21 | Set: Ruby_core_fundamentals | Type: Review All ---
+[INCORRECT] Q: I want some information that never changes in my program. How do I create a fixed value? (Your Answer: name = value)
+[INCORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data? (Your Answer: value = name)
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+--- SESSION END: 3/5 correct ---
+
+--- SESSION START: 2025-08-01 16:23:37 | Set: Ruby_error_testing | Type: Review All ---
+[CORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 16:25:21 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code?
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I want my greet method to work with any name. How do I pass information to a method?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[CORRECT] Q: My program is getting long. How do I group related code together?
+[CORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?
+[CORRECT] Q: I want to greet each person in my names list. How do I do something for each item?
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+--- SESSION END: 20/20 correct ---
+
+--- SESSION START: 2025-08-01 18:12:57 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: My program is getting long. How do I group related code together?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[INCORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code? (Your Answer: class ClassName)
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want my greet method to work with any name. How do I pass information to a method?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I want to greet each person in my names list. How do I do something for each item?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[INCORRECT] Q: I want to ask the user for their name and store their response. What gets user input? (Your Answer: geo.chomp)
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[INCORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully? (Your Answer: begin react end)
+[INCORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional? (Your Answer: def method(optional required = default))
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+--- SESSION END: 16/20 correct ---
+
+--- SESSION START: 2025-08-01 18:23:20 | Set: Ruby | Type: Review All ---
+--- SESSION START: 2025-08-01 18:24:29 | Set: Ruby core fundamentals | Type: Review All ---
+[CORRECT] Q: I want to divide numbers. What's the division operator?
+[CORRECT] Q: I want to check if one value is greater than another. What's the operator?
+[INCORRECT] Q: I want to convert something to an array. What method does this? (Your Answer: Array.new)
+[CORRECT] Q: I want to represent nothing or empty. What value represents this?
+[CORRECT] Q: I want to add numbers together. What's the addition operator?
+[INCORRECT] Q: I want to negate a boolean condition. What's the NOT operator? (Your Answer: !=)
+[CORRECT] Q: I want to convert something to an integer. What method does this?
+[INCORRECT] Q: I want to create a variable that starts with lowercase. What's this called? (Your Answer: variable)
+[INCORRECT] Q: I want to check what Ruby version I'm running. What command shows this? (Your Answer: ruby -v)
+[CORRECT] Q: I want to include a backslash in a string. How do I escape it?
+[INCORRECT] Q: I want to check if two values are equal. What's the equality operator? (Your Answer: =)
+[INCORRECT] Q: I want to see if an object is a specific type. What method checks this? (Your Answer: is)
+[INCORRECT] Q: I want to combine two conditions with AND logic. What's the operator? (Your Answer: AND)
+[INCORRECT] Q: I want to include a newline in a string. How do I add it? (Your Answer: \\n)
+[INCORRECT] Q: I want to ask the user for their name and store their response. What gets user input? (Your Answer: name = gets.chomp)
+[INCORRECT] Q: I want to use different number bases. How do I write binary numbers? (Your Answer: 1)
+[INCORRECT] Q: I want to subtract from a variable's current value. What's the shorthand? (Your Answer: -)
+[INCORRECT] Q: I want to check if something is true or false. What method checks this? (Your Answer: is_t)
+[INCORRECT] Q: I want to check what type of object I have. What method tells me this? (Your Answer: kind_of)
+[CORRECT] Q: I want to convert something to a float. What method does this?
+[CORRECT] Q: I want to assign a value to a variable. What's the assignment operator?
+[INCORRECT] Q: I want to make numbers more readable. How do I add separators? (Your Answer:  )
+[CORRECT] Q: I want to check if one value is less than another. What's the operator?
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[INCORRECT] Q: I want to add to a variable's current value. What's the shorthand? (Your Answer: +=)
+[CORRECT] Q: I want to multiply numbers. What's the multiplication operator?
+[INCORRECT] Q: I want to print with formatted output like printf. What's Ruby's version? (Your Answer: putsf)
+[INCORRECT] Q: I want to exit my Ruby program early. What command stops execution? (Your Answer: end)
+[CORRECT] Q: I want to check if one value is greater than or equal. What's the operator?
+[INCORRECT] Q: I want to include a tab in a string. How do I add it? (Your Answer: \	)
+[CORRECT] Q: I want to convert something to a string. What method does this?
+[INCORRECT] Q: I want to use different number bases. How do I write hexadecimal numbers? (Your Answer: a)
+[INCORRECT] Q: I want to include a quote inside a string. How do I escape it? (Your Answer: \")
+[INCORRECT] Q: I want to create a variable that starts with @@. What's this called? (Your Answer: variable)
+[INCORRECT] Q: I want to create a string with double quotes. When do I use this? (Your Answer: )
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I want to see what methods an object has. What method lists them?
+[CORRECT] Q: I want to subtract numbers. What's the subtraction operator?
+[INCORRECT] Q: I want to create a string with single quotes. When do I use this? (Your Answer: single quotes for string)
+[INCORRECT] Q: I want to get multiple lines of input until EOF. What method does this? (Your Answer: all)
+[INCORRECT] Q: I want to use different number bases. How do I write octal numbers? (Your Answer: 08)
+[INCORRECT] Q: I want to pause execution and read user input. What gets a single character? (Your Answer: gets.chomp.1)
+[INCORRECT] Q: I want to see the unique ID of an object. What method shows this? (Your Answer: id)
+[INCORRECT] Q: I want to raise a number to a power. What's the exponentiation operator? (Your Answer: ^)
+[INCORRECT] Q: I want to print something without a newline. What command does this? (Your Answer: printf)
+[INCORRECT] Q: I want to check if an object responds to a method. What method checks this? (Your Answer: method?)
+[INCORRECT] Q: I want to divide a variable by a value. What's the shorthand? (Your Answer: /)
+[INCORRECT] Q: I want to create true and false values. What are these called? (Your Answer: boolean)
+[INCORRECT] Q: I want to write multi-line comments in Ruby. How do I do this? (Your Answer: ```)
+[INCORRECT] Q: I want to run a Ruby file from the command line. What's the command? (Your Answer: ruby file.rb)
+[INCORRECT] Q: I want to show the output with line numbers. What method does this? (Your Answer: printf)
+[INCORRECT] Q: I want to inspect an object's details. What method shows everything? (Your Answer: details)
+[CORRECT] Q: I want to multiply a variable by a value. What's the shorthand?
+[CORRECT] Q: I want to find the remainder after division. What's the modulo operator?
+[CORRECT] Q: I want to combine two conditions with OR logic. What's the operator?
+[CORRECT] Q: I want to check if one value is less than or equal. What's the operator?
+[INCORRECT] Q: I want to create a variable that starts with $. What's this called? (Your Answer: )
+[INCORRECT] Q: I want to check if two values are not equal. What's the inequality operator? (Your Answer: ! or not)
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[INCORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data? (Your Answer: puts with #{name})
+[INCORRECT] Q: I want to create a variable that starts with @. What's this called? (Your Answer: variable)
+--- SESSION END: 21/61 correct ---
+
+--- SESSION START: 2025-08-01 18:32:25 | Set: Ruby core fundamentals | Type: Review All ---
+[CORRECT] Q: I want to subtract from a variable's current value. What's the shorthand?
+[CORRECT] Q: I want to create a string with single quotes. When do I use this?
+[CORRECT] Q: I want to subtract numbers. What's the subtraction operator?
+[CORRECT] Q: I want to assign a value to a variable. What's the assignment operator?
+[CORRECT] Q: I want to include a backslash in a string. How do I escape it?
+[CORRECT] Q: I want to check if one value is less than another. What's the operator?
+[CORRECT] Q: I want to add numbers together. What's the addition operator?
+[CORRECT] Q: I want to divide numbers. What's the division operator?
+[CORRECT] Q: I want to combine two conditions with AND logic. What's the operator?
+[CORRECT] Q: I want to check what Ruby version I'm running. What command shows this?
+[CORRECT] Q: I want to convert something to a float. What method does this?
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want to exit my Ruby program early. What command stops execution?
+[CORRECT] Q: I want to include a newline in a string. How do I add it?
+[INCORRECT] Q: I want to see if an object is a specific type. What method checks this? (Your Answer: kind_of or is_?)
+[CORRECT] Q: I want to negate a boolean condition. What's the NOT operator?
+[CORRECT] Q: I want to raise a number to a power. What's the exponentiation operator?
+[INCORRECT] Q: I want to pause execution and read user input. What gets a single character? (Your Answer: p)
+[CORRECT] Q: I want to multiply numbers. What's the multiplication operator?
+[CORRECT] Q: I want to include a quote inside a string. How do I escape it?
+[CORRECT] Q: I want to create a variable that starts with lowercase. What's this called?
+[CORRECT] Q: I want to create a variable that starts with $. What's this called?
+[CORRECT] Q: I want to include a tab in a string. How do I add it?
+[INCORRECT] Q: I want to write multi-line comments in Ruby. How do I do this? (Your Answer: =start =end)
+[INCORRECT] Q: I want to inspect an object's details. What method shows everything? (Your Answer: properties)
+[INCORRECT] Q: I want to create a variable that starts with @@. What's this called? (Your Answer: instance variable)
+[INCORRECT] Q: I want to use different number bases. How do I write binary numbers? (Your Answer: 0b (0b1010))
+[CORRECT] Q: I want to represent nothing or empty. What value represents this?
+[CORRECT] Q: I want to check if two values are not equal. What's the inequality operator?
+[INCORRECT] Q: I want to divide a variable by a value. What's the shorthand? (Your Answer: /)
+[INCORRECT] Q: I want to see the unique ID of an object. What method shows this? (Your Answer: unique_id)
+[INCORRECT] Q: I want to check what type of object I have. What method tells me this? (Your Answer: kind_of)
+[INCORRECT] Q: I want to add to a variable's current value. What's the shorthand? (Your Answer: +=)
+[CORRECT] Q: I want to convert something to a string. What method does this?
+[INCORRECT] Q: I want to use different number bases. How do I write hexadecimal numbers? (Your Answer: 0x prefix (0x1010))
+[CORRECT] Q: I want to check if two values are equal. What's the equality operator?
+[INCORRECT] Q: I want to see what methods an object has. What method lists them? (Your Answer: keys)
+[INCORRECT] Q: I want to check if an object responds to a method. What method checks this? (Your Answer: respond_to)
+[CORRECT] Q: I want to create true and false values. What are these called?
+[CORRECT] Q: I want to multiply a variable by a value. What's the shorthand?
+[INCORRECT] Q: I want to check if something is true or false. What method checks this? (Your Answer: is_b)
+[CORRECT] Q: I want to check if one value is greater than or equal. What's the operator?
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[INCORRECT] Q: I want to make numbers more readable. How do I add separators? (Your Answer: _ or underscore (1_000_000))
+[CORRECT] Q: I want to convert something to an integer. What method does this?
+[INCORRECT] Q: I want to get multiple lines of input until EOF. What method does this? (Your Answer: =begin and =end)
+[INCORRECT] Q: I want to check if one value is greater than another. What's the operator? (Your Answer: +)
+[CORRECT] Q: I want to convert something to an array. What method does this?
+[INCORRECT] Q: I want to create a string with double quotes. When do I use this? (Your Answer: double-quote for literal strings)
+[CORRECT] Q: I want to run a Ruby file from the command line. What's the command?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I want to show the output with line numbers. What method does this?
+[CORRECT] Q: I want to print with formatted output like printf. What's Ruby's version?
+[CORRECT] Q: I want to find the remainder after division. What's the modulo operator?
+[CORRECT] Q: I want to check if one value is less than or equal. What's the operator?
+[INCORRECT] Q: I want to create a variable that starts with @. What's this called? (Your Answer: global variable)
+[INCORRECT] Q: I want to use different number bases. How do I write octal numbers? (Your Answer: 0)
+[CORRECT] Q: I want to combine two conditions with OR logic. What's the operator?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I want to print something without a newline. What command does this?
+--- SESSION END: 41/61 correct ---
+
+--- SESSION START: 2025-08-01 18:39:59 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[INCORRECT] Q: I want to use different number bases. How do I write octal numbers? (Your Answer: 0 prefix (055))
+[CORRECT] Q: I want to use different number bases. How do I write binary numbers?
+[INCORRECT] Q: I want to see if an object is a specific type. What method checks this? (Your Answer: kind_of or is_a?)
+[CORRECT] Q: I want to use different number bases. How do I write hexadecimal numbers?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[CORRECT] Q: I want to create a variable that starts with @@. What's this called?
+[CORRECT] Q: I want to check if an object responds to a method. What method checks this?
+[CORRECT] Q: I want to check if something is true or false. What method checks this?
+[CORRECT] Q: I want to add to a variable's current value. What's the shorthand?
+[CORRECT] Q: I want to inspect an object's details. What method shows everything?
+[INCORRECT] Q: I want to create a variable that starts with @. What's this called? (Your Answer: global variable)
+[CORRECT] Q: I want to divide a variable by a value. What's the shorthand?
+[CORRECT] Q: I want to write multi-line comments in Ruby. How do I do this?
+[CORRECT] Q: I want to create a string with double quotes. When do I use this?
+[INCORRECT] Q: I want to check what type of object I have. What method tells me this? (Your Answer: kind_of or is_a?)
+[CORRECT] Q: I want to pause execution and read user input. What gets a single character?
+[CORRECT] Q: I want to see the unique ID of an object. What method shows this?
+[CORRECT] Q: I want to make numbers more readable. How do I add separators?
+[CORRECT] Q: I want to get multiple lines of input until EOF. What method does this?
+--- SESSION END: 15/19 correct ---
+
+--- SESSION START: 2025-08-01 18:43:14 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[CORRECT] Q: I want to pause execution and read user input. What gets a single character?
+[CORRECT] Q: I want to create a string with double quotes. When do I use this?
+[CORRECT] Q: I want to use different number bases. How do I write hexadecimal numbers?
+[CORRECT] Q: I want to write multi-line comments in Ruby. How do I do this?
+[CORRECT] Q: I want to inspect an object's details. What method shows everything?
+[CORRECT] Q: I want to get multiple lines of input until EOF. What method does this?
+[CORRECT] Q: I want to add to a variable's current value. What's the shorthand?
+[CORRECT] Q: I want to see if an object is a specific type. What method checks this?
+[CORRECT] Q: I want to see the unique ID of an object. What method shows this?
+[CORRECT] Q: I want to use different number bases. How do I write octal numbers?
+[INCORRECT] Q: I want to create a variable that starts with @. What's this called? (Your Answer: class variable)
+[CORRECT] Q: I want to divide a variable by a value. What's the shorthand?
+[CORRECT] Q: I want to check if something is true or false. What method checks this?
+[INCORRECT] Q: I want to check what type of object I have. What method tells me this? (Your Answer: kind_of? or is_a?)
+[CORRECT] Q: I want to make numbers more readable. How do I add separators?
+[CORRECT] Q: I want to check if an object responds to a method. What method checks this?
+[INCORRECT] Q: I want to create a variable that starts with @@. What's this called? (Your Answer: global variable)
+[CORRECT] Q: I want to use different number bases. How do I write binary numbers?
+--- SESSION END: 15/18 correct ---
+
+--- SESSION START: 2025-08-01 18:45:47 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[INCORRECT] Q: I want to create a variable that starts with @. What's this called? (Your Answer: class variable)
+[CORRECT] Q: I want to create a variable that starts with @@. What's this called?
+[CORRECT] Q: I want to see if an object is a specific type. What method checks this?
+[CORRECT] Q: I want to use different number bases. How do I write octal numbers?
+[CORRECT] Q: I want to check what type of object I have. What method tells me this?
+--- SESSION END: 4/5 correct ---
+
+--- SESSION START: 2025-08-01 18:47:06 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[CORRECT] Q: I want to check what type of object I have. What method tells me this?
+[CORRECT] Q: I want to use different number bases. How do I write octal numbers?
+[INCORRECT] Q: I want to create a variable that starts with @@. What's this called? (Your Answer: instance variable)
+[CORRECT] Q: I want to create a variable that starts with @. What's this called?
+[CORRECT] Q: I want to see if an object is a specific type. What method checks this?
+--- SESSION END: 4/5 correct ---
+
+--- SESSION START: 2025-08-01 18:47:49 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[CORRECT] Q: I want to check what type of object I have. What method tells me this?
+[INCORRECT] Q: I want to create a variable that starts with @@. What's this called? (Your Answer: instance variable)
+[INCORRECT] Q: I want to create a variable that starts with @. What's this called? (Your Answer: instance_variable)
+--- SESSION END: 1/3 correct ---
+
+--- SESSION START: 2025-08-01 18:48:08 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[CORRECT] Q: I want to create a variable that starts with @@. What's this called?
+[CORRECT] Q: I want to check what type of object I have. What method tells me this?
+[CORRECT] Q: I want to create a variable that starts with @. What's this called?
+--- SESSION END: 3/3 correct ---
+
+--- SESSION START: 2025-08-01 18:48:25 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[INCORRECT] Q: I want to create a variable that starts with @. What's this called? (Your Answer: class variable)
+[CORRECT] Q: I want to create a variable that starts with @@. What's this called?
+--- SESSION END: 1/2 correct ---
+
+--- SESSION START: 2025-08-01 18:48:38 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[CORRECT] Q: I want to create a variable that starts with @@. What's this called?
+[CORRECT] Q: I want to create a variable that starts with @. What's this called?
+--- SESSION END: 2/2 correct ---
+
+--- SESSION START: 2025-08-01 18:48:46 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[CORRECT] Q: I want to create a variable that starts with @. What's this called?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 18:48:52 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[CORRECT] Q: I want to create a variable that starts with @. What's this called?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 18:48:56 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[CORRECT] Q: I want to create a variable that starts with @. What's this called?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 18:48:59 | Set: Ruby core fundamentals | Type: Practice Difficult ---
+[CORRECT] Q: I want to create a variable that starts with @. What's this called?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 18:49:11 | Set: Ruby core fundamentals | Type: Review All ---
+[CORRECT] Q: I want to represent nothing or empty. What value represents this?
+[CORRECT] Q: I want to check what Ruby version I'm running. What command shows this?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[CORRECT] Q: I want to include a tab in a string. How do I add it?
+[CORRECT] Q: I want to create a string with single quotes. When do I use this?
+[CORRECT] Q: I want to exit my Ruby program early. What command stops execution?
+[CORRECT] Q: I want to add to a variable's current value. What's the shorthand?
+[CORRECT] Q: I want to multiply numbers. What's the multiplication operator?
+[CORRECT] Q: I want to make numbers more readable. How do I add separators?
+[CORRECT] Q: I want to check if something is true or false. What method checks this?
+[CORRECT] Q: I want to inspect an object's details. What method shows everything?
+[CORRECT] Q: I want to raise a number to a power. What's the exponentiation operator?
+[CORRECT] Q: I want to see the unique ID of an object. What method shows this?
+[CORRECT] Q: I want to convert something to an integer. What method does this?
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[CORRECT] Q: I want to negate a boolean condition. What's the NOT operator?
+[CORRECT] Q: I want to see what methods an object has. What method lists them?
+[CORRECT] Q: I want to check if one value is greater than or equal. What's the operator?
+[CORRECT] Q: I want to add numbers together. What's the addition operator?
+[INCORRECT] Q: I want to include a quote inside a string. How do I escape it? (Your Answer: \")
+[INCORRECT] Q: I want to multiply a variable by a value. What's the shorthand? (Your Answer: +=)
+[CORRECT] Q: I want to combine two conditions with AND logic. What's the operator?
+[CORRECT] Q: I want to convert something to a float. What method does this?
+[CORRECT] Q: I want to write multi-line comments in Ruby. How do I do this?
+[CORRECT] Q: I want to create a variable that starts with @. What's this called?
+[CORRECT] Q: I want to use different number bases. How do I write octal numbers?
+[CORRECT] Q: I want to include a newline in a string. How do I add it?
+[CORRECT] Q: I want to print with formatted output like printf. What's Ruby's version?
+[CORRECT] Q: I want to check if one value is greater than another. What's the operator?
+[INCORRECT] Q: I want to check what type of object I have. What method tells me this? (Your Answer: is_a? or kind_of?)
+[CORRECT] Q: I want to pause execution and read user input. What gets a single character?
+[CORRECT] Q: I want to subtract from a variable's current value. What's the shorthand?
+[CORRECT] Q: I want to convert something to a string. What method does this?
+[CORRECT] Q: I want to create a string with double quotes. When do I use this?
+[INCORRECT] Q: I want to use different number bases. How do I write hexadecimal numbers? (Your Answer: 0x prefix (0x1010))
+[CORRECT] Q: I want to get multiple lines of input until EOF. What method does this?
+[CORRECT] Q: I want to find the remainder after division. What's the modulo operator?
+[CORRECT] Q: I want to create a variable that starts with @@. What's this called?
+[INCORRECT] Q: I want to show the output with line numbers. What method does this? (Your Answer: print)
+[CORRECT] Q: I want to create true and false values. What are these called?
+[CORRECT] Q: I want to check if one value is less than another. What's the operator?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I want to create a variable that starts with lowercase. What's this called?
+[CORRECT] Q: I want to divide a variable by a value. What's the shorthand?
+[CORRECT] Q: I want to check if one value is less than or equal. What's the operator?
+[CORRECT] Q: I want to check if two values are equal. What's the equality operator?
+[CORRECT] Q: I want to combine two conditions with OR logic. What's the operator?
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I want to divide numbers. What's the division operator?
+[CORRECT] Q: I want to include a backslash in a string. How do I escape it?
+[INCORRECT] Q: I want to run a Ruby file from the command line. What's the command? (Your Answer: irb)
+[CORRECT] Q: I want to check if two values are not equal. What's the inequality operator?
+[CORRECT] Q: I want to use different number bases. How do I write binary numbers?
+[CORRECT] Q: I want to see if an object is a specific type. What method checks this?
+[CORRECT] Q: I want to convert something to an array. What method does this?
+[CORRECT] Q: I want to create a variable that starts with $. What's this called?
+[CORRECT] Q: I want to assign a value to a variable. What's the assignment operator?
+[CORRECT] Q: I want to print something without a newline. What command does this?
+[CORRECT] Q: I want to check if an object responds to a method. What method checks this?
+[CORRECT] Q: I want to subtract numbers. What's the subtraction operator?
+--- SESSION END: 55/61 correct ---
+
+--- SESSION START: 2025-08-01 18:55:01 | Set: Ruby | Type: Practice Difficult ---
+[CORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 19:39:08 | Set: Ruby | Type: Review All ---
+[INCORRECT] Q: I made a method called greet_user. How do I use (call) this method? (Your Answer: )
+--- SESSION START: 2025-08-01 19:39:16 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully?
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: My program is getting long. How do I group related code together?
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[CORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[CORRECT] Q: I want my greet method to work with any name. How do I pass information to a method?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[CORRECT] Q: I want to greet each person in my names list. How do I do something for each item?
+--- SESSION END: 20/20 correct ---
+
+--- SESSION START: 2025-08-01 19:44:06 | Set: Ruby control flow | Type: Review All ---
+[CORRECT] Q: I want to greet each person in my names list. How do I do something for each item?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 19:46:33 | Set: Ruby Core Fundamentals | Type: Review All ---
+[CORRECT] Q: I want to convert something to a float. What method does this?
+[CORRECT] Q: I want to include a tab in a string. How do I add it?
+[CORRECT] Q: I want to check if one value is less than another. What's the operator?
+[CORRECT] Q: I want to create a variable that starts with $. What's this called?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[CORRECT] Q: I want to negate a boolean condition. What's the NOT operator?
+[CORRECT] Q: I want to assign a value to a variable. What's the assignment operator?
+[CORRECT] Q: I want to divide numbers. What's the division operator?
+[CORRECT] Q: I want to get multiple lines of input until EOF. What method does this?
+[CORRECT] Q: I want to create true and false values. What are these called?
+[CORRECT] Q: I want to pause execution and read user input. What gets a single character?
+[CORRECT] Q: I want to add to a variable's current value. What's the shorthand?
+[INCORRECT] Q: I want to see what methods an object has. What method lists them? (Your Answer: inspect)
+[CORRECT] Q: I want to create a variable that starts with @@. What's this called?
+[CORRECT] Q: I want to print with formatted output like printf. What's Ruby's version?
+[CORRECT] Q: I want to convert something to an array. What method does this?
+[CORRECT] Q: I want to combine two conditions with AND logic. What's the operator?
+[CORRECT] Q: I want to write multi-line comments in Ruby. How do I do this?
+[CORRECT] Q: I want to subtract numbers. What's the subtraction operator?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I want to raise a number to a power. What's the exponentiation operator?
+[CORRECT] Q: I want to find the remainder after division. What's the modulo operator?
+[CORRECT] Q: I want to check what Ruby version I'm running. What command shows this?
+[CORRECT] Q: I want to check if something is true or false. What method checks this?
+[CORRECT] Q: I want to exit my Ruby program early. What command stops execution?
+[INCORRECT] Q: I want to include a quote inside a string. How do I escape it? (Your Answer: \")
+[INCORRECT] Q: I want to create a string with double quotes. When do I use this? (Your Answer: \")
+[CORRECT] Q: I want to create a variable that starts with @. What's this called?
+[CORRECT] Q: I want to add numbers together. What's the addition operator?
+[CORRECT] Q: I want to create a string with single quotes. When do I use this?
+[CORRECT] Q: I want to combine two conditions with OR logic. What's the operator?
+[CORRECT] Q: I want to show the output with line numbers. What method does this?
+[CORRECT] Q: I want to make numbers more readable. How do I add separators?
+[CORRECT] Q: I want to use different number bases. How do I write binary numbers?
+[CORRECT] Q: I want to create a variable that starts with lowercase. What's this called?
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[CORRECT] Q: I want to divide a variable by a value. What's the shorthand?
+[CORRECT] Q: I want to see the unique ID of an object. What method shows this?
+[CORRECT] Q: I want to convert something to a string. What method does this?
+[CORRECT] Q: I want to subtract from a variable's current value. What's the shorthand?
+[CORRECT] Q: I want to include a newline in a string. How do I add it?
+[CORRECT] Q: I want to represent nothing or empty. What value represents this?
+[CORRECT] Q: I want to check if one value is less than or equal. What's the operator?
+[CORRECT] Q: I want to use different number bases. How do I write hexadecimal numbers?
+[CORRECT] Q: I want to check if one value is greater than another. What's the operator?
+[CORRECT] Q: I want to multiply a variable by a value. What's the shorthand?
+[CORRECT] Q: I want to inspect an object's details. What method shows everything?
+[CORRECT] Q: I want to run a Ruby file from the command line. What's the command?
+[CORRECT] Q: I want to check if two values are not equal. What's the inequality operator?
+[CORRECT] Q: I want to include a backslash in a string. How do I escape it?
+[CORRECT] Q: I want to print something without a newline. What command does this?
+[CORRECT] Q: I want to check if two values are equal. What's the equality operator?
+[CORRECT] Q: I want to convert something to an integer. What method does this?
+[CORRECT] Q: I want to see if an object is a specific type. What method checks this?
+[CORRECT] Q: I want to multiply numbers. What's the multiplication operator?
+[CORRECT] Q: I want to use different number bases. How do I write octal numbers?
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I want to check if one value is greater than or equal. What's the operator?
+[CORRECT] Q: I want to check if an object responds to a method. What method checks this?
+[CORRECT] Q: I want to check what type of object I have. What method tells me this?
+--- SESSION END: 58/61 correct ---
+
+--- SESSION START: 2025-08-01 19:59:30 | Set: Ruby | Type: Review All ---
+[CORRECT] Q: I want to ask the user for their name and store their response. What gets user input?
+[CORRECT] Q: I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?
+[CORRECT] Q: I want my greet method to work with any name. How do I pass information to a method?
+[CORRECT] Q: I want to show text to the user. What Ruby command displays text?
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[CORRECT] Q: My program is getting long. How do I group related code together?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[CORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?
+[CORRECT] Q: I want to greet each person in my names list. How do I do something for each item?
+[INCORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code? (Your Answer: class ClassName)
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I want some information that never changes in my program. How do I create a fixed value?
+[CORRECT] Q: Sometimes my program crashes. How do I handle errors gracefully?
+[CORRECT] Q: I want to see what my code does step by step. How do I add notes that Ruby ignores?
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+--- SESSION END: 19/20 correct ---
+
+--- SESSION START: 2025-08-01 20:05:04 | Set: Ruby Oop | Type: Review All ---
+[INCORRECT] Q: My program is getting long. How do I group related code together? (Your Answer: def method_name)
+--- SESSION END: 0/1 correct ---
+
+--- SESSION START: 2025-08-01 20:05:23 | Set: Ruby Oop | Type: Review All ---
+[CORRECT] Q: My program is getting long. How do I group related code together?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 20:06:49 | Set: Ruby Data Structures | Type: Review All ---
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[INCORRECT] Q: I have numbers = [1 2 3 4 5]. How do I get the first item? (Your Answer: numbers.0)
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: I have numbers = [5 2 8 1]. How do I put them in order?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[INCORRECT] Q: I have numbers = [1 2 3]. How do I transform each to double? (Your Answer: numbers.each.to_d)
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[INCORRECT] Q: I have fruits = [apple banana]. How do I get the total count? (Your Answer: fruits.count)
+[INCORRECT] Q: I have person = {name: Alice}. How do I add age: 25 to it? (Your Answer: person.age = 25)
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I have data = {a: 1 b: 2 c: 3}. How do I get all the values?
+[INCORRECT] Q: I have mixed = [1 hello 3.5]. How do I keep only numbers? (Your Answer: mixed.select(number))
+[CORRECT] Q: I have data = {a: 1 b: 2 c: 3}. How do I get all the keys?
+[CORRECT] Q: I have numbers = [1 2 3 4 5]. How do I get the last item?
+[CORRECT] Q: I have numbers = [1 2 3 4]. How do I remove the last item?
+[INCORRECT] Q: I have words = [hello world]. How do I combine them into one string? (Your Answer: words.to_s)
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[INCORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list? (Your Answer: names.push(Carol) or names << 2)
+--- SESSION END: 12/19 correct ---
+
+--- SESSION START: 2025-08-01 20:09:00 | Set: Ruby Data Structures | Type: Review All ---
+[CORRECT] Q: I have mixed = [1 hello 3.5]. How do I keep only numbers?
+[CORRECT] Q: I have fruits = [apple banana]. How do I get the total count?
+[CORRECT] Q: I have data = {a: 1 b: 2 c: 3}. How do I get all the values?
+[CORRECT] Q: I have words = [hello world]. How do I combine them into one string?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: I have data = {a: 1 b: 2 c: 3}. How do I get all the keys?
+[CORRECT] Q: I have numbers = [1 2 3 4 5]. How do I get the last item?
+[CORRECT] Q: I have numbers = [1 2 3 4]. How do I remove the last item?
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[CORRECT] Q: I have numbers = [5 2 8 1]. How do I put them in order?
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: I have numbers = [1 2 3]. How do I transform each to double?
+[INCORRECT] Q: I have person = {name: Alice}. How do I add age: 25 to it? (Your Answer: person.age = 25)
+[CORRECT] Q: I have numbers = [1 2 3 4 5]. How do I get the first item?
+--- SESSION END: 18/19 correct ---
+
+--- SESSION START: 2025-08-01 20:11:14 | Set: Ruby Data Structures | Type: Review All ---
+[CORRECT] Q: I have data = {a: 1 b: 2 c: 3}. How do I get all the values?
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: I have numbers = [1 2 3]. How do I transform each to double?
+[CORRECT] Q: I have numbers = [1 2 3 4 5]. How do I get the last item?
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I have data = {a: 1 b: 2 c: 3}. How do I get all the keys?
+[CORRECT] Q: I have numbers = [1 2 3 4]. How do I remove the last item?
+[CORRECT] Q: I have fruits = [apple banana]. How do I get the total count?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[INCORRECT] Q: I have mixed = [1 hello 3.5]. How do I keep only numbers? (Your Answer: mixed.select)
+[CORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes?
+[CORRECT] Q: I have numbers = [5 2 8 1]. How do I put them in order?
+[CORRECT] Q: I have numbers = [1 2 3 4 5]. How do I get the first item?
+[CORRECT] Q: I have person = {name: Alice}. How do I add age: 25 to it?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[CORRECT] Q: I have words = [hello world]. How do I combine them into one string?
+--- SESSION END: 18/19 correct ---
+
+--- SESSION START: 2025-08-01 20:12:46 | Set: Ruby Data Structures | Type: Review All ---
+[CORRECT] Q: I have name = Alice. How do I show Hello Alice using the stored name?
+[CORRECT] Q: I have numbers = [1 2 3 4 5]. How do I get the first item?
+[CORRECT] Q: I have names = [Alice Bob]. How do I add Carol to this list?
+[CORRECT] Q: I have fruits = [apple banana]. How do I get the total count?
+[INCORRECT] Q: I have mixed = [1 hello 3.5]. How do I keep only numbers? (Your Answer: mixed.select or mixed.sort)
+[CORRECT] Q: I want to store person info like name and age together. What holds key-value pairs?
+[CORRECT] Q: I have numbers = [1 2 3 4 5]. How do I get the last item?
+[CORRECT] Q: I have numbers = [5 2 8 1]. How do I put them in order?
+[CORRECT] Q: I have person = {name: Alice}. How do I add age: 25 to it?
+[CORRECT] Q: I want to store multiple names like Alice Bob Carol. What holds a list of items?
+[CORRECT] Q: I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?
+[CORRECT] Q: I have person = {name: Alice age: 25}. How do I get Alice's age?
+[CORRECT] Q: I have data = {a: 1 b: 2 c: 3}. How do I get all the values?
+[CORRECT] Q: I have words = [hello world]. How do I combine them into one string?
+[INCORRECT] Q: I'm writing person.name but person might be nil. How do I avoid crashes? (Your Answer: person&.nam,e)
+[CORRECT] Q: I have numbers = [1 2 3 4]. How do I remove the last item?
+[CORRECT] Q: I want to check if something exists before using it. How do I test if a variable has no value?
+[CORRECT] Q: I have data = {a: 1 b: 2 c: 3}. How do I get all the keys?
+[CORRECT] Q: I have numbers = [1 2 3]. How do I transform each to double?
+--- SESSION END: 17/19 correct ---
+
+--- SESSION START: 2025-08-01 20:14:24 | Set: Ruby Data Structures | Type: Practice Difficult ---
+[CORRECT] Q: I have mixed = [1 hello 3.5]. How do I keep only numbers?
+[CORRECT] Q: I have person = {name: Alice}. How do I add age: 25 to it?
+--- SESSION END: 2/2 correct ---
+
+--- SESSION START: 2025-08-01 20:14:39 | Set: Ruby Data Structures | Type: Practice Difficult ---
+[CORRECT] Q: I have mixed = [1 hello 3.5]. How do I keep only numbers?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 20:14:48 | Set: Ruby Data Structures | Type: Practice Difficult ---
+[CORRECT] Q: I have mixed = [1 hello 3.5]. How do I keep only numbers?
+--- SESSION END: 1/1 correct ---
+
+--- SESSION START: 2025-08-01 20:16:18 | Set: Ruby Methods Blocks | Type: Review All ---
+[INCORRECT] Q: I have names = [Alice Bob]. I want to print each with Hello. How do I use each with my own code? (Your Answer: names.each do |name|)
+[INCORRECT] Q: I have data = [1 2 3]. I want to double each and keep evens. How do I chain methods? (Your Answer: data)
+[INCORRECT] Q: I have a method that needs both regular args and a block. How do I define this? (Your Answer: def method(**args))
+[CORRECT] Q: I made a method called greet_user. How do I use (call) this method?
+[INCORRECT] Q: I'm using each but need to write a lot of code for each item. How do I group code together? (Your Answer: )
+[INCORRECT] Q: I want to write code that runs for each item but also returns something. What's different from each? (Your Answer: )
+[CORRECT] Q: I keep writing the same code over and over. How do I create a reusable piece of code?
+[INCORRECT] Q: I want my method to give back a result. How do I make a method return a value? (Your Answer: return value)
+[INCORRECT] Q: I want to check if my method was given a block. How do I test for this? (Your Answer: )
+[CORRECT] Q: I have ages = [18 25 17 30]. I want to find all adults (18+). What method keeps some items?
+[CORRECT] Q: I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?
+[CORRECT] Q: I want my greet method to work with any name. How do I pass information to a method?
+[INCORRECT] Q: I want to create a block of code I can reuse later. How do I save a block in a variable? (Your Answer: )
+[INCORRECT] Q: I want to pass different numbers of arguments to my method. How do I handle variable arguments? (Your Answer: )
+[INCORRECT] Q: I have numbers = [1 2 3]. I want to do something with each number. What do I use? (Your Answer: numbers.each do |number|)
+[INCORRECT] Q: I have keyword arguments like name: Alice age: 25. How do I accept these in my method? (Your Answer: )
+[INCORRECT] Q: I want to pass a method as an argument to another method. How do I reference a method? (Your Answer: d)
+[INCORRECT] Q: I have a method that takes a block. How do I call the block from inside my method? (Your Answer: )
+[INCORRECT] Q: I have numbers = [1 2 3 4]. I want to add them all up. What method combines them? (Your Answer: numbers.reduce)
+[INCORRECT] Q: I want to pass a hash as keyword arguments. How do I expand it? (Your Answer: hash)
+--- SESSION END: 5/20 correct ---
+
+--- SESSION START: 2025-08-01 20:21:19 | Set: Ruby Methods Blocks | Type: Practice Difficult ---
+[CORRECT] Q: I want to pass different numbers of arguments to my method. How do I handle variable arguments?
+[INCORRECT] Q: I'm using each but need to write a lot of code for each item. How do I group code together? (Your Answer: def method_name)
+[INCORRECT] Q: I want to write code that runs for each item but also returns something. What's different from each? (Your Answer: items.map)
+[INCORRECT] Q: I want my method to give back a result. How do I make a method return a value? (Your Answer: yield)
+[INCORRECT] Q: I have names = [Alice Bob]. I want to print each with Hello. How do I use each with my own code? (Your Answer: names.each do {|name| puts "Hello #{name}})
+[INCORRECT] Q: I want to pass a method as an argument to another method. How do I reference a method? (Your Answer: def method(:method_name))
+[CORRECT] Q: I want to check if my method was given a block. How do I test for this?
+[INCORRECT] Q: I have data = [1 2 3]. I want to double each and keep evens. How do I chain methods? (Your Answer: data.map(|x| x*2).select(|x| x.even))
+[CORRECT] Q: I have a method that needs both regular args and a block. How do I define this?
+[INCORRECT] Q: I want to create a block of code I can reuse later. How do I save a block in a variable? (Your Answer: )
+[INCORRECT] Q: I want to pass a hash as keyword arguments. How do I expand it? (Your Answer: def method(hash)_)
+[INCORRECT] Q: I have a method that takes a block. How do I call the block from inside my method? (Your Answer: method(:method_name))
+[CORRECT] Q: I have numbers = [1 2 3]. I want to do something with each number. What do I use?
+[CORRECT] Q: I have keyword arguments like name: Alice age: 25. How do I accept these in my method?
+[CORRECT] Q: I have numbers = [1 2 3 4]. I want to add them all up. What method combines them?
+--- SESSION END: 6/15 correct ---
+

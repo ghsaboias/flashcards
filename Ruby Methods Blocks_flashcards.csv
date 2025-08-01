@@ -1,0 +1,20 @@
+I keep writing the same code over and over. How do I create a reusable piece of code?,def method_name,5,2,7
+I made a method called greet_user. How do I use (call) this method?,greet_user,7,0,7
+I want my greet method to work with any name. How do I pass information to a method?,def greet(name),4,3,7
+I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?,def method(required optional = default),4,3,7
+I want my method to give back a result. How do I make a method return a value?,return value or last line value,0,2,2
+I have numbers = [1 2 3]. I want to do something with each number. What do I use?,numbers.each,1,1,2
+I want to write code that runs for each item but also returns something. What's different from each?,numbers.map,0,2,2
+I have ages = [18 25 17 30]. I want to find all adults (18+). What method keeps some items?,ages.select,1,0,1
+I have numbers = [1 2 3 4]. I want to add them all up. What method combines them?,numbers.reduce or numbers.sum,1,1,2
+I'm using each but need to write a lot of code for each item. How do I group code together?,{ } or do...end,0,2,2
+I have names = [Alice Bob]. I want to print each with Hello. How do I use each with my own code?,names.each { |name| puts Hello #{name} },0,2,2
+I want to create a block of code I can reuse later. How do I save a block in a variable?,proc = Proc.new { } or lambda { },0,2,2
+I have a method that takes a block. How do I call the block from inside my method?,yield,0,2,2
+I want to check if my method was given a block. How do I test for this?,block_given?,1,1,2
+I have data = [1 2 3]. I want to double each and keep evens. How do I chain methods?,data.map{|x| x*2}.select{|x| x.even?},0,2,2
+I want to pass different numbers of arguments to my method. How do I handle variable arguments?,def method(*args),1,1,2
+I have keyword arguments like name: Alice age: 25. How do I accept these in my method?,def method(name: age:),1,1,2
+I want to pass a hash as keyword arguments. How do I expand it?,method(**hash),0,2,2
+I have a method that needs both regular args and a block. How do I define this?,def method(arg &block),1,1,2
+I want to pass a method as an argument to another method. How do I reference a method?,method(:method_name),0,2,2
