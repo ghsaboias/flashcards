@@ -1,10 +1,10 @@
-结束,finish; end,8,2,10
-停,stop,9,1,10
-等,wait,8,2,10
-坐,sit,8,2,10
-站,stand,8,2,10
-躺,lie down,9,1,10
-睡觉,sleep,9,1,10
-醒,wake up,7,3,10
-吃,eat,9,1,10
-喝,drink,9,1,10
+结束,finish; end,11,4,15
+停,stop,14,1,15
+等,wait,11,4,15
+坐,sit,26,4,30
+站,stand,24,6,30
+躺,lie down,13,2,15
+睡觉,sleep,14,1,15
+醒,wake up,24,6,30
+吃,eat,28,2,30
+喝,drink,28,2,30

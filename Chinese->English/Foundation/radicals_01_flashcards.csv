@@ -1,10 +1,10 @@
-水,water; liquid,639,32,671
-人,person; human,671,0,671
-言,speech; words,11,7,18
-手,hand,575,96,671
-心,heart; mind,671,0,671
-火,fire,671,0,671
-土,earth; soil,12,6,18
-木,wood; tree,575,96,671
-金,metal; gold,16,2,18
-口,mouth,671,0,671
+水,water; liquid,5131,256,5387
+人,person; human,5383,4,5387
+言,speech; words,13,9,22
+手,hand,4619,768,5387
+心,heart; mind,5387,0,5387
+火,fire,5387,0,5387
+土,earth; soil,16,6,22
+木,wood; tree,4619,768,5387
+金,metal; gold,20,2,22
+口,mouth,5387,0,5387

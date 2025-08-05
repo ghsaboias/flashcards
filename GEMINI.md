@@ -1,11 +1,10 @@
-# CLAUDE.md
+# GEMINI.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Gemini when working with code in this repository.
 
-## Important Instructions for Claude
-- **NEVER run or test the flashcards application - it is interactive and only the user should run it**
-- **ALWAYS update this CLAUDE.md file after making any changes to the codebase**
-- **ALWAYS confirm with the user before updating CLAUDE.md**
+## Important Instructions for Gemini
+- **ALWAYS update this GEMINI.md file after making any changes to the codebase**
+- **ALWAYS confirm with the user before updating GEMINI.md**
 - Keep this documentation current with the actual implementation
 
 ## Running the Application
@@ -24,7 +23,6 @@ Python console flashcard application with modular architecture:
 - **lib/set_manager.py**: Set discovery, creation, deletion, category management
 - **lib/session_tracker.py**: Session history parsing and tracking
 - **lib/review_engine.py**: Core review session logic
-- **lib/pinyin_converter.py**: Chinese pinyin conversion functionality
 - **convert_logs.py**: Utility to compress session logs (standalone script)
 
 ### Data Files
@@ -54,12 +52,8 @@ Python console flashcard application with modular architecture:
 
 ### Audio Support (Chinese Sets)
 - Automatic audio playback for Chinese text using macOS `say` command
+- Press 'p' during questions to replay audio
 - Detects Chinese characters automatically
-
-### Pinyin Support (Chinese Sets)
-- Automatic pinyin pronunciation display for Chinese characters: 现在 (xiànzài)
-- Uses pypinyin library for accurate tone-marked pinyin
-- Only displays for text containing Chinese characters
 
 ### Answer Matching
 - Supports multiple correct answers: `answer1; answer2` or `answer1 or answer2`
@@ -137,14 +131,14 @@ Session data: `session_log.txt` (compact format)
 ## Collaborative Learning Setup
 
 ### Persistent Session Management (Default Behavior)
-**Practice Set** and **Practice Category** options use persistent Claude sessions:
+**Practice Set** and **Practice Category** options use persistent Gemini sessions:
 1. Run `python flashcards.py`
 2. Choose option **1. Practice Set** or **2. Practice Category**
 3. **First session**: Script prompts for LLM choice (Gemini/Claude/None)
 4. **Subsequent sessions**: Script automatically reuses existing LLM session without prompting
 5. Script automatically:
-   - Detects existing Claude Code window or launches new one
-   - Reuses existing Claude session for multi-turn conversations
+   - Detects existing Gemini Code window or launches new one
+   - Reuses existing Gemini session for multi-turn conversations
    - Maintains session continuity across multiple practice sessions
    - Sends session summaries for ongoing pattern analysis
    - Preserves conversation history for better insights
@@ -158,7 +152,7 @@ Session data: `session_log.txt` (compact format)
 - Uses AppleScript for macOS terminal and window management
 
 ### Session Summary Integration
-After each practice session, Claude automatically receives:
+After each practice session, Gemini automatically receives:
 - Session type and set name
 - Score and duration
 - Correct/incorrect counts
@@ -171,4 +165,4 @@ After each practice session, Claude automatically receives:
 - Persistent coaching context and personalized feedback
 - Long-term progress tracking and trend analysis
 - Efficient session reuse without repeated setup overhead
-- Non-intrusive coaching (Claude only speaks when it has valuable input)
+- Non-intrusive coaching (Gemini only speaks when it has valuable input)
