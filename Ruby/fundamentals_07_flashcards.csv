@@ -1,0 +1,3 @@
+I want my greet method to work with any name. How do I pass information to a method?,def greet(name),7,3,10
+I have a method that sometimes needs extra info and sometimes doesn't. How do I make parameters optional?,def method(required optional = default),7,4,11
+My program is getting long. How do I group related code together?,class ClassName,8,2,10

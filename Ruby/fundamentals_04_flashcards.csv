@@ -1,3 +1,5 @@
+I want to pause execution and read user input. What gets a single character?,getc,4,2,6
+I want to get multiple lines of input until EOF. What method does this?,readlines,4,2,6
 I want to store multiple names like Alice Bob Carol. What holds a list of items?,[],10,0,10
 I have names = [Alice Bob]. How do I add Carol to this list?,names << Carol or names.push(Carol),6,4,10
 I have ages = [25 30 35]. I want only ages over 30. How do I filter a list?,ages.select,9,1,10
@@ -16,4 +18,3 @@ I have words = [hello world]. How do I combine them into one string?,words.join,
 I have numbers = [1 2 3]. How do I transform each to double?,numbers.map,3,1,4
 I have mixed = [1 hello 3.5]. How do I keep only numbers?,mixed.select or mixed.filter,4,3,7
 I have person = {name: Alice}. How do I add age: 25 to it?,person[:age] = 25,3,2,5
-I have numbers = [1 2 3 4]. How do I remove the last item?,numbers.pop,4,0,4

@@ -2,80 +2,155 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Important Instructions for Claude
+- **ALWAYS update this CLAUDE.md file after making any changes to the codebase**
+- **ALWAYS confirm with the user before updating CLAUDE.md**
+- Keep this documentation current with the actual implementation
+
 ## Running the Application
 
-Run the flashcards application:
 ```bash
 ruby flashcards.rb
 ```
 
 ## Code Architecture
 
-This is a Ruby console application for multi-set flashcard learning with the following structure:
+Ruby console flashcard application with modular architecture:
 
-- **flashcards.rb**: Main application file containing the interactive menu system, set management, and review logic
-- **{set_name}_flashcards.csv**: Data storage files (e.g., ruby_flashcards.csv, javascript_flashcards.csv) with format: question,answer,correct_count,incorrect_count,reviewed_count
-- **session_log.txt**: Automatically generated log file tracking review sessions across all sets (created when first session runs)
+### File Structure
+- **flashcards.rb**: Main entry point and menu loop
+- **lib/audio_handler.rb**: Chinese text-to-speech functionality  
+- **lib/set_manager.rb**: Set discovery, creation, deletion, category management
+- **lib/session_tracker.rb**: Session history parsing and tracking
+- **lib/review_engine.rb**: Core review session logic
+- **convert_logs.rb**: Utility to compress session logs (standalone script)
 
-### Key Components
+### Data Files
+- **{path}_flashcards.csv**: Card data with format: `question,answer,correct_count,incorrect_count,reviewed_count`
+- **session_log.txt**: All session results with compact format
 
-**Global State**: `$current_set` variable tracks the active card set (defaults to "ruby")
+### Directory Structure
+```
+├── Chinese->English/Foundation/    # Recognition practice (C→E)
+├── Chinese->English/Vocabulary/    # Recognition practice (C→E)  
+├── English->Chinese/Foundation/    # Production practice (E→C)
+├── English->Chinese/Vocabulary/    # Production practice (E→C)
+├── Ruby/                          # Ruby topic sets
+└── *.csv files                    # Main directory sets
+```
 
-**Set Management Functions (lines 8-159)**:
-- `display_set_name(set_name)`: Formats set names for display with proper capitalization
-- `get_csv_filename(set_name)`: Returns CSV filename for a set (supports subdirectories)
-- `list_available_sets()`: Scans for existing card set files in main directory and Ruby/ subdirectory
-- `select_card_set()`: Handles set selection and creation UI with subdirectory support
-- `create_new_set()`: Creates new empty card set
-- `delete_set()`: Safely deletes card sets with confirmation
+## Menu Options
 
-**Main Loop (lines 348-519)**: Interactive menu system with 7 options:
-1. Select/Switch Card Set
-2. Add new flashcard
-3. Review all flashcards  
-4. Practice difficult cards (where incorrect > correct)
-5. View scores
-6. Delete a card set
-7. Exit
+1. **Practice Set**: Review all cards in current set (automatically starts in collaborative mode)
+2. **Practice Category**: Review all sets in a category (automatically starts in collaborative mode)
+3. **Practice Difficult Cards**: Cards where incorrect ≥ correct
+4. **View Scores**: Individual card stats + session history table (last 10 sessions)
+5. **Delete Set**: Remove card set with confirmation
+6. **Exit**
 
-**Session Management Functions (lines 161-345)**:
-- `get_all_session_results()`: Parses session log to retrieve all session data for current set
-- `get_last_session_results()`: Gets the most recent session results for display
-- `run_review_session(flashcards, indices_to_review, session_type)`: Core learning logic that:
-  - Randomizes question order while maintaining CSV index mapping
-  - Shows last session results before starting new session
-  - Handles flexible answer matching (supports "A or B" format)
-  - Updates statistics (correct/incorrect/reviewed counts)
-  - Logs all sessions with timestamps and set information to session_log.txt
-  - Displays comprehensive session history table (last 10 sessions)
-  - Returns modified flashcards array for persistence
+## Key Features
 
-### Data Flow
-1. User selects a card set (stored in `$current_set`)
-2. CSV data for current set is loaded into memory as 2D array
-3. Review sessions modify the in-memory data
-4. Updated data is written back to the current set's CSV file
-5. All user interactions are logged to session_log.txt with set information
+### Audio Support (Chinese Sets)
+- Automatic audio playback for Chinese text using macOS `say` command
+- Press 'p' during questions to replay audio
+- Detects Chinese characters automatically
 
-### Multi-Set Features
-- **Automatic Discovery**: Available sets are discovered by scanning for `*_flashcards.csv` files in main directory and Ruby/ subdirectory
-- **Subdirectory Support**: Special handling for Ruby topic sets organized in Ruby/ subdirectory
-- **Dynamic Creation**: New sets can be created through the UI
-- **Safe Deletion**: Card sets can be deleted with confirmation prompts and automatic switching to remaining sets
-- **Set Isolation**: Each set maintains its own statistics and progress
-- **Unified Logging**: All sessions across sets are logged to a single session_log.txt file
-- **Enhanced Display**: Proper capitalization and formatting for set names (e.g., "JavaScript", "Ruby")
+### Answer Matching
+- Supports multiple correct answers: `answer1; answer2` or `answer1 or answer2`
+- Case-insensitive matching
+- Flexible input handling
 
-### Answer Matching Logic
-The application uses flexible answer matching that splits answers on " or " and compares sorted arrays, allowing for multiple acceptable answers per question.
+### Category System
+- **Foundation**: Basic recognition/production practice
+- **Vocabulary**: Advanced vocabulary sets  
+- **Ruby**: Programming topic sets
+- Cross-set statistics and combined sessions
 
-### Session History & Progress Tracking
-- **Last Session Display**: Shows results from the most recent session before starting a new one
-- **Comprehensive Logging**: All questions, answers, and results are logged with timestamps
-- **Visual Progress Table**: Multi-column table showing question-by-question results across last 10 sessions
-- **Question Randomization**: Questions are presented in random order during sessions while maintaining proper result tracking
-- **Session Types**: Tracks different session types ("Review All", "Practice Difficult") in logs
+### Session Tracking
+- Real-time progress display before each session
+- Question-by-question history table (✓/✗ grid)
+- Compact log format with timestamps and durations
+
+## Development Notes
+
+### Global State
+- `$current_set`: Tracks active card set (string with path if in subdirectory)
+
+### Key Functions (lib/set_manager.rb)
+- `display_set_name(set_name)`: Formats set names for UI display
+- `list_available_sets()`: Scans for all `*_flashcards.csv` files across directories
+- `get_category_sets(category)`: Returns sets matching category type
+- `load_combined_flashcards(category)`: Merges cards from multiple sets, handling duplicates
+
+### Key Functions (lib/review_engine.rb)  
+- `run_review_session(flashcards, indices, type)`: Core review logic with randomization
+- Handles audio playback, answer validation, statistics updates, logging
+
+### Key Functions (lib/session_tracker.rb)
+- `get_all_session_results()`: Parses compact log format for current set
+- `get_last_session_results()`: Returns most recent session data
+
+### Answer Validation Logic
+```ruby
+if answer.include?(";") || answer.include?(" or ")
+  correct_parts = answer.downcase.split(/[;]| or /).map(&:strip).sort
+  user_parts = user_answer.downcase.split(" or ").map(&:strip).sort
+  is_correct = user_parts.any? { |part| correct_parts.include?(part) }
+else
+  is_correct = user_answer.downcase.strip == answer.downcase.strip
+end
+```
+
+### Session Log Format
+```
+> 2024-01-01 10:00:00 | Set Name | Session Type
+✓ Question text (2.1s)
+✗ Question text A:wrong_answer (3.4s)  
+< 10:05:23 67.8s 8/10
+```
+
+## Utilities
+
+### convert_logs.rb
+Standalone script to compress verbose session logs:
+```bash
+ruby convert_logs.rb  # Creates session_log_converted.txt + backup
+```
 
 ## Logging
 
-- Check logs here: `session_log.txt` (created in the application directory)
+Session data: `session_log.txt` (compact format)
+
+## Collaborative Learning Setup
+
+### Automatic Setup (Default Behavior)
+**Practice Set** and **Practice Category** options now automatically start in collaborative mode:
+1. Run `ruby flashcards.rb`
+2. Choose option **1. Practice Set** or **2. Practice Category**
+3. Script automatically:
+   - Splits terminal pane using Cmd+D
+   - Launches Claude Code in new pane
+   - Sends initial context message to Claude
+   - Continues with flashcard practice session
+   - Sends session summary to Claude after completion
+
+### Key Functions (flashcards.rb)
+- `start_collaborative_mode()`: Handles automatic terminal splitting and Claude Code launch
+- `send_session_summary_to_claude(session_type, set_name, score, duration)`: Sends post-session analysis data
+- Called automatically before Practice Set and Practice Category sessions
+- Uses AppleScript to automate setup and messaging on macOS
+
+### Session Summary Integration
+After each practice session, Claude automatically receives:
+- Session type and set name
+- Score and duration
+- Correct/incorrect counts
+- Reference to check latest session_log.txt entries for patterns
+- Instruction to only respond with specific tips or important pattern observations
+
+### Benefits
+- Real-time session analysis and learning insights
+- Pattern recognition for difficult concepts
+- Speed and accuracy tracking
+- Interface and learning strategy optimization
+- Non-intrusive coaching (Claude only speaks when it has valuable input)

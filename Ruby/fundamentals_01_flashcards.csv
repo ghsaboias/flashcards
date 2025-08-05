@@ -1,0 +1,20 @@
+I want to greet each person in my names list. How do I do something for each item?,names.each do |name|,4,3,7
+I want to see what my code does step by step. How do I add notes that Ruby ignores?,# This is a comment,10,1,11
+I want to show text to the user. What Ruby command displays text?,puts,11,0,11
+I want to ask the user for their name and store their response. What gets user input?,gets.chomp,8,3,11
+I wrote puts Hello. Now I want to store the user's name in memory. What creates a container for data?,name = value,7,5,12
+I want some information that never changes in my program. How do I create a fixed value?,CONSTANT_NAME = value,8,3,11
+I want to write multi-line comments in Ruby. How do I do this?,=begin and =end,4,2,6
+I want to check what Ruby version I'm running. What command shows this?,ruby --version or ruby -v,3,1,4
+I want to run a Ruby file from the command line. What's the command?,ruby filename.rb,2,2,4
+I want to print something without a newline. What command does this?,print,3,1,4
+I want to print with formatted output like printf. What's Ruby's version?,printf,3,1,4
+I want to show the output with line numbers. What method does this?,p,2,2,4
+I want to inspect an object's details. What method shows everything?,inspect,4,2,6
+I want to add numbers together. What's the addition operator?,+,4,0,4
+I want to subtract numbers. What's the subtraction operator?,-,4,0,4
+I want to multiply numbers. What's the multiplication operator?,*,4,0,4
+I want to divide numbers. What's the division operator?,/,4,0,4
+I want to find the remainder after division. What's the modulo operator?,%,4,0,4
+I want to raise a number to a power. What's the exponentiation operator?,**,3,1,4
+I want to check if two values are equal. What's the equality operator?,==,3,1,4

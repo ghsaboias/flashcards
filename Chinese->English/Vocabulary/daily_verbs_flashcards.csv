@@ -1,0 +1,30 @@
+吃,eat,14,1,15
+喝,drink,14,1,15
+看,see; look,5,1,6
+走,walk; go,5,1,6
+来,come,6,0,6
+去,go,6,0,6
+说,speak; say,5,1,6
+听,listen; hear,5,1,6
+读,read,4,2,6
+写,write,6,0,6
+睡,sleep,5,1,6
+醒,wake up,12,3,15
+坐,sit,13,2,15
+站,stand,13,2,15
+跑,run,6,0,6
+买,buy,5,1,6
+卖,sell,6,0,6
+给,give,16,4,20
+拿,take,14,6,20
+放,put,14,6,20
+开,open,15,5,20
+关,close,15,5,20
+做,do; make,20,8,28
+工作,work,13,3,16
+学,learn,14,2,16
+教,teach,15,1,16
+帮,help,6,0,6
+爱,love,5,1,6
+喜欢,like; love,26,2,28
+要,want; wish,23,5,28

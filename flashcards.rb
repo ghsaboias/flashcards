@@ -1,383 +1,99 @@
 require "csv"
-require "time" # For timestamps
+require_relative "lib/audio_handler"
+require_relative "lib/set_manager"
+require_relative "lib/session_tracker"
+require_relative "lib/review_engine"
 
-# Global variable to track current card set
+include AudioHandler
+include SetManager
+include SessionTracker
+include ReviewEngine
+
 $current_set = "ruby"
 
-# Method to display set name nicely
-def display_set_name(set_name)
-  if set_name.include?("Ruby/")
-    set_name.gsub("Ruby/", "").gsub("_", " ").split.map(&:capitalize).join(" ")
-  else
-    # Handle special cases for proper capitalization
-    case set_name.downcase
-    when "javascript"
-      "JavaScript"
-    when "ruby"
-      "Ruby"
-    else
-      set_name.gsub("_", " ").split.map(&:capitalize).join(" ")
-    end
+def bring_terminal_to_front
+  if system("which osascript > /dev/null 2>&1")
+    system("osascript -e 'tell application \"Terminal\" to activate'")
   end
 end
 
-# Method to get CSV filename for a card set
-def get_csv_filename(set_name)
-  # Check if it's a set in a subdirectory (contains /)
-  if set_name.include?("/")
-    "#{set_name}_flashcards.csv"
-  else
-    "#{set_name}_flashcards.csv"
+def start_collaborative_mode(session_type, set_name)
+  if system("which osascript > /dev/null 2>&1")
+    system("osascript -e 'tell application \"System Events\" to keystroke \"d\" using {command down}'")
+    sleep(1)
+    system("osascript -e 'tell application \"System Events\" to keystroke \"claude\"'")
+    sleep(0.5)
+    system("osascript -e 'tell application \"System Events\" to keystroke return'")
+    sleep(2)
+    
+    # Send initial message to Claude with session context
+    message = "I'm starting a #{session_type} session with #{set_name}. Please monitor my learning progress and provide insights only when you notice important patterns or have specific tips. Just observe for now."
+    system("osascript -e 'tell application \"System Events\" to keystroke \"#{message}\"'")
+    sleep(0.3)
+    system("osascript -e 'tell application \"System Events\" to keystroke return'")
+    
+    # Switch back to the original terminal pane using Cmd+[
+    sleep(0.5)
+    system("osascript -e 'tell application \"System Events\" to keystroke \"[\" using {command down}'")
   end
 end
 
-# Method to list available card sets
-def list_available_sets
-  # Get files from main directory
-  main_csv_files = Dir.glob("*_flashcards.csv")
-  main_sets = main_csv_files.map { |file| file.gsub("_flashcards.csv", "") }
+def send_session_summary_to_claude(session_type, set_name, score, duration)
+  return unless system("which osascript > /dev/null 2>&1")
   
-  # Get files from Ruby subdirectory
-  ruby_csv_files = Dir.glob("Ruby/*_flashcards.csv")
-  ruby_sets = ruby_csv_files.map { |file| file.gsub("_flashcards.csv", "").gsub("Ruby/", "Ruby/") }
+  # Get the most recent session from logs
+  recent_session = get_last_session_results
   
-  all_sets = main_sets + ruby_sets
-  all_sets.empty? ? ["ruby"] : all_sets.sort
+  summary = "Session completed: #{session_type} - #{set_name}. Score: #{score}, Duration: #{duration}s."
+  
+  if recent_session && !recent_session[:questions].empty?
+    correct_count = recent_session[:questions].count("✓")
+    incorrect_count = recent_session[:questions].count("✗")
+    summary += " Correct: #{correct_count}, Incorrect: #{incorrect_count}."
+    
+    # Add pattern info if there were mistakes
+    if incorrect_count > 0
+      summary += " Check latest session_log.txt entries for mistake patterns."
+    end
+  end
+  
+  summary += " Only respond if you have specific learning tips or notice important patterns."
+  
+  system("osascript -e 'tell application \"System Events\" to keystroke \"#{summary}\"'")
+  sleep(0.3)
+  system("osascript -e 'tell application \"System Events\" to keystroke return'")
+  
+  # Switch back to the flashcard script pane using Cmd+Ctrl+Left Arrow
+  sleep(0.5)
+  system("osascript -e 'tell application \"System Events\" to keystroke (ASCII character 28) using {command down, control down}'")
 end
-
-# Method to select a card set
-def select_card_set
-  available_sets = list_available_sets
-  
-  puts "\n--- Available Card Sets ---"
-  puts "Main Sets:"
-  main_sets = available_sets.select { |set| !set.include?("/") }
-  main_sets.each_with_index do |set, index|
-    current_indicator = set == $current_set ? " (current)" : ""
-    puts "  #{index + 1}. #{display_set_name(set)}#{current_indicator}"
-  end
-  
-  ruby_sets = available_sets.select { |set| set.include?("Ruby/") }
-  if !ruby_sets.empty?
-    puts "\nRuby Topic Sets:"
-    ruby_sets.each_with_index do |set, index|
-      current_indicator = set == $current_set ? " (current)" : ""
-      display_name = set.gsub("Ruby/", "").gsub("_", " ").split.map(&:capitalize).join(" ")
-      puts "  #{main_sets.length + index + 1}. #{display_name}#{current_indicator}"
-    end
-  end
-  puts "#{available_sets.length + 1}. Create new set"
-  puts "#{available_sets.length + 2}. Back to main menu"
-  
-  print "Select a set: "
-  choice = gets.chomp.to_i
-  
-  if choice >= 1 && choice <= available_sets.length
-    $current_set = available_sets[choice - 1]
-    puts "Switched to #{display_set_name($current_set)} cards."
-  elsif choice == available_sets.length + 1
-    create_new_set
-  elsif choice == available_sets.length + 2
-    return
-  else
-    puts "Invalid choice."
-  end
-end
-
-# Method to create a new card set
-def create_new_set
-  print "Enter name for new card set: "
-  set_name = gets.chomp.downcase.gsub(/\s+/, "_")
-  
-  if set_name.empty?
-    puts "Invalid set name."
-    return
-  end
-  
-  filename = get_csv_filename(set_name)
-  if File.exist?(filename)
-    puts "Set '#{set_name}' already exists."
-    return
-  end
-  
-  # Create empty CSV file
-  CSV.open(filename, "w") { |csv| }
-  $current_set = set_name
-  puts "Created new set '#{set_name}' and switched to it."
-end
-
-# Method to delete a card set
-def delete_set
-  available_sets = list_available_sets
-  
-  if available_sets.length <= 1
-    puts "Cannot delete the only remaining set."
-    return
-  end
-  
-  puts "\n--- Delete Card Set ---"
-  puts "Available sets to delete:"
-  available_sets.each_with_index do |set, index|
-    puts "  #{index + 1}. #{display_set_name(set)}"
-  end
-  puts "#{available_sets.length + 1}. Cancel"
-  
-  print "Select set to delete: "
-  choice = gets.chomp.to_i
-  
-  if choice >= 1 && choice <= available_sets.length
-    set_to_delete = available_sets[choice - 1]
-    
-    puts "\nAre you sure you want to delete '#{display_set_name(set_to_delete)}'?"
-    puts "This will permanently remove all cards and progress data."
-    print "Type 'yes' to confirm: "
-    confirmation = gets.chomp.downcase
-    
-    if confirmation == "yes"
-      filename = get_csv_filename(set_to_delete)
-      if File.exist?(filename)
-        File.delete(filename)
-        puts "Deleted set '#{display_set_name(set_to_delete)}'."
-        
-        # If we deleted the current set, switch to another available set
-        if set_to_delete == $current_set
-          remaining_sets = list_available_sets
-          $current_set = remaining_sets.first unless remaining_sets.empty?
-          puts "Switched to '#{display_set_name($current_set)}' set."
-        end
-      else
-        puts "Set file not found."
-      end
-    else
-      puts "Delete cancelled."
-    end
-  elsif choice == available_sets.length + 1
-    puts "Delete cancelled."
-  else
-    puts "Invalid choice."
-  end
-end
-
-# Method to get all session results for current set
-def get_all_session_results
-  return [] unless File.exist?("session_log.txt")
-  
-  lines = File.readlines("session_log.txt")
-  all_sessions = []
-  current_session = nil
-  
-  lines.each do |line|
-    if line.include?("--- SESSION START:") && line.include?("Set: #{display_set_name($current_set)}")
-      current_session = { questions: [], score: nil }
-    elsif current_session && line.include?("--- SESSION END:")
-      if match = line.match(/(\d+)\/(\d+) correct/)
-        current_session[:score] = "#{match[1]}/#{match[2]}"
-        all_sessions << current_session
-      end
-      current_session = nil
-    elsif current_session && line.include?("[CORRECT]")
-      current_session[:questions] << "✓"
-    elsif current_session && line.include?("[INCORRECT]")
-      current_session[:questions] << "✗"
-    end
-  end
-  
-  all_sessions
-end
-
-# Method to get last session results for current set
-def get_last_session_results
-  all_sessions = get_all_session_results
-  return nil if all_sessions.empty?
-  all_sessions.last
-end
-
-# Method to run a review session for a given set of cards
-def run_review_session(flashcards, indices_to_review, session_type)
-  if indices_to_review.empty?
-    puts "
-No cards to review in this category."
-    return flashcards
-  end
-
-  session_start_time = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-  session_correct_count = 0
-  session_results = []
-
-  # Randomize the order of questions
-  randomized_indices = indices_to_review.shuffle
-  # Create mapping from randomized position to original CSV position
-  position_to_csv_index = {}
-  randomized_indices.each_with_index do |csv_index, position|
-    position_to_csv_index[position] = csv_index
-  end
-
-  # Show last session results if available
-  last_session = get_last_session_results
-  if last_session
-    puts "\nLast Session: #{last_session[:score]} correct"
-    puts "Q#  | Result"
-    puts "----|-------"
-    last_session[:questions].each_with_index do |result, index|
-      puts "#{(index + 1).to_s.rjust(2)}  | #{result}"
-    end
-  end
-
-  puts "
---- Starting Session: #{session_type} ---"
-
-  File.open("session_log.txt", "a") do |log_file|
-    log_file.puts "--- SESSION START: #{session_start_time} | Set: #{display_set_name($current_set)} | Type: #{session_type} ---"
-
-    randomized_indices.each_with_index do |index, question_number|
-      row = flashcards[index]
-      question = row[0]
-      answer = row[1]
-      correct_count = row[2].to_i
-      incorrect_count = row[3].to_i
-      reviewed_count = row[4].to_i
-
-      puts "Question #{question_number + 1}: #{question}"
-      print "Your answer: "
-      user_answer = gets.chomp
-
-      correct_parts = answer.downcase.split(" or ").map(&:strip).sort
-      user_parts = user_answer.downcase.split(" or ").map(&:strip).sort
-
-      if user_parts == correct_parts
-        puts "Correct!"
-        flashcards[index][2] = correct_count + 1
-        session_correct_count += 1
-        session_results << { number: question_number + 1, result: "✓" }
-        log_file.puts "[CORRECT] Q: #{question}"
-      else
-        puts "Sorry, the correct answer is: #{answer}"
-        flashcards[index][3] = incorrect_count + 1
-        session_results << { number: question_number + 1, result: "✗" }
-        log_file.puts "[INCORRECT] Q: #{question} (Your Answer: #{user_answer})"
-      end
-      flashcards[index][4] = reviewed_count + 1
-    end
-
-    session_summary = "--- SESSION END: #{session_correct_count}/#{indices_to_review.length} correct ---"
-    log_file.puts session_summary
-    log_file.puts "" # Add a blank line for spacing
-    
-    puts "\n--- Session Complete ---"
-    
-    # Convert session results back to CSV order for display
-    current_session_by_csv_order = Array.new(indices_to_review.length, " ")
-    session_results.each do |result|
-      csv_index = position_to_csv_index[result[:number] - 1]
-      csv_position = indices_to_review.index(csv_index)
-      current_session_by_csv_order[csv_position] = result[:result] if csv_position
-    end
-    
-    # Get all previous sessions plus current session
-    all_sessions = get_all_session_results
-    all_sessions << { questions: current_session_by_csv_order, score: "#{session_correct_count}/#{indices_to_review.length}" }
-    
-    # Show only last 10 sessions in summary (but keep all data)
-    recent_sessions = all_sessions.last(10)
-    
-    # Show multi-column score table
-    puts "Score Summary (Last 10 Sessions):"
-    
-    # Header
-    header = "Q# |"
-    recent_sessions.each_with_index do |_, index|
-      header += " ##{index + 1} |"
-    end
-    puts header
-    
-    # Separator
-    separator = "---|"
-    recent_sessions.each do |_|
-      separator += "----|"
-    end
-    puts separator
-    
-    # Question rows
-    max_questions = recent_sessions.map { |s| s[:questions].length }.max || 0
-    (0...max_questions).each do |q_index|
-      row = "#{(q_index + 1).to_s.rjust(2)} |"
-      recent_sessions.each do |session|
-        result = session[:questions][q_index] || " "
-        row += " #{result}  |"
-      end
-      puts row
-    end
-    
-    # Totals
-    puts separator
-    
-    # Correct counts row
-    correct_row = " ✓ |"
-    recent_sessions.each do |session|
-      score = session[:score] || "0/0"
-      correct = score.split('/')[0]
-      correct_row += " #{correct.rjust(2)} |"
-    end
-    puts correct_row
-    
-    # Incorrect counts row
-    incorrect_row = " ✗ |"
-    recent_sessions.each do |session|
-      score = session[:score] || "0/0"
-      correct, total = score.split('/').map(&:to_i)
-      incorrect = total - correct
-      incorrect_row += " #{incorrect.to_s.rjust(2)} |"
-    end
-    puts incorrect_row
-    
-    # Total counts row
-    total_row = " T |"
-    recent_sessions.each do |session|
-      score = session[:score] || "0/0"
-      total = score.split('/')[1]
-      total_row += " #{total.rjust(2)} |"
-    end
-    puts total_row
-  end
-
-  # Return the modified flashcards array
-  flashcards
-end
-
 
 loop do
   puts "
 Current set: #{display_set_name($current_set)}
 What would you like to do?"
-  puts "1. Select/Switch Card Set"
-  puts "2. Add a new flashcard"
-  puts "3. Review all flashcards"
-  puts "4. Practice difficult cards"
-  puts "5. View Scores"
-  puts "6. Delete a card set"
-  puts "7. Exit"
+  puts "1. Practice Set"
+  puts "2. Practice Category"
+  puts "3. Practice Difficult Cards"
+  puts "4. View Scores"
+  puts "5. Delete Set"
+  puts "6. Exit"
   print "Enter your choice: "
   choice = gets.chomp
 
   case choice
   when "1"
+    # Practice Set in Collaborative Mode
     select_card_set
-  when "2"
-    # Add a new flashcard
-    print "Enter the question: "
-    question = gets.chomp
-    print "Enter the answer: "
-    answer = gets.chomp
-
-    CSV.open(get_csv_filename($current_set), "a") do |csv|
-      csv << [question, answer, 0, 0, 0]
-    end
-  when "3"
+    
     filename = get_csv_filename($current_set)
     if !File.exist?(filename)
       puts "No cards found for #{display_set_name($current_set)} set."
       next
     end
+    
+    # Start collaborative mode after set selection
+    start_collaborative_mode("Practice Set", display_set_name($current_set))
     
     flashcards = CSV.read(filename)
     if flashcards.empty?
@@ -386,13 +102,88 @@ What would you like to do?"
     end
     
     all_indices = (0...flashcards.length).to_a
-    flashcards = run_review_session(flashcards, all_indices, "Review All")
-
-    # Save the updated flashcards back to the CSV
+    result = run_review_session(flashcards, all_indices, "Review All")
+    
     CSV.open(filename, "w") do |csv|
-      flashcards.each { |row| csv << row }
+      result[:flashcards].each { |row| csv << row }
     end
-  when "4"
+    
+    # Send session summary to Claude
+    send_session_summary_to_claude(
+      result[:session_data][:session_type],
+      display_set_name($current_set),
+      result[:session_data][:score],
+      result[:session_data][:duration]
+    )
+  when "2"
+    # Practice Category in Collaborative Mode
+    puts "\n--- Category Review (Collaborative Mode) ---"
+    puts "Select a category to review all sets:"
+    puts "1. Chinese→English Foundation (Recognition)"  
+    puts "2. Chinese→English Vocabulary (Recognition)"
+    puts "3. English→Chinese Foundation (Production)"
+    puts "4. English→Chinese Vocabulary (Production)"
+    puts "5. Ruby Topic Sets"
+    puts "6. Back to main menu"
+    print "Select category: "
+    
+    category_choice = gets.chomp
+    
+    category_map = {
+      "1" => "foundation",
+      "2" => "vocabulary", 
+      "3" => "production_foundation",
+      "4" => "production_vocabulary",
+      "5" => "ruby"
+    }
+    
+    if category_map[category_choice]
+      category = category_map[category_choice]
+      sets_in_category = get_category_sets(category)
+      
+      if sets_in_category.empty?
+        puts "No sets found in #{get_category_display_name(category)} category."
+        next
+      end
+      
+      # Start collaborative mode after category selection
+      start_collaborative_mode("Practice Category", get_category_display_name(category))
+      
+      total_questions = sets_in_category.sum { |set| count_questions_in_set(set) }
+      puts "\nReviewing #{get_category_display_name(category)}"
+      puts "Total questions: #{total_questions} (from #{sets_in_category.length} sets)"
+      puts "Sets included: #{sets_in_category.map { |s| display_set_name(s) }.join(', ')}"
+      puts "Press Enter to continue or 'q' to cancel..."
+      confirm = gets.chomp
+      
+      if confirm.downcase != 'q'
+        combined_data = load_combined_flashcards(category)
+        
+        if combined_data[:flashcards].empty?
+          puts "No flashcards found in category."
+          next
+        end
+        
+        all_indices = (0...combined_data[:flashcards].length).to_a
+        result = run_review_session(combined_data[:flashcards], all_indices, "Category Review: #{get_category_display_name(category)}")
+        
+        save_combined_flashcards(combined_data, result[:flashcards])
+        puts "Category review completed! Statistics updated for all sets."
+        
+        # Send session summary to Claude
+        send_session_summary_to_claude(
+          result[:session_data][:session_type],
+          get_category_display_name(category),
+          result[:session_data][:score],
+          result[:session_data][:duration]
+        )
+      end
+    elsif category_choice == "6"
+      next
+    else
+      puts "Invalid choice."
+    end
+  when "3"
     filename = get_csv_filename($current_set)
     if !File.exist?(filename)
       puts "No cards found for #{display_set_name($current_set)} set."
@@ -413,13 +204,13 @@ No difficult cards to practice right now. Keep reviewing!"
       next
     end
     
-    flashcards = run_review_session(flashcards, difficult_cards_indices, "Practice Difficult")
+    result = run_review_session(flashcards, difficult_cards_indices, "Practice Difficult")
 
     # Save the updated flashcards back to the CSV
     CSV.open(filename, "w") do |csv|
-      flashcards.each { |row| csv << row }
+      result[:flashcards].each { |row| csv << row }
     end
-  when "5"
+  when "4"
     # View Scores
     filename = get_csv_filename($current_set)
     if !File.exist?(filename)
@@ -437,11 +228,12 @@ No difficult cards to practice right now. Keep reviewing!"
 --- #{display_set_name($current_set)} Flashcard Scores ---"
     flashcards.each_with_index do |row, index|
       question = row[0]
-      correct = row[2]
-      incorrect = row[3]
-      reviewed = row[4]
+      correct = row[2].to_i
+      incorrect = row[3].to_i
+      reviewed = row[4].to_i
+      percentage = (correct + incorrect) > 0 ? ((correct.to_f / (correct + incorrect)) * 100).round(1) : 0
       puts "#{index + 1}. #{question}"
-      puts "   Correct: #{correct}, Incorrect: #{incorrect}, Reviewed: #{reviewed}"
+      puts "   #{GREEN}Correct: #{correct}#{RESET}, #{RED}Incorrect: #{incorrect}#{RESET}, Reviewed: #{reviewed} (#{percentage}%)"
     end
     puts "------------------------"
     
@@ -472,7 +264,15 @@ No difficult cards to practice right now. Keep reviewing!"
         row = "#{(q_index + 1).to_s.rjust(2)} |"
         recent_sessions.each do |session|
           result = session[:questions][q_index] || " "
-          row += " #{result}  |"
+          colored_result = case result
+                          when "✓"
+                            "#{GREEN}#{result}#{RESET}"
+                          when "✗"
+                            "#{RED}#{result}#{RESET}"
+                          else
+                            result
+                          end
+          row += " #{colored_result}  |"
         end
         puts row
       end
@@ -509,9 +309,9 @@ No difficult cards to practice right now. Keep reviewing!"
       puts total_row
     end
     puts ""
-  when "6"
+  when "5"
     delete_set
-  when "7"
+  when "6"
     break
   else
     puts "Invalid choice. Please try again."

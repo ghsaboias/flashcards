@@ -1,0 +1,20 @@
+I want to check if two values are not equal. What's the inequality operator?,!=,3,1,4
+I want to check if one value is greater than another. What's the operator?,>,3,1,4
+I want to check if one value is less than another. What's the operator?,<,4,0,4
+I want to check if one value is greater than or equal. What's the operator?,>=,4,0,4
+I want to check if one value is less than or equal. What's the operator?,<=,4,0,4
+I want to combine two conditions with AND logic. What's the operator?,&& or and,3,1,4
+I want to combine two conditions with OR logic. What's the operator?,|| or or,4,0,4
+I want to negate a boolean condition. What's the NOT operator?,! or not,3,1,4
+I want to assign a value to a variable. What's the assignment operator?,=,4,0,4
+I want to add to a variable's current value. What's the shorthand?,+= or variable = variable +,4,2,6
+I want to subtract from a variable's current value. What's the shorthand?,-=,3,1,4
+I want to multiply a variable by a value. What's the shorthand?,*=,3,1,4
+I want to divide a variable by a value. What's the shorthand?,/=,4,2,6
+I want to check what type of object I have. What method tells me this?,class,5,5,10
+I want to see if an object is a specific type. What method checks this?,is_a? or kind_of?,5,3,8
+I want to see what methods an object has. What method lists them?,methods,2,2,4
+I want to check if an object responds to a method. What method checks this?,respond_to?,4,2,6
+I want to convert something to a string. What method does this?,to_s,4,0,4
+I want to convert something to an integer. What method does this?,to_i,4,0,4
+I want to convert something to a float. What method does this?,to_f,4,0,4
