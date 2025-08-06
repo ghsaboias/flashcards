@@ -1,10 +1,10 @@
-右,right,31,1,32
-前,front,30,2,32
-后,back; behind,28,4,32
-内,inside; in,30,2,32
-外,outside; out,26,6,32
-东,east,28,4,32
-西,west,27,5,32
-南,south,29,3,32
-北,north,30,2,32
-门,door; gate,31,1,32
+右,right,32,1,33
+前,front,31,2,33
+后,back; behind,29,4,33
+内,inside; in,31,2,33
+外,outside; out,27,6,33
+东,east,29,4,33
+西,west,27,6,33
+南,south,30,3,33
+北,north,31,2,33
+门,door; gate,32,1,33

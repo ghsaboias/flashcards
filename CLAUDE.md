@@ -45,10 +45,13 @@ Python console flashcard application with modular architecture:
 
 1. **Practice Set**: Review all cards in current set (automatically starts in collaborative mode)
 2. **Practice Category**: Review all sets in a category (automatically starts in collaborative mode)
-3. **Practice Difficult Cards**: Cards where incorrect ≥ correct
-4. **View Scores**: Individual card stats + session history table (last 10 sessions)
-5. **Delete Set**: Remove card set with confirmation
-6. **Exit**
+3. **Practice Difficult Cards**: Select any set, then practice only cards with accuracy < 80% (supports collaborative mode)
+4. **Practice Difficult Category**: Select a category, then practice only difficult cards (accuracy < 80%) from all sets in that category (supports collaborative mode)
+5. **View Scores**: Individual card stats + session history table (last 10 sessions)
+6. **Select Set**: Choose a different flashcard set
+7. **Delete Set**: Remove card set with confirmation
+8. **Close LLM Session** (only shown when LLM session is active)
+9. **Exit**
 
 ## Key Features
 
@@ -137,9 +140,9 @@ Session data: `session_log.txt` (compact format)
 ## Collaborative Learning Setup
 
 ### Persistent Session Management (Default Behavior)
-**Practice Set** and **Practice Category** options use persistent Claude sessions:
+**Practice Set**, **Practice Category**, **Practice Difficult Cards**, and **Practice Difficult Category** options support persistent LLM sessions:
 1. Run `python flashcards.py`
-2. Choose option **1. Practice Set** or **2. Practice Category**
+2. Choose option **1. Practice Set**, **2. Practice Category**, **3. Practice Difficult Cards**, or **4. Practice Difficult Category**
 3. **First session**: Script prompts for LLM choice (Gemini/Claude/None)
 4. **Subsequent sessions**: Script automatically reuses existing LLM session without prompting
 5. Script automatically:
@@ -158,7 +161,7 @@ Session data: `session_log.txt` (compact format)
 - Uses AppleScript for macOS terminal and window management
 
 ### Session Summary Integration
-After each practice session, Claude automatically receives:
+After each practice session (for all LLM-enabled options), the selected LLM automatically receives:
 - Session type and set name
 - Score and duration
 - Correct/incorrect counts
@@ -171,4 +174,5 @@ After each practice session, Claude automatically receives:
 - Persistent coaching context and personalized feedback
 - Long-term progress tracking and trend analysis
 - Efficient session reuse without repeated setup overhead
-- Non-intrusive coaching (Claude only speaks when it has valuable input)
+- Non-intrusive coaching (LLM only speaks when it has valuable input)
+- Focused assistance for challenging cards through difficult card practice modes

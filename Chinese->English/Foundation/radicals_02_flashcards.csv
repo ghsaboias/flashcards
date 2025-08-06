@@ -1,10 +1,10 @@
-日,sun; day,5643,256,5899
-月,moon; month,22,2,24
-目,eye,5899,0,5899
-女,woman; female,5643,256,5899
-男,man; male,23,1,24
-子,child,20,4,24
-米,rice; food,15,9,24
-糸,thread; silk,18,6,24
-草,grass; plant,23,1,24
-竹,bamboo,21,3,24
+日,sun; day,45148,2048,47196
+月,moon; month,23,2,25
+目,eye,47196,0,47196
+女,woman; female,45148,2048,47196
+男,man; male,24,1,25
+子,child,21,4,25
+米,rice; food,18,9,27
+糸,thread; silk,19,8,27
+草,grass; plant,24,1,25
+竹,bamboo,22,3,25

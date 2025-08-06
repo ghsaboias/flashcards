@@ -114,7 +114,7 @@ class ReviewEngine:
                         print(f"{self.audio_handler.RED}Sorry, the correct answer is: {answer}{self.audio_handler.RESET}")
                         flashcards[index][3] = str(incorrect_count + 1)
                         session_results.append({"number": question_number + 1, "result": "✗"})
-                        log_file.write(f"✗ {question} A:{user_answer} ({question_duration}s)\n")
+                        log_file.write(f"✗ {question} A:{user_answer} C:{answer} ({question_duration}s)\n")
                     
                     flashcards[index][4] = str(reviewed_count + 1)
 
@@ -142,9 +142,8 @@ class ReviewEngine:
             if csv_position is not None:
                 current_session_by_csv_order[csv_position] = result["result"]
         
-        # Get all sessions and add current one
+        # Get all sessions (current session already included from log file)
         all_sessions = self.session_tracker.get_all_session_results()
-        all_sessions.append({"questions": current_session_by_csv_order, "score": f"{session_correct_count}/{len(indices_to_review)}"})
         
         # Show recent sessions summary (last 10)
         recent_sessions = all_sessions[-10:]

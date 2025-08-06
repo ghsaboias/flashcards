@@ -6,7 +6,34 @@ from .audio_handler import AudioHandler
 class SetManager:
     def __init__(self):
         self.audio_handler = AudioHandler()
-        self.current_set = "ruby"
+        self.current_set = self.load_current_set()
+
+    def load_current_set(self):
+        """Load the last used set from config file"""
+        try:
+            if os.path.exists("current_set.txt"):
+                with open("current_set.txt", 'r', encoding='utf-8') as f:
+                    saved_set = f.read().strip()
+                    if saved_set and self.set_exists(saved_set):
+                        return saved_set
+        except Exception as e:
+            print(f"Warning: Could not load saved set: {e}")
+        
+        # Default to ruby if no saved set or saved set doesn't exist
+        return "ruby"
+
+    def save_current_set(self):
+        """Save the current set to config file"""
+        try:
+            with open("current_set.txt", 'w', encoding='utf-8') as f:
+                f.write(self.current_set)
+        except Exception as e:
+            print(f"Warning: Could not save current set: {e}")
+
+    def set_exists(self, set_name):
+        """Check if a set file exists"""
+        filename = self.get_csv_filename(set_name)
+        return os.path.exists(filename)
 
     def display_set_name(self, set_name):
         """Format set name for display"""
@@ -243,6 +270,7 @@ class SetManager:
                 return
             elif 1 <= choice <= len(available_sets):
                 self.current_set = available_sets[choice - 1]
+                self.save_current_set()
                 print(f"Switched to {self.display_set_name(self.current_set)} cards.")
             elif choice == len(available_sets) + 1:
                 self.create_new_set()
@@ -272,6 +300,7 @@ class SetManager:
             pass
         
         self.current_set = set_name
+        self.save_current_set()
         print(f"Created new set '{set_name}' and switched to it.")
 
     def get_category_sets(self, category):
@@ -468,6 +497,7 @@ class SetManager:
                             remaining_sets = self.list_available_sets()
                             if remaining_sets:
                                 self.current_set = remaining_sets[0]
+                                self.save_current_set()
                                 print(f"Switched to '{self.display_set_name(self.current_set)}' set.")
                     else:
                         print("Set file not found.")

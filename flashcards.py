@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run python
 import csv
 import os
 import subprocess
@@ -169,7 +169,7 @@ class FlashcardsApp:
                 mistake_details = self.analyze_session_mistakes_from_data(recent_session["questions"])
                 summary += f"\n{mistake_details}"
         
-        summary += f"\n\nProvide exact words to review or study patterns to target. For Chinese characters, include pinyin pronunciation and English meanings for each. Don't mention what I answered if I got it wrong, as that creates false associations. Focus on the correct symbol/meaning relationships using creative memory aids based on the symbol, sound, meaning, or character breakdown. Note: Mastery is achieved with 3 consecutive 10/10 sessions. (Provider: {self.llm_provider})"
+        summary += f"\n\nProvide exact words to review or study patterns to target. For Chinese characters, include pinyin pronunciation and English meanings for each. Never repeat incorrect answers - only teach correct character-meaning relationships. Break down each character into its component parts and explain how they combine to form meaning. Include radical information and stroke patterns where helpful for understanding structure. Provide both analytical understanding (how character is built) and memorable associations (what it looks like). Build on user's visual interpretations when they share how they see character shapes. Note: Mastery is achieved with 3 consecutive 10/10 sessions. (Provider: {self.llm_provider})"
         
         # Switch to LLM pane using Cmd+] to ensure we're in the right pane
         subprocess.run(["osascript", "-e", 'tell application "System Events" to keystroke "]" using {command down}'], 
@@ -350,6 +350,8 @@ class FlashcardsApp:
 
     def practice_difficult_cards(self):
         """Practice Difficult Cards menu option"""
+        self.set_manager.select_card_set()
+        
         filename = self.set_manager.get_csv_filename(self.set_manager.current_set)
         if not os.path.exists(filename):
             print(f"No cards found for {self.set_manager.display_set_name(self.set_manager.current_set)} set.")
@@ -367,18 +369,31 @@ class FlashcardsApp:
             print(f"No cards in {self.set_manager.display_set_name(self.set_manager.current_set)} set.")
             return
         
-        # Find difficult cards (incorrect >= correct)
+        # Find difficult cards (accuracy < 80%)
         difficult_cards_indices = []
         for i, card in enumerate(flashcards):
             if len(card) >= 5:
                 incorrect_count = int(card[3])
                 correct_count = int(card[2])
-                if incorrect_count >= correct_count:
-                    difficult_cards_indices.append(i)
+                total_attempts = correct_count + incorrect_count
+                if total_attempts > 0:
+                    accuracy = (correct_count / total_attempts) * 100
+                    if accuracy < 80:
+                        difficult_cards_indices.append(i)
         
         if not difficult_cards_indices:
             print("\nNo difficult cards to practice right now. Keep reviewing!")
             return
+        
+        # Check if LLM session is already active or ask user
+        if self.llm_session_active:
+            use_llm = True  # Continue with existing session
+        else:
+            use_llm = self.ask_use_llm("Practice Difficult Cards", self.set_manager.display_set_name(self.set_manager.current_set))
+        
+        # Start collaborative mode only if user agrees and no session is active
+        if use_llm and not self.llm_session_active:
+            self.start_llm_session("Practice Difficult Cards", self.set_manager.display_set_name(self.set_manager.current_set))
         
         result = self.review_engine.run_review_session(flashcards, difficult_cards_indices, "Practice Difficult")
         
@@ -390,6 +405,114 @@ class FlashcardsApp:
                     writer.writerow(row)
         except Exception as e:
             print(f"Error saving flashcards: {e}")
+        
+        # Send session summary to LLM only if using an LLM
+        if use_llm:
+            self.send_session_summary_to_llm(
+                result["session_data"]["session_type"],
+                self.set_manager.display_set_name(self.set_manager.current_set),
+                result["session_data"]["score"],
+                result["session_data"]["duration"]
+            )
+
+    def practice_difficult_category(self):
+        """Practice Difficult Category menu option - practice difficult cards across all sets in a category"""
+        print("\n--- Practice Difficult Category ---")
+        print("Select a category to practice difficult cards (accuracy < 80%):")
+        print("1. Chinese→English Foundation (Recognition)")
+        print("2. Chinese→English Vocabulary (Recognition)")
+        print("3. English→Chinese Foundation (Production)")
+        print("4. English→Chinese Vocabulary (Production)")
+        print("5. Ruby Topic Sets")
+        print("6. Back to main menu")
+        
+        try:
+            category_choice = input("Select category: ")
+        except (EOFError, KeyboardInterrupt):
+            return
+        
+        category_map = {
+            "1": "foundation",
+            "2": "vocabulary",
+            "3": "production_foundation",
+            "4": "production_vocabulary",
+            "5": "ruby"
+        }
+        
+        if category_choice in category_map:
+            category = category_map[category_choice]
+            sets_in_category = self.set_manager.get_category_sets(category)
+            
+            if not sets_in_category:
+                print(f"No sets found in {self.set_manager.get_category_display_name(category)} category.")
+                return
+            
+            # Load all flashcards from category and find difficult ones
+            combined_data = self.set_manager.load_combined_flashcards(category)
+            
+            if not combined_data["flashcards"]:
+                print("No flashcards found in category.")
+                return
+            
+            # Find difficult cards (accuracy < 80%)
+            difficult_cards_indices = []
+            for i, card in enumerate(combined_data["flashcards"]):
+                if len(card) >= 5:
+                    incorrect_count = int(card[3])
+                    correct_count = int(card[2])
+                    total_attempts = correct_count + incorrect_count
+                    if total_attempts > 0:
+                        accuracy = (correct_count / total_attempts) * 100
+                        if accuracy < 80:
+                            difficult_cards_indices.append(i)
+            
+            if not difficult_cards_indices:
+                print(f"\nNo difficult cards found in {self.set_manager.get_category_display_name(category)} category.")
+                print("All cards have 80%+ accuracy. Keep up the great work!")
+                return
+            
+            # Check if LLM session is already active or ask user
+            if self.llm_session_active:
+                use_llm = True  # Continue with existing session
+            else:
+                use_llm = self.ask_use_llm("Practice Difficult Category", self.set_manager.get_category_display_name(category))
+            
+            # Start collaborative mode only if user agrees and no session is active
+            if use_llm and not self.llm_session_active:
+                self.start_llm_session("Practice Difficult Category", self.set_manager.get_category_display_name(category))
+            
+            print(f"\nFound {len(difficult_cards_indices)} difficult cards in {self.set_manager.get_category_display_name(category)}")
+            print(f"Total cards in category: {len(combined_data['flashcards'])} (from {len(sets_in_category)} sets)")
+            print(f"Sets included: {', '.join(self.set_manager.display_set_name(s) for s in sets_in_category)}")
+            print("Press Enter to continue or 'q' to cancel...")
+            
+            try:
+                confirm = input()
+            except (EOFError, KeyboardInterrupt):
+                return
+            
+            if confirm.lower() != 'q':
+                result = self.review_engine.run_review_session(
+                    combined_data["flashcards"], 
+                    difficult_cards_indices, 
+                    f"Practice Difficult Category: {self.set_manager.get_category_display_name(category)}"
+                )
+                
+                self.set_manager.save_combined_flashcards(combined_data, result["flashcards"])
+                print("Difficult category practice completed! Statistics updated for all sets.")
+                
+                # Send session summary to LLM only if using an LLM
+                if use_llm:
+                    self.send_session_summary_to_llm(
+                        result["session_data"]["session_type"],
+                        self.set_manager.get_category_display_name(category),
+                        result["session_data"]["score"],
+                        result["session_data"]["duration"]
+                    )
+        elif category_choice == "6":
+            return
+        else:
+            print("Invalid choice.")
 
     def view_scores(self):
         """View Scores menu option"""
@@ -425,7 +548,7 @@ class FlashcardsApp:
         # Show session history table
         all_sessions = self.session_tracker.get_all_session_results()
         if all_sessions:
-            # Show only last 10 sessions in summary
+            # Show last 10 sessions in summary table
             recent_sessions = all_sessions[-10:]
             print("\nSession History (Last 10 Sessions):")
             
@@ -435,8 +558,10 @@ class FlashcardsApp:
                 header += f" #{index + 1} |"
             print(header)
 
-            # Separator
-            separator = "---|----" * len(recent_sessions) + "---"
+            # Separator - fix the excessive dashes
+            separator = "---|"
+            for _ in recent_sessions:
+                separator += "----|"
             print(separator)
 
             # Question rows
@@ -482,7 +607,51 @@ class FlashcardsApp:
                 total = score.split('/')[1]
                 total_row += f" {total.rjust(2)} |"
             print(total_row)
+
+        # Show last 3 sessions as they appear in the log
+        print("\nLast 3 Sessions (from log):")
+        try:
+            with open("session_log.txt", 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+                
+            # Find sessions for current set and get last 3
+            current_set_display = self.set_manager.display_set_name(self.set_manager.current_set)
+            session_blocks = []
+            current_block = []
+            
+            for line in lines:
+                line = line.strip()
+                if line.startswith(">") and current_set_display in line:
+                    if current_block:
+                        session_blocks.append(current_block)
+                    current_block = [line]
+                elif current_block and (line.startswith("✓") or line.startswith("✗") or line.startswith("<")):
+                    current_block.append(line)
+                elif current_block and line.startswith("<"):
+                    session_blocks.append(current_block)
+                    current_block = []
+            
+            if current_block:
+                session_blocks.append(current_block)
+            
+            # Show last 3 sessions
+            last_3_sessions = session_blocks[-3:] if len(session_blocks) >= 3 else session_blocks
+            
+            if last_3_sessions:
+                for session in last_3_sessions:
+                    for line in session:
+                        print(line)
+                    print()  # Empty line between sessions
+            else:
+                print("No session history found for this set.")
+                
+        except Exception as e:
+            print(f"Could not read session log: {e}")
         print("")
+
+    def select_set(self):
+        """Select Set menu option"""
+        self.set_manager.select_card_set()
 
     def run(self):
         """Main application loop"""
@@ -495,11 +664,13 @@ What would you like to do?""")
                 print("1. Practice Set")
                 print("2. Practice Category")
                 print("3. Practice Difficult Cards")
-                print("4. View Scores")
-                print("5. Delete Set")
+                print("4. Practice Difficult Category")
+                print("5. View Scores")
+                print("6. Select Set")
+                print("7. Delete Set")
                 if self.llm_session_active:
-                    print("6. Close LLM Session")
-                print("7. Exit")
+                    print("8. Close LLM Session")
+                print("9. Exit")
                 
                 try:
                     choice = input("Enter your choice: ")
@@ -513,12 +684,16 @@ What would you like to do?""")
                 elif choice == "3":
                     self.practice_difficult_cards()
                 elif choice == "4":
-                    self.view_scores()
+                    self.practice_difficult_category()
                 elif choice == "5":
-                    self.set_manager.delete_set()
-                elif choice == "6" and self.llm_session_active:
-                    self.close_llm_session()
+                    self.view_scores()
+                elif choice == "6":
+                    self.select_set()
                 elif choice == "7":
+                    self.set_manager.delete_set()
+                elif choice == "8" and self.llm_session_active:
+                    self.close_llm_session()
+                elif choice == "9":
                     break
                 else:
                     print("Invalid choice. Please try again.")
