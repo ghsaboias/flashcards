@@ -1,0 +1,28 @@
+father,父,0,0,0
+mother,母,0,0,0
+son,儿,0,0,0
+daughter,女,0,0,0
+older brother,哥,0,0,0
+younger brother,弟,0,0,0
+older sister,姐,0,0,0
+younger sister,妹,0,0,0
+grandfather (paternal),爷,0,0,0
+grandmother (paternal),奶,0,0,0
+grandfather (maternal),外公,0,0,0
+grandmother (maternal),外婆,0,0,0
+uncle (father's brother),叔,0,0,0
+aunt (father's sister),姑,0,0,0
+uncle (mother's brother),舅,0,0,0
+aunt (mother's sister),姨,0,0,0
+husband,夫,0,0,0
+wife,妻,0,0,0
+family,家,0,0,0
+parents,父母,0,0,0
+children,孩子,0,0,0
+baby,婴儿,0,0,0
+boy,男孩,0,0,0
+girl,女孩,0,0,0
+cousin (male),表哥,0,0,0
+cousin (female),表姐,0,0,0
+nephew,侄子,0,0,0
+niece,侄女,0,0,0
