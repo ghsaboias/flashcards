@@ -24,7 +24,7 @@ class AudioHandler:
     @staticmethod
     def is_chinese_set(set_name):
         """Check if the set name indicates Chinese language content"""
-        return "Chinese" in set_name or "English" in set_name
+        return "Chinese" in set_name or "English" in set_name or "HSK1" in set_name
 
     @staticmethod
     def play_success_sound():

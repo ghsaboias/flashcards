@@ -7,6 +7,7 @@ class SetManager:
     def __init__(self):
         self.audio_handler = AudioHandler()
         self.current_set = self.load_current_set()
+        self.current_category = self.load_current_category()
 
     def load_current_set(self):
         """Load the last used set from config file"""
@@ -19,8 +20,9 @@ class SetManager:
         except Exception as e:
             print(f"Warning: Could not load saved set: {e}")
         
-        # Default to ruby if no saved set or saved set doesn't exist
-        return "ruby"
+        # Default to first available set if no saved set or saved set doesn't exist
+        available_sets = self.list_available_sets()
+        return available_sets[0] if available_sets else None
 
     def save_current_set(self):
         """Save the current set to config file"""
@@ -30,6 +32,26 @@ class SetManager:
         except Exception as e:
             print(f"Warning: Could not save current set: {e}")
 
+    def load_current_category(self):
+        """Load the last used category from config file"""
+        try:
+            if os.path.exists("current_category.txt"):
+                with open("current_category.txt", 'r', encoding='utf-8') as f:
+                    saved_category = f.read().strip()
+                    if saved_category and saved_category in self.list_categories():
+                        return saved_category
+        except Exception as e:
+            print(f"Warning: Could not load saved category: {e}")
+        return None # Default to None if no saved category or invalid
+
+    def save_current_category(self):
+        """Save the current category to config file"""
+        try:
+            with open("current_category.txt", 'w', encoding='utf-8') as f:
+                f.write(self.current_category if self.current_category else "")
+        except Exception as e:
+            print(f"Warning: Could not save current category: {e}")
+
     def set_exists(self, set_name):
         """Check if a set file exists"""
         filename = self.get_csv_filename(set_name)
@@ -37,28 +59,16 @@ class SetManager:
 
     def display_set_name(self, set_name):
         """Format set name for display"""
-        if "Ruby/" in set_name:
-            name = set_name.replace("Ruby/", "").replace("_", " ")
-            return "Ruby: " + " ".join(word.capitalize() for word in name.split())
-        elif "Chinese->English/Foundation/" in set_name:
-            name = set_name.replace("Chinese->English/Foundation/", "").replace("_", " ")
-            return "Chinese→English Foundation: " + " ".join(word.capitalize() for word in name.split())
-        elif "Chinese->English/Vocabulary/" in set_name:
-            name = set_name.replace("Chinese->English/Vocabulary/", "").replace("_", " ")
-            return "Chinese→English Vocabulary: " + " ".join(word.capitalize() for word in name.split())
-        elif "English->Chinese/Foundation/" in set_name:
-            name = set_name.replace("English->Chinese/Foundation/", "").replace("_", " ")
-            return "English→Chinese Foundation: " + " ".join(word.capitalize() for word in name.split())
-        elif "English->Chinese/Vocabulary/" in set_name:
-            name = set_name.replace("English->Chinese/Vocabulary/", "").replace("_", " ")
-            return "English→Chinese Vocabulary: " + " ".join(word.capitalize() for word in name.split())
+        if "Recognition_Practice/HSK_Level_1/" in set_name:
+            name = set_name.replace("Recognition_Practice/HSK_Level_1/", "").replace("_flashcards", "").replace("_", " ")
+            return "HSK 1: " + " ".join(word.capitalize() for word in name.split())
+        elif "Recognition_Practice/HSK_Level_2/" in set_name:
+            name = set_name.replace("Recognition_Practice/HSK_Level_2/", "").replace("_flashcards", "").replace("_", " ")
+            return "HSK 2: " + " ".join(word.capitalize() for word in name.split())
         else:
-            if set_name.lower() == "javascript":
-                return "JavaScript"
-            elif set_name.lower() == "ruby":
-                return "Ruby"
-            else:
-                return " ".join(word.capitalize() for word in set_name.replace("_", " ").split())
+            # Handle legacy or simple set names
+            clean_name = set_name.replace("_flashcards", "").replace("_", " ")
+            return " ".join(word.capitalize() for word in clean_name.split())
 
     def get_csv_filename(self, set_name):
         """Get CSV filename for a set"""
@@ -112,174 +122,121 @@ class SetManager:
         """List all available flashcard sets"""
         all_sets = []
         
-        # Main directory CSV files
+        # Main directory CSV files (legacy)
         main_csv_files = list(Path(".").glob("*_flashcards.csv"))
         main_sets = [str(file).replace("_flashcards.csv", "") for file in main_csv_files]
         all_sets.extend(main_sets)
         
-        # Ruby sets
-        ruby_path = Path("Ruby")
-        if ruby_path.exists():
-            ruby_csv_files = list(ruby_path.glob("*_flashcards.csv"))
-            ruby_sets = [f"Ruby/{file.stem.replace('_flashcards', '')}" for file in ruby_csv_files]
-            all_sets.extend(ruby_sets)
+        # HSK Level 1 sets
+        hsk1_path = Path("Recognition_Practice/HSK_Level_1")
+        if hsk1_path.exists():
+            hsk1_files = list(hsk1_path.glob("*_flashcards.csv"))
+            hsk1_sets = [f"Recognition_Practice/HSK_Level_1/{file.stem.replace('_flashcards', '')}" 
+                        for file in hsk1_files]
+            all_sets.extend(hsk1_sets)
         
-        # Chinese->English Foundation sets
-        ce_foundation_path = Path("Chinese->English/Foundation")
-        if ce_foundation_path.exists():
-            ce_foundation_files = list(ce_foundation_path.glob("*_flashcards.csv"))
-            ce_foundation_sets = [f"Chinese->English/Foundation/{file.stem.replace('_flashcards', '')}" 
-                                 for file in ce_foundation_files]
-            all_sets.extend(ce_foundation_sets)
+        # HSK Level 2 sets
+        hsk2_path = Path("Recognition_Practice/HSK_Level_2")
+        if hsk2_path.exists():
+            hsk2_files = list(hsk2_path.glob("*_flashcards.csv"))
+            hsk2_sets = [f"Recognition_Practice/HSK_Level_2/{file.stem.replace('_flashcards', '')}"
+                        for file in hsk2_files]
+            all_sets.extend(hsk2_sets)
         
-        # Chinese->English Vocabulary sets
-        ce_vocabulary_path = Path("Chinese->English/Vocabulary")
-        if ce_vocabulary_path.exists():
-            ce_vocabulary_files = list(ce_vocabulary_path.glob("*_flashcards.csv"))
-            ce_vocabulary_sets = [f"Chinese->English/Vocabulary/{file.stem.replace('_flashcards', '')}"
-                                 for file in ce_vocabulary_files]
-            all_sets.extend(ce_vocabulary_sets)
-        
-        # English->Chinese Foundation sets
-        ec_foundation_path = Path("English->Chinese/Foundation")
-        if ec_foundation_path.exists():
-            ec_foundation_files = list(ec_foundation_path.glob("*_flashcards.csv"))
-            ec_foundation_sets = [f"English->Chinese/Foundation/{file.stem.replace('_flashcards', '')}"
-                                 for file in ec_foundation_files]
-            all_sets.extend(ec_foundation_sets)
-        
-        # English->Chinese Vocabulary sets
-        ec_vocabulary_path = Path("English->Chinese/Vocabulary")
-        if ec_vocabulary_path.exists():
-            ec_vocabulary_files = list(ec_vocabulary_path.glob("*_flashcards.csv"))
-            ec_vocabulary_sets = [f"English->Chinese/Vocabulary/{file.stem.replace('_flashcards', '')}"
-                                 for file in ec_vocabulary_files]
-            all_sets.extend(ec_vocabulary_sets)
-        
-        return sorted(all_sets) if all_sets else ["ruby"]
+        return sorted(all_sets) if all_sets else []
+
+    PAGE_SIZE = 10  # Number of sets to display per page
 
     def select_card_set(self):
-        """Interactive set selection menu"""
+        """Interactive set selection menu with pagination"""
         available_sets = self.list_available_sets()
-        
-        print("\n--- Available Card Sets ---")
-        
-        # Main sets
-        main_sets = [s for s in available_sets if "/" not in s]
-        current_index = 0
-        
-        if main_sets:
-            print("Main Sets:")
-            for i, set_name in enumerate(main_sets):
-                current_indicator = " (current)" if set_name == self.current_set else ""
-                question_count = self.count_questions_in_set(set_name)
-                progress = self.get_set_progress_stats(set_name)
-                progress_display = ""
-                if progress["total"] > 0:
-                    progress_display = f" [{self.audio_handler.GREEN}✓{progress['correct']}{self.audio_handler.RESET} {self.audio_handler.RED}✗{progress['incorrect']}{self.audio_handler.RESET} T{progress['total']} {progress['percentage']}%]"
-                print(f"  {current_index + 1}. {self.display_set_name(set_name)} ({question_count} questions){progress_display}{current_indicator}")
-                current_index += 1
-        
-        # Chinese->English Foundation sets
-        ce_foundation_sets = [s for s in available_sets if "Chinese->English/Foundation/" in s]
-        if ce_foundation_sets:
-            print("\nChinese→English Foundation (Recognition):")
-            for set_name in ce_foundation_sets:
-                current_indicator = " (current)" if set_name == self.current_set else ""
-                display_name = set_name.replace("Chinese->English/Foundation/", "").replace("_", " ")
-                display_name = " ".join(word.capitalize() for word in display_name.split())
-                question_count = self.count_questions_in_set(set_name)
-                progress = self.get_set_progress_stats(set_name)
-                progress_display = ""
-                if progress["total"] > 0:
-                    progress_display = f" [{self.audio_handler.GREEN}✓{progress['correct']}{self.audio_handler.RESET} {self.audio_handler.RED}✗{progress['incorrect']}{self.audio_handler.RESET} T{progress['total']} {progress['percentage']}%]"
-                print(f"  {current_index + 1}. {display_name} ({question_count} questions){progress_display}{current_indicator}")
-                current_index += 1
-        
-        # Chinese->English Vocabulary sets
-        ce_vocabulary_sets = [s for s in available_sets if "Chinese->English/Vocabulary/" in s]
-        if ce_vocabulary_sets:
-            print("\nChinese→English Vocabulary (Recognition):")
-            for set_name in ce_vocabulary_sets:
-                current_indicator = " (current)" if set_name == self.current_set else ""
-                display_name = set_name.replace("Chinese->English/Vocabulary/", "").replace("_", " ")
-                display_name = " ".join(word.capitalize() for word in display_name.split())
-                question_count = self.count_questions_in_set(set_name)
-                progress = self.get_set_progress_stats(set_name)
-                progress_display = ""
-                if progress["total"] > 0:
-                    progress_display = f" [{self.audio_handler.GREEN}✓{progress['correct']}{self.audio_handler.RESET} {self.audio_handler.RED}✗{progress['incorrect']}{self.audio_handler.RESET} T{progress['total']} {progress['percentage']}%]"
-                print(f"  {current_index + 1}. {display_name} ({question_count} questions){progress_display}{current_indicator}")
-                current_index += 1
-        
-        # English->Chinese Foundation sets
-        ec_foundation_sets = [s for s in available_sets if "English->Chinese/Foundation/" in s]
-        if ec_foundation_sets:
-            print("\nEnglish→Chinese Foundation (Production):")
-            for set_name in ec_foundation_sets:
-                current_indicator = " (current)" if set_name == self.current_set else ""
-                display_name = set_name.replace("English->Chinese/Foundation/", "").replace("_", " ")
-                display_name = " ".join(word.capitalize() for word in display_name.split())
-                question_count = self.count_questions_in_set(set_name)
-                progress = self.get_set_progress_stats(set_name)
-                progress_display = ""
-                if progress["total"] > 0:
-                    progress_display = f" [{self.audio_handler.GREEN}✓{progress['correct']}{self.audio_handler.RESET} {self.audio_handler.RED}✗{progress['incorrect']}{self.audio_handler.RESET} T{progress['total']} {progress['percentage']}%]"
-                print(f"  {current_index + 1}. {display_name} ({question_count} questions){progress_display}{current_indicator}")
-                current_index += 1
-        
-        # English->Chinese Vocabulary sets
-        ec_vocabulary_sets = [s for s in available_sets if "English->Chinese/Vocabulary/" in s]
-        if ec_vocabulary_sets:
-            print("\nEnglish→Chinese Vocabulary (Production):")
-            for set_name in ec_vocabulary_sets:
-                current_indicator = " (current)" if set_name == self.current_set else ""
-                display_name = set_name.replace("English->Chinese/Vocabulary/", "").replace("_", " ")
-                display_name = " ".join(word.capitalize() for word in display_name.split())
-                question_count = self.count_questions_in_set(set_name)
-                progress = self.get_set_progress_stats(set_name)
-                progress_display = ""
-                if progress["total"] > 0:
-                    progress_display = f" [{self.audio_handler.GREEN}✓{progress['correct']}{self.audio_handler.RESET} {self.audio_handler.RED}✗{progress['incorrect']}{self.audio_handler.RESET} T{progress['total']} {progress['percentage']}%]"
-                print(f"  {current_index + 1}. {display_name} ({question_count} questions){progress_display}{current_indicator}")
-                current_index += 1
-        
-        # Ruby sets
-        ruby_sets = [s for s in available_sets if "Ruby/" in s]
-        if ruby_sets:
-            print("\nRuby Topic Sets:")
-            for set_name in ruby_sets:
-                current_indicator = " (current)" if set_name == self.current_set else ""
-                display_name = set_name.replace("Ruby/", "").replace("_", " ")
-                display_name = " ".join(word.capitalize() for word in display_name.split())
-                question_count = self.count_questions_in_set(set_name)
-                progress = self.get_set_progress_stats(set_name)
-                progress_display = ""
-                if progress["total"] > 0:
-                    progress_display = f" [{self.audio_handler.GREEN}✓{progress['correct']}{self.audio_handler.RESET} {self.audio_handler.RED}✗{progress['incorrect']}{self.audio_handler.RESET} T{progress['total']} {progress['percentage']}%]"
-                print(f"  {current_index + 1}. {display_name} ({question_count} questions){progress_display}{current_indicator}")
-                current_index += 1
-        
-        print(f"\n{len(available_sets) + 1}. Create new set")
-        print("0. Back to main menu")
-        
-        try:
-            choice = int(input("Select a set: "))
+        total_sets = len(available_sets)
+        total_pages = (total_sets + self.PAGE_SIZE - 1) // self.PAGE_SIZE
+        current_page = 0
+
+        while True:
+            print("""
+--- Available Card Sets ---""")
+            print(f"Page {current_page + 1}/{total_pages}")
             
-            if choice == 0:
-                return
-            elif 1 <= choice <= len(available_sets):
-                self.current_set = available_sets[choice - 1]
-                self.save_current_set()
-                print(f"Switched to {self.display_set_name(self.current_set)} cards.")
-            elif choice == len(available_sets) + 1:
-                self.create_new_set()
-            else:
-                print("Invalid choice.")
-                return
-        except ValueError:
-            print("Invalid choice.")
-            return
+            start_index = current_page * self.PAGE_SIZE
+            end_index = min(start_index + self.PAGE_SIZE, total_sets)
+            
+            displayed_sets = available_sets[start_index:end_index]
+            
+            if not displayed_sets:
+                print("No sets available.")
+                if total_sets == 0:
+                    print(f"""
+1. Create new set""")
+                    print("0. Back to main menu")
+                else:
+                    print("""
+0. Back to main menu""")
+                
+                try:
+                    choice = input("Enter your choice: ")
+                    if choice == "0":
+                        return
+                    elif total_sets == 0 and choice == "1":
+                        self.create_new_set()
+                        return
+                    else:
+                        print("Invalid choice.")
+                        continue
+                except ValueError:
+                    print("Invalid choice.")
+                    continue
+
+            
+            for i, set_name in enumerate(displayed_sets):
+                display_index = start_index + i + 1
+                current_indicator = " (current)" if set_name == self.current_set else ""
+                question_count = self.count_questions_in_set(set_name)
+                progress = self.get_set_progress_stats(set_name)
+                progress_display = ""
+                if progress["total"] > 0:
+                    progress_display = f" [{self.audio_handler.GREEN}✓{progress['correct']}{self.audio_handler.RESET} {self.audio_handler.RED}✗{progress['incorrect']}{self.audio_handler.RESET} T{progress['total']} {progress['percentage']}%]"
+                print(f"  {display_index}. {self.display_set_name(set_name)} ({question_count} questions){progress_display}{current_indicator}")
+            
+            print("""
+--- Navigation ---""")
+            if current_page < total_pages - 1:
+                print("N. Next Page")
+            if current_page > 0:
+                print("P. Previous Page")
+            print(f"C. Create new set")
+            print("0. Back to main menu")
+            
+            try:
+                choice = input("Select a set number, or navigate (N/P/C/0): ").upper()
+                
+                if choice == "0":
+                    return
+                elif choice == "N":
+                    if current_page < total_pages - 1:
+                        current_page += 1
+                    else:
+                        print("Already on the last page.")
+                elif choice == "P":
+                    if current_page > 0:
+                        current_page -= 1
+                    else:
+                        print("Already on the first page.")
+                elif choice == "C":
+                    self.create_new_set()
+                    return
+                else:
+                    selected_index = int(choice) - 1
+                    if 0 <= selected_index < total_sets:
+                        self.current_set = available_sets[selected_index]
+                        self.save_current_set()
+                        print(f"Switched to {self.display_set_name(self.current_set)} cards.")
+                        return
+                    else:
+                        print("Invalid choice.")
+            except ValueError:
+                print("Invalid input. Please enter a number or N/P/C/0.")
 
     def create_new_set(self):
         """Create a new flashcard set"""
@@ -307,27 +264,18 @@ class SetManager:
         """Get sets belonging to a specific category"""
         available_sets = self.list_available_sets()
         
-        if category == "foundation":
-            return [s for s in available_sets if "Chinese->English/Foundation/" in s]
-        elif category == "vocabulary":
-            return [s for s in available_sets if "Chinese->English/Vocabulary/" in s]
-        elif category == "production_foundation":
-            return [s for s in available_sets if "English->Chinese/Foundation/" in s]
-        elif category == "production_vocabulary":
-            return [s for s in available_sets if "English->Chinese/Vocabulary/" in s]
-        elif category == "ruby":
-            return [s for s in available_sets if "Ruby/" in s]
+        if category == "hsk_level_1":
+            return [s for s in available_sets if "Recognition_Practice/HSK_Level_1/" in s]
+        elif category == "hsk_level_2":
+            return [s for s in available_sets if "Recognition_Practice/HSK_Level_2/" in s]
         else:
             return []
 
     def get_category_display_name(self, category):
         """Get display name for a category"""
         category_names = {
-            "foundation": "Chinese→English Foundation (Recognition)",
-            "vocabulary": "Chinese→English Vocabulary (Recognition)",
-            "production_foundation": "English→Chinese Foundation (Production)",
-            "production_vocabulary": "English→Chinese Vocabulary (Production)",
-            "ruby": "Ruby Topic Sets"
+            "hsk_level_1": "HSK Level 1 (Recognition)",
+            "hsk_level_2": "HSK Level 2 (Recognition)",
         }
         return category_names.get(category, "Unknown Category")
 
@@ -462,6 +410,127 @@ class SetManager:
                             writer.writerow(row)
             except Exception as e:
                 print(f"Warning: Could not save updates to {set_name}: {e}")
+
+    def list_categories(self):
+        """List all available categories"""
+        categories = set()
+        for s in self.list_available_sets():
+            if "Recognition_Practice/HSK_Level_1/" in s:
+                categories.add("hsk_level_1")
+            elif "Recognition_Practice/HSK_Level_2/" in s:
+                categories.add("hsk_level_2")
+        return sorted(list(categories))
+
+    def load_flashcards_from_set(self, set_name):
+        """Load flashcards from a single set"""
+        filename = self.get_csv_filename(set_name)
+        if not os.path.exists(filename):
+            return []
+        try:
+            with open(filename, 'r', newline='', encoding='utf-8') as csvfile:
+                reader = csv.reader(csvfile)
+                return list(reader)
+        except Exception as e:
+            print(f"Error reading flashcards from {set_name}: {e}")
+            return []
+
+    def select_multiple_sets(self):
+        """Interactive menu to select one or more sets"""
+        available_sets = self.list_available_sets()
+        if not available_sets:
+            print("No sets available.")
+            return []
+
+        selected_sets = []
+        while True:
+            print("\n--- Select Sets ---")
+            for i, set_name in enumerate(available_sets):
+                print(f"  {i + 1}. {self.display_set_name(set_name)}")
+            print("\nEnter numbers separated by commas (e.g., 1,3,5), 'all' for all sets, or '0' to cancel.")
+            
+            try:
+                choice = input("Your choice: ").lower().strip()
+                if choice == "0":
+                    return []
+                elif choice == "all":
+                    return available_sets
+                else:
+                    indices = [int(x.strip()) - 1 for x in choice.split(',')]
+                    for idx in indices:
+                        if 0 <= idx < len(available_sets):
+                            selected_sets.append(available_sets[idx])
+                        else:
+                            print(f"Invalid set number: {idx + 1}. Please try again.")
+                            selected_sets = [] # Clear selection on invalid input
+                            break
+                    if selected_sets:
+                        return list(set(selected_sets)) # Return unique selected sets
+            except ValueError:
+                print("Invalid input. Please enter numbers or 'all'.")
+
+    def select_multiple_categories(self):
+        """Interactive menu to select one or more categories"""
+        available_categories = self.list_categories()
+        if not available_categories:
+            print("No categories available.")
+            return []
+
+        selected_categories = []
+        while True:
+            print("\n--- Select Categories ---")
+            for i, category_key in enumerate(available_categories):
+                print(f"  {i + 1}. {self.get_category_display_name(category_key)}")
+            print("\nEnter numbers separated by commas (e.g., 1,3), 'all' for all categories, or '0' to cancel.")
+            
+            try:
+                choice = input("Your choice: ").lower().strip()
+                if choice == "0":
+                    return []
+                elif choice == "all":
+                    return available_categories
+                else:
+                    indices = [int(x.strip()) - 1 for x in choice.split(',')]
+                    for idx in indices:
+                        if 0 <= idx < len(available_categories):
+                            selected_categories.append(available_categories[idx])
+                        else:
+                            print(f"Invalid category number: {idx + 1}. Please try again.")
+                            selected_categories = [] # Clear selection on invalid input
+                            break
+                    if selected_categories:
+                        return list(set(selected_categories)) # Return unique selected categories
+            except ValueError:
+                print("Invalid input. Please enter numbers or 'all'.")
+
+    def select_category(self):
+        """Interactive menu to select a single category and set it as current"""
+        available_categories = self.list_categories()
+        if not available_categories:
+            print("No categories available.")
+            return
+
+        while True:
+            print("\n--- Select a Category ---")
+            for i, category_key in enumerate(available_categories):
+                current_indicator = " (current)" if category_key == self.current_category else ""
+                print(f"  {i + 1}. {self.get_category_display_name(category_key)}{current_indicator}")
+            print("\nEnter category number, or '0' to cancel.")
+            
+            try:
+                choice = input("Your choice: ").lower().strip()
+                if choice == "0":
+                    return
+                else:
+                    selected_index = int(choice) - 1
+                    if 0 <= selected_index < len(available_categories):
+                        self.current_category = available_categories[selected_index]
+                        self.save_current_category()
+                        print(f"Switched to {self.get_category_display_name(self.current_category)} category.")
+                        return
+                    else:
+                        print("Invalid category number. Please try again.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
 
     def delete_set(self):
         """Delete a flashcard set"""

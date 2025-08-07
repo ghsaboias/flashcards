@@ -1,0 +1,475 @@
+:root {
+  --bg: #0b0e14;
+  --panel: #11151c;
+  --accent: #58a6ff;
+  --ok: #3fb950;
+  --bad: #f85149;
+  --text: #e6edf3;
+  --muted: #9da7b3;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+
+h1 {
+  font-size: 20px;
+  margin: 12px 0;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  gap: 16px;
+  padding: 16px;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.left,
+.right {
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  margin-bottom: 16px;
+}
+.summary {
+  flex: 1;
+  overflow: auto;
+}
+.right .question {
+  font-size: 28px;
+}
+.right .question.zh {
+  font-size: 72px;
+  line-height: 1.2;
+}
+.right .questionWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  text-align: center;
+}
+
+.previous {
+  margin-top: 12px;
+  border-top: 1px solid #262b36;
+  padding-top: 12px;
+  max-height: 40vh;
+  overflow: auto;
+}
+
+.previous-item {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.previous-item .q {
+  color: var(--text);
+}
+.previous-item .a {
+  color: var(--muted);
+}
+.previous-item .r.ok {
+  color: var(--ok);
+}
+.previous-item .r.bad {
+  color: var(--bad);
+}
+
+select,
+input[type="text"] {
+  background: #0f131a;
+  border: 1px solid #262b36;
+  color: var(--text);
+  padding: 8px;
+  border-radius: 6px;
+}
+
+button {
+  background: var(--accent);
+  color: #06131f;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 180ms ease, box-shadow 180ms ease,
+    filter 180ms ease;
+}
+button.btn-primary {
+  background: var(--accent);
+}
+button.btn-secondary {
+  background: #5b8def;
+}
+button.btn-tertiary {
+  background: #2b313b;
+  color: var(--text);
+  border: 1px solid #3a4150;
+}
+/* Subtle, elegant hover states */
+@supports (color: color-mix(in srgb, white, black)) {
+  button:not(:disabled):hover,
+  button.btn-primary:not(:disabled):hover {
+    background: color-mix(in srgb, var(--accent) 92%, white);
+  }
+  button.btn-secondary:not(:disabled):hover {
+    background: color-mix(in srgb, #5b8def 92%, white);
+  }
+  button.btn-tertiary:not(:disabled):hover {
+    background: color-mix(in srgb, #2b313b 96%, white);
+    border-color: color-mix(in srgb, #3a4150 90%, white);
+  }
+}
+@supports not (color: color-mix(in srgb, white, black)) {
+  /* Fallback for browsers without color-mix */
+  button:not(:disabled):hover,
+  button.btn-primary:not(:disabled):hover {
+    filter: brightness(1.06);
+  }
+  button.btn-secondary:not(:disabled):hover {
+    filter: brightness(1.06);
+  }
+  button.btn-tertiary:not(:disabled):hover {
+    filter: brightness(1.1);
+  }
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.progress {
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background: #0f131a;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid #262b36;
+}
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #58a6ff, #3fb950);
+}
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0;
+}
+.streak {
+  color: var(--text);
+  font-size: 14px;
+}
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+  margin-left: 4px;
+}
+.question {
+  font-size: 22px;
+  margin: 12px 0 8px;
+}
+.feedback {
+  margin-top: 8px;
+}
+.ok {
+  color: var(--ok);
+}
+.bad {
+  color: var(--bad);
+}
+
+/* Session complete panel */
+.completePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.completeTitle {
+  margin: 0 0 4px;
+}
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(60px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+.kpi {
+  background: #0f131a;
+  border: 1px solid #262b36;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.kpi .value {
+  font-size: 22px;
+  font-weight: 700;
+}
+.kpi .label {
+  font-size: 12px;
+  color: var(--muted);
+}
+.incorrectBlock table {
+  margin-top: 4px;
+  width: 100%;
+}
+
+.summary table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.summary th,
+.summary td {
+  border-bottom: 1px solid #262b36;
+  padding: 6px 8px;
+  text-align: left;
+}
+.summary .true {
+  color: var(--ok);
+}
+.summary .false {
+  color: var(--bad);
+}
+
+.group {
+  margin-bottom: 12px;
+}
+.group label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 8px;
+  background: #1f6feb;
+  color: white;
+  border-radius: 6px;
+}
+#root {
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.cta-empty {
+  margin-top: 16px;
+}
+
+/* Stats table in right column */
+.statsPanel {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-width: 0; /* Allow flexbox to shrink */
+}
+.statsPanel h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.panelSubtext {
+  margin: 6px 0 8px;
+}
+.statsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto; /* Let columns size based on content */
+}
+.srsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto; /* Let columns size based on content */
+}
+.statsTable thead th,
+.srsTable thead th {
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 1px solid #262b36;
+  padding: 8px 6px;
+  white-space: nowrap;
+  /* Reserve enough space for header text + arrow symbols (▲ ▼) */
+  min-width: 80px;
+}
+.statsTable thead th button,
+.srsTable thead th button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: inherit;
+  white-space: nowrap;
+  display: inline-block;
+  min-width: 100%;
+  text-align: center;
+}
+.statsTable tbody td,
+.srsTable tbody td {
+  border-bottom: 1px solid #262b36;
+  padding: 8px 6px;
+  text-align: center;
+}
+
+/* Specific column widths for longer headers */
+.statsTable thead th:nth-child(6), /* Accuracy column */
+.srsTable thead th:nth-child(6),   /* Review column */
+.srsTable thead th:nth-child(7) {
+  /* On Schedule column */
+  min-width: 100px;
+}
+
+/* Remove fixed widths so columns size automatically */
+
+/* Responsive */
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .right {
+    order: -1;
+  }
+
+  /* Reduce padding on smaller screens to prevent wrapping */
+  .statsTable thead th,
+  .srsTable thead th {
+    padding: 6px 4px;
+    font-size: 13px;
+  }
+  .statsTable tbody td,
+  .srsTable tbody td {
+    padding: 6px 4px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Even tighter spacing on very small screens */
+  .statsTable thead th,
+  .srsTable thead th {
+    padding: 4px 2px;
+    font-size: 12px;
+  }
+  .statsTable tbody td,
+  .srsTable tbody td {
+    padding: 4px 2px;
+    font-size: 12px;
+  }
+}
+
+/* Remove blue focus border on sortable header buttons */
+.statsTable thead th button,
+.srsTable thead th button {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.statsTable thead th button:focus,
+.srsTable thead th button:focus {
+  outline: none;
+  box-shadow: none;
+}
+.statsTable thead th button:focus-visible,
+.srsTable thead th button:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Remove blue focus border on click for form controls, keep accessible focus for keyboard */
+button:focus,
+select:focus,
+input[type="text"]:focus {
+  outline: none;
+  box-shadow: none;
+}
+button:focus-visible,
+select:focus-visible,
+input[type="text"]:focus-visible {
+  outline: 2px solid #3a4150;
+  outline-offset: 2px;
+}
+/* Avoid tap highlight on mobile */
+button,
+select {
+  -webkit-tap-highlight-color: transparent;
+}

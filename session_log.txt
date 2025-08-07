@@ -1,4 +1,4 @@
-> 2025-08-04 12:13:10 | Chinese Starter Recognition | Review All
+> 2025-08-04 12:13:10 | HSK 1: HSK1 Extended A (Radicals) | Review All
 ✓ 水 (3.4s)
 ✓ 日 (5.0s)
 ✗ 口 A:mouth' (3.0s)
@@ -11,7 +11,7 @@
 ✓ 人 (2.2s)
 < 12:13:36 26.2s 9/10
 
-> 2025-08-04 12:13:44 | Chinese Numbers Recognition | Review All
+> 2025-08-04 12:13:44 | HSK 1: HSK1 Core C (Radicals & Numbers) | Review All
 ✓ 五 (3.3s)
 ✓ 二 (2.0s)
 ✓ 七 (2.6s)
@@ -24,7 +24,7 @@
 ✓ 四 (2.1s)
 < 12:14:09 25.2s 10/10
 
-> 2025-08-04 12:14:21 | Chinese Family Recognition | Review All
+> 2025-08-04 12:14:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 家 A:daughter (4.3s)
 ✓ 奶 (4.8s)
 ✗ 哥 A:older brother (5.0s)
@@ -39,14 +39,14 @@
 > 2025-08-04 12:21:47 | Ruby | Review All (Reverse)
 ✗ [] A:Array (4.0s)
 > 2025-08-04 12:22:26 | Chinese Daily Verbs | Review All
-> 2025-08-04 12:22:43 | Chinese Daily Verbs Recognition | Review All
+> 2025-08-04 12:22:43 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 睡 A:come (3.3s)
 ✗ 跑 A:think (4.1s)
-> 2025-08-04 14:02:58 | Chinese/foundation/numbers | Review All
-> 2025-08-04 14:05:31 | Chinese->english/foundation/numbers | Review All
+> 2025-08-04 14:02:58 | HSK 1: HSK1 Core C (Radicals & Numbers) | Review All
+> 2025-08-04 14:05:31 | HSK 1: HSK1 Core C (Radicals & Numbers) | Review All
 ✓ 二 (2.8s)
 ✓ 四 (2.1s)
-> 2025-08-04 14:07:00 | Chinese->english/foundation/numbers | Review All
+> 2025-08-04 14:07:00 | HSK 1: HSK1 Core C (Radicals & Numbers) | Review All
 ✓ 五 (7.1s)
 ✓ 二 (2.1s)
 ✓ 十 (2.1s)
@@ -59,7 +59,7 @@
 ✓ 一 (2.4s)
 < 14:07:29 29.2s 10/10
 
-> 2025-08-04 14:07:40 | Chinese->english/foundation/radicals 01 | Review All
+> 2025-08-04 14:07:40 | HSK 1: HSK1 Extended A (Radicals) | Review All
 ✓ 火 (4.3s)
 ✗ 土 A:what (4.8s)
 ✓ 心 (8.1s)
@@ -72,7 +72,7 @@
 ✓ 口 (4.7s)
 < 14:08:26 46.4s 7/10
 
-> 2025-08-04 14:08:29 | Chinese->english/foundation/radicals 01 | Review All
+> 2025-08-04 14:08:29 | HSK 1: HSK1 Extended A (Radicals) | Review All
 ✓ 火 (1.9s)
 ✓ 心 (2.6s)
 ✓ 人 (2.0s)
@@ -85,7 +85,7 @@
 ✓ 土 (2.1s)
 < 14:08:52 23.2s 10/10
 
-> 2025-08-04 14:08:56 | Chinese->english/foundation/radicals 01 | Review All
+> 2025-08-04 14:08:56 | HSK 1: HSK1 Extended A (Radicals) | Review All
 ✓ 土 (3.9s)
 ✓ 口 (2.3s)
 ✓ 火 (1.9s)
@@ -98,7 +98,7 @@
 ✓ 心 (2.8s)
 < 14:09:22 25.1s 10/10
 
-> 2025-08-04 14:09:27 | Chinese->english/foundation/radicals 01 | Review All
+> 2025-08-04 14:09:27 | HSK 1: HSK1 Extended A (Radicals) | Review All
 ✓ 金 (2.6s)
 ✓ 口 (2.4s)
 ✓ 火 (2.1s)
@@ -111,8 +111,8 @@
 ✓ 木 (2.2s)
 < 14:09:52 24.8s 10/10
 
-> 2025-08-04 14:09:56 | Chinese->english/foundation/radicals 01 | Review All
-> 2025-08-04 14:19:22 | Chinese→English Foundation: Radicals 02 | Review All
+> 2025-08-04 14:09:56 | HSK 1: HSK1 Extended A (Radicals) | Review All
+> 2025-08-04 14:19:22 | HSK 1: HSK1 Core A | Review All
 ✗ 月 A:mom (3.8s)
 ✓ 女 (7.0s)
 ✗ 子 A:mast (3.7s)
@@ -125,7 +125,7 @@
 ✗ 竹 A:idk (3.3s)
 < 14:20:35 73.1s 2/10
 
-> 2025-08-04 14:20:37 | Chinese→English Foundation: Radicals 02 | Review All
+> 2025-08-04 14:20:37 | HSK 1: HSK1 Core A | Review All
 ✗ 糸 A:idk (2.6s)
 ✗ 竹 A:idk (3.1s)
 ✓ 日 (8.7s)
@@ -138,7 +138,7 @@
 ✓ 月 (11.9s)
 < 14:21:29 51.4s 7/10
 
-> 2025-08-04 14:21:36 | Chinese→English Foundation: Radicals 02 | Review All
+> 2025-08-04 14:21:36 | HSK 1: HSK1 Core A | Review All
 ✓ 女 (2.2s)
 ✓ 月 (4.0s)
 ✓ 子 (4.9s)
@@ -151,7 +151,7 @@
 ✓ 竹 (2.5s)
 < 14:22:13 36.9s 10/10
 
-> 2025-08-04 14:22:15 | Chinese→English Foundation: Radicals 02 | Review All
+> 2025-08-04 14:22:15 | HSK 1: HSK1 Core A | Review All
 ✓ 草 (2.8s)
 ✓ 男 (2.4s)
 ✓ 日 (8.6s)
@@ -164,7 +164,7 @@
 ✓ 女 (2.1s)
 < 14:22:50 34.1s 9/10
 
-> 2025-08-04 14:22:51 | Chinese→English Foundation: Radicals 02 | Review All
+> 2025-08-04 14:22:51 | HSK 1: HSK1 Core A | Review All
 ✓ 竹 (2.8s)
 ✓ 男 (1.9s)
 ✓ 草 (12.2s)
@@ -177,7 +177,7 @@
 ✓ 子 (2.2s)
 < 14:23:30 38.6s 10/10
 
-> 2025-08-04 14:23:31 | Chinese→English Foundation: Radicals 02 | Review All
+> 2025-08-04 14:23:31 | HSK 1: HSK1 Core A | Review All
 ✓ 月 (3.1s)
 ✓ 糸 (2.4s)
 ✓ 目 (1.9s)
@@ -190,7 +190,7 @@
 ✓ 米 (3.0s)
 < 14:23:57 25.7s 10/10
 
-> 2025-08-04 14:24:01 | Chinese→English Foundation: Radicals 02 | Review All
+> 2025-08-04 14:24:01 | HSK 1: HSK1 Core A | Review All
 ✓ 糸 (2.8s)
 ✓ 月 (2.4s)
 ✓ 草 (2.4s)
@@ -203,7 +203,7 @@
 ✓ 日 (2.8s)
 < 14:24:26 25.3s 10/10
 
-> 2025-08-04 14:24:52 | Chinese→English Foundation: Radicals 03 | Review All
+> 2025-08-04 14:24:52 | HSK 1: HSK1 Core A | Review All
 ✗ 力 A:nine (5.6s)
 ✓ 五 (7.7s)
 ✓ 四 (3.5s)
@@ -216,7 +216,7 @@
 ✓ 三 (3.4s)
 < 14:25:25 33.5s 8/10
 
-> 2025-08-04 14:26:00 | Chinese→English Foundation: Radicals 03 | Review All
+> 2025-08-04 14:26:00 | HSK 1: HSK1 Core A | Review All
 ✓ 六 (3.9s)
 ✓ 四 (2.5s)
 ✓ 十 (1.9s)
@@ -229,7 +229,7 @@
 ✓ 七 (3.0s)
 < 14:26:34 34.1s 10/10
 
-> 2025-08-04 14:26:36 | Chinese→English Foundation: Radicals 03 | Review All
+> 2025-08-04 14:26:36 | HSK 1: HSK1 Core A | Review All
 ✓ 十 (2.3s)
 ✓ 刀 (4.4s)
 ✓ 七 (2.4s)
@@ -242,7 +242,7 @@
 ✓ 二 (2.1s)
 < 14:27:02 26.3s 10/10
 
-> 2025-08-04 14:27:04 | Chinese→English Foundation: Radicals 03 | Review All
+> 2025-08-04 14:27:04 | HSK 1: HSK1 Core A | Review All
 ✓ 一 (2.3s)
 ✓ 六 (2.1s)
 ✓ 五 (4.2s)
@@ -255,7 +255,7 @@
 ✓ 刀 (2.8s)
 < 14:27:29 25.1s 10/10
 
-> 2025-08-04 14:27:41 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:27:41 | HSK 1: HSK1 Core A | Review All
 ✗ 中 A:flag (3.5s)
 ✗ 百 A:battery (6.3s)
 ✗ 下 A:ten (8.3s)
@@ -268,7 +268,7 @@
 ✗ 大 A:tree (8.7s)
 < 14:28:40 59.0s 1/10
 
-> 2025-08-04 14:28:43 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:28:43 | HSK 1: HSK1 Core A | Review All
 ✗ 千 A:tree (4.3s)
 ✓ 左 (3.6s)
 ✓ 九 (3.1s)
@@ -281,7 +281,7 @@
 ✓ 中 (3.5s)
 < 14:29:21 38.5s 8/10
 
-> 2025-08-04 14:29:25 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:29:25 | HSK 1: HSK1 Core A | Review All
 ✓ 上 (2.6s)
 ✓ 小 (3.0s)
 ✓ 下 (2.2s)
@@ -294,7 +294,7 @@
 ✓ 大 (24.1s)
 < 14:30:15 50.5s 10/10
 
-> 2025-08-04 14:30:21 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:30:21 | HSK 1: HSK1 Core A | Review All
 ✓ 下 (2.6s)
 ✓ 左 (3.1s)
 ✓ 九 (2.1s)
@@ -307,7 +307,7 @@
 ✓ 八 (2.1s)
 < 14:30:47 25.7s 10/10
 
-> 2025-08-04 14:30:49 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:30:49 | HSK 1: HSK1 Core A | Review All
 ✓ 下 (2.6s)
 ✓ 大 (2.1s)
 ✓ 八 (2.0s)
@@ -343,7 +343,7 @@
 ✓ I have numbers = [1 2 3]. I want to do something with each number. What do I use? (5.3s)
 < 14:52:09 183.7s 8/20
 
-> 2025-08-04 14:52:27 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:52:27 | HSK 1: HSK1 Core A | Review All
 ✓ 上 (2.4s)
 ✓ 百 (3.8s)
 ✓ 八 (2.1s)
@@ -356,7 +356,7 @@
 ✓ 九 (4.2s)
 < 14:52:56 29.1s 9/10
 
-> 2025-08-04 14:52:59 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:52:59 | HSK 1: HSK1 Core A | Review All
 ✓ 九 (3.4s)
 ✓ 下 (2.9s)
 ✓ 千 (2.5s)
@@ -369,7 +369,7 @@
 ✓ 中 (2.8s)
 < 14:53:26 27.1s 10/10
 
-> 2025-08-04 14:53:30 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:53:30 | HSK 1: HSK1 Core A | Review All
 ✓ 左 (4.1s)
 ✓ 八 (2.3s)
 ✓ 九 (3.2s)
@@ -382,7 +382,7 @@
 ✓ 千 (2.5s)
 < 14:53:56 25.5s 9/10
 
-> 2025-08-04 14:53:57 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:53:57 | HSK 1: HSK1 Core A | Review All
 ✓ 百 (2.7s)
 ✓ 八 (1.9s)
 ✓ 九 (1.6s)
@@ -395,7 +395,7 @@
 ✓ 大 (1.9s)
 < 14:54:17 19.7s 10/10
 
-> 2025-08-04 14:54:19 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:54:19 | HSK 1: HSK1 Core A | Review All
 ✓ 上 (2.8s)
 ✓ 下 (2.7s)
 ✓ 大 (1.9s)
@@ -408,7 +408,7 @@
 ✓ 八 (2.1s)
 < 14:54:43 24.8s 10/10
 
-> 2025-08-04 14:54:44 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:54:44 | HSK 1: HSK1 Core A | Review All
 ✓ 中 (2.5s)
 ✓ 千 (2.5s)
 ✓ 上 (2.9s)
@@ -421,7 +421,7 @@
 ✓ 百 (2.5s)
 < 14:55:08 24.0s 10/10
 
-> 2025-08-04 14:55:28 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 14:55:28 | HSK 1: HSK1 Core A | Review All
 ✗ 西 A:cap (5.3s)
 ✗ 内 A:south (6.6s)
 ✗ 外 A:above (4.4s)
@@ -434,7 +434,7 @@
 ✗ 右 A:back (4.4s)
 < 14:56:23 54.5s 1/10
 
-> 2025-08-04 14:56:43 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-04 14:56:43 | HSK 1: HSK1 Core A | Review All
 ✓ 百 (2.3s)
 ✓ 千 (2.6s)
 ✓ 九 (1.8s)
@@ -447,7 +447,7 @@
 ✓ 上 (1.9s)
 < 14:57:03 20.2s 10/10
 
-> 2025-08-04 14:57:10 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 14:57:10 | HSK 1: HSK1 Core A | Review All
 ✓ 前 (3.9s)
 ✓ 内 (3.5s)
 ✓ 后 (2.4s)
@@ -460,7 +460,7 @@
 ✗ 外 A:front (12.0s)
 < 14:58:06 55.9s 6/10
 
-> 2025-08-04 14:58:36 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 14:58:36 | HSK 1: HSK1 Core A | Review All
 ✓ 外 (3.0s)
 ✓ 门 (2.1s)
 ✓ 西 (3.1s)
@@ -473,7 +473,7 @@
 ✓ 北 (2.2s)
 < 14:59:03 27.2s 10/10
 
-> 2025-08-04 14:59:05 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 14:59:05 | HSK 1: HSK1 Core A | Review All
 ✓ 西 (2.8s)
 ✗ 外 A:front (3.2s)
 ✓ 南 (4.0s)
@@ -486,7 +486,7 @@
 ✓ 北 (1.8s)
 < 14:59:43 37.7s 8/10
 
-> 2025-08-04 14:59:44 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 14:59:44 | HSK 1: HSK1 Core A | Review All
 ✓ 外 (3.3s)
 ✓ 东 (2.5s)
 ✓ 后 (2.1s)
@@ -499,7 +499,7 @@
 ✓ 右 (2.3s)
 < 15:00:08 23.8s 10/10
 
-> 2025-08-04 15:00:09 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:00:09 | HSK 1: HSK1 Core A | Review All
 ✓ 东 (2.8s)
 ✓ 前 (2.6s)
 ✓ 内 (2.3s)
@@ -512,7 +512,7 @@
 ✓ 右 (2.0s)
 < 15:00:34 24.2s 10/10
 
-> 2025-08-04 15:00:35 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:00:35 | HSK 1: HSK1 Core A | Review All
 ✓ 南 (3.5s)
 ✓ 东 (2.2s)
 ✓ 前 (2.3s)
@@ -525,7 +525,7 @@
 ✓ 西 (3.1s)
 < 15:01:02 27.1s 10/10
 
-> 2025-08-04 15:01:30 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:01:30 | HSK 1: HSK1 Core A | Review All
 ✓ 外 (2.6s)
 ✓ 北 (2.2s)
 ✓ 内 (4.0s)
@@ -538,8 +538,8 @@
 ✗ 前 A:out (3.2s)
 < 15:01:56 26.1s 9/10
 
-> 2025-08-04 15:02:56 | Chinese→English Foundation: Radicals 05 | Review All
-> 2025-08-04 15:08:46 | Chinese→English Foundation: Numbers | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 15:02:56 | HSK 1: HSK1 Core A | Review All
+> 2025-08-04 15:08:46 | HSK 1: HSK1 Core A | Category Review
 ✗ 四 A:inside (4.3s)
 ✗ 足 A:below (6.3s)
 ✓ 中 (7.6s)
@@ -642,7 +642,7 @@
 ✗ 衣 A:idk (2.2s)
 < 15:15:19 392.8s 58/100
 
-> 2025-08-04 15:15:47 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:15:47 | HSK 1: HSK1 Core A | Review All
 ✗ 足 A:idk (3.1s)
 ✗ 屋 A:idk (3.6s)
 ✓ 走 (8.4s)
@@ -655,7 +655,7 @@
 ✗ 身 A:idk (4.6s)
 < 15:16:44 57.7s 2/10
 
-> 2025-08-04 15:16:49 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:16:49 | HSK 1: HSK1 Core A | Review All
 ✗ 屋 A:head (5.1s)
 ✓ 家 (4.2s)
 ✓ 头 (2.6s)
@@ -668,7 +668,7 @@
 ✓ 饮 (8.2s)
 < 15:17:37 48.1s 5/10
 
-> 2025-08-04 15:17:39 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:17:39 | HSK 1: HSK1 Core A | Review All
 ✓ 食 (2.2s)
 ✓ 饮 (3.2s)
 ✓ 家 (2.3s)
@@ -681,7 +681,7 @@
 ✓ 走 (14.5s)
 < 15:18:25 45.5s 10/10
 
-> 2025-08-04 15:18:26 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:18:26 | HSK 1: HSK1 Core A | Review All
 ✓ 屋 (2.3s)
 ✓ 饮 (2.4s)
 ✓ 窗 (6.7s)
@@ -694,7 +694,7 @@
 ✓ 身 (1.9s)
 < 15:18:53 26.7s 10/10
 
-> 2025-08-04 15:18:54 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:18:54 | HSK 1: HSK1 Core A | Review All
 ✓ 窗 (7.9s)
 ✓ 身 (2.0s)
 ✓ 家 (2.3s)
@@ -707,7 +707,7 @@
 ✓ 屋 (1.9s)
 < 15:19:21 27.1s 10/10
 
-> 2025-08-04 15:19:31 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:19:31 | HSK 1: HSK1 Core A | Review All
 ✗ 去 A:idk (2.0s)
 ✗ 来 A:idk (8.5s)
 ✗ 写 A:read (8.2s)
@@ -720,7 +720,7 @@
 ✗ 说 A:see (5.0s)
 < 15:20:20 49.1s 2/10
 
-> 2025-08-04 15:20:24 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:20:24 | HSK 1: HSK1 Core A | Review All
 ✓ 听 (2.5s)
 ✗ 说 A:read (2.4s)
 ✓ 写 (8.8s)
@@ -733,7 +733,7 @@
 ✓ 来 (4.1s)
 < 15:21:28 63.7s 7/10
 
-> 2025-08-04 15:21:30 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:21:30 | HSK 1: HSK1 Core A | Review All
 ✓ 教 (3.0s)
 ✓ 来 (1.9s)
 ✓ 读 (3.2s)
@@ -746,7 +746,7 @@
 ✓ 写 (2.1s)
 < 15:22:01 31.5s 9/10
 
-> 2025-08-04 15:22:03 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:22:03 | HSK 1: HSK1 Core A | Review All
 ✗ 说 A:listen (3.8s)
 ✓ 学 (7.6s)
 ✓ 写 (1.8s)
@@ -759,7 +759,7 @@
 ✓ 来 (1.9s)
 < 15:22:38 35.2s 9/10
 
-> 2025-08-04 15:22:39 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:22:39 | HSK 1: HSK1 Core A | Review All
 ✓ 读 (3.3s)
 ✓ 看 (6.6s)
 ✓ 说 (7.4s)
@@ -772,7 +772,7 @@
 ✓ 学 (2.7s)
 < 15:23:11 32.2s 10/10
 
-> 2025-08-04 15:23:12 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:23:12 | HSK 1: HSK1 Core A | Review All
 ✓ 教 (1.9s)
 ✓ 来 (1.5s)
 ✓ 跑 (1.4s)
@@ -785,7 +785,7 @@
 ✓ 写 (1.7s)
 < 15:23:34 21.2s 10/10
 
-> 2025-08-04 15:23:35 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:23:35 | HSK 1: HSK1 Core A | Review All
 ✓ 去 (1.8s)
 ✓ 跑 (1.4s)
 ✓ 看 (2.1s)
@@ -798,7 +798,7 @@
 ✓ 来 (1.8s)
 < 15:23:56 21.0s 10/10
 
-> 2025-08-04 15:24:05 | Chinese→English Foundation: Radicals 08 | Review All
+> 2025-08-04 15:24:05 | HSK 1: HSK1 Core A | Review All
 ✗ 钱 A:idk (1.9s)
 ✓ 猫 (6.5s)
 ✗ 买 A:head (8.3s)
@@ -811,7 +811,7 @@
 ✗ 车 A:idk (2.9s)
 < 15:24:49 43.7s 3/10
 
-> 2025-08-04 15:24:56 | Chinese→English Foundation: Radicals 08 | Review All
+> 2025-08-04 15:24:56 | HSK 1: HSK1 Core A | Review All
 ✓ 钱 (4.0s)
 ✓ 鸟 (3.7s)
 ✓ 鱼 (2.2s)
@@ -824,7 +824,7 @@
 ✓ 狗 (6.5s)
 < 15:25:30 34.3s 9/10
 
-> 2025-08-04 15:25:31 | Chinese→English Foundation: Radicals 08 | Review All
+> 2025-08-04 15:25:31 | HSK 1: HSK1 Core A | Review All
 ✓ 狗 (2.3s)
 ✓ 猫 (2.0s)
 ✓ 钱 (2.2s)
@@ -837,7 +837,7 @@
 ✓ 鱼 (3.6s)
 < 15:25:57 25.7s 10/10
 
-> 2025-08-04 15:25:59 | Chinese→English Foundation: Radicals 08 | Review All
+> 2025-08-04 15:25:59 | HSK 1: HSK1 Core A | Review All
 ✓ 鱼 (2.1s)
 ✓ 马 (4.6s)
 ✓ 买 (2.5s)
@@ -850,7 +850,7 @@
 ✓ 猫 (1.7s)
 < 15:26:21 22.8s 10/10
 
-> 2025-08-04 15:26:23 | Chinese→English Foundation: Radicals 08 | Review All
+> 2025-08-04 15:26:23 | HSK 1: HSK1 Core A | Review All
 ✓ 狗 (1.9s)
 ✓ 工 (2.8s)
 ✓ 鸟 (1.8s)
@@ -863,7 +863,7 @@
 ✓ 钱 (3.0s)
 < 15:26:43 20.4s 10/10
 
-> 2025-08-04 15:26:50 | Chinese→English Foundation: Radicals 08 | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 15:26:50 | HSK 1: HSK1 Core A | Category Review
 ✓ 九 (3.7s)
 ✓ 内 (2.1s)
 ✗ 糸 A:east (2.2s)
@@ -966,7 +966,7 @@
 ✓ 猫 (4.1s)
 < 15:32:47 356.8s 86/100
 
-> 2025-08-04 15:33:09 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:33:09 | HSK 1: HSK1 Core A | Review All
 ✓ 外 (4.2s)
 ✓ 南 (4.8s)
 ✓ 门 (1.8s)
@@ -979,7 +979,7 @@
 ✓ 东 (6.7s)
 < 15:33:49 40.5s 10/10
 
-> 2025-08-04 15:33:52 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:33:52 | HSK 1: HSK1 Core A | Review All
 ✓ 右 (2.5s)
 ✗ 西 A:east (2.7s)
 ✓ 门 (2.1s)
@@ -992,7 +992,7 @@
 ✓ 前 (2.5s)
 < 15:34:15 22.7s 9/10
 
-> 2025-08-04 15:34:16 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:34:16 | HSK 1: HSK1 Core A | Review All
 ✓ 北 (1.9s)
 ✓ 东 (2.4s)
 ✓ 外 (2.6s)
@@ -1005,7 +1005,7 @@
 ✓ 后 (2.4s)
 < 15:34:41 25.3s 10/10
 
-> 2025-08-04 15:34:43 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:34:43 | HSK 1: HSK1 Core A | Review All
 ✓ 外 (3.2s)
 ✓ 北 (3.1s)
 ✓ 南 (2.1s)
@@ -1018,7 +1018,7 @@
 ✓ 东 (2.1s)
 < 15:35:06 22.7s 10/10
 
-> 2025-08-04 15:35:07 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:35:07 | HSK 1: HSK1 Core A | Review All
 ✓ 前 (3.8s)
 ✓ 后 (3.9s)
 ✓ 东 (2.1s)
@@ -1031,7 +1031,7 @@
 ✓ 南 (4.4s)
 < 15:35:34 27.2s 9/10
 
-> 2025-08-04 15:35:35 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:35:35 | HSK 1: HSK1 Core A | Review All
 ✓ 西 (2.6s)
 ✓ 后 (2.2s)
 ✓ 南 (1.9s)
@@ -1044,7 +1044,7 @@
 ✓ 右 (1.9s)
 < 15:35:55 19.8s 10/10
 
-> 2025-08-04 15:35:56 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:35:56 | HSK 1: HSK1 Core A | Review All
 ✓ 西 (2.3s)
 ✓ 北 (1.6s)
 ✓ 右 (1.6s)
@@ -1057,7 +1057,7 @@
 ✓ 前 (3.2s)
 < 15:36:16 19.4s 10/10
 
-> 2025-08-04 15:36:17 | Chinese→English Foundation: Radicals 05 | Review All
+> 2025-08-04 15:36:17 | HSK 1: HSK1 Core A | Review All
 ✓ 右 (2.1s)
 ✓ 前 (3.2s)
 ✓ 南 (2.1s)
@@ -1070,7 +1070,7 @@
 ✓ 门 (2.0s)
 < 15:36:42 24.8s 10/10
 
-> 2025-08-04 15:36:52 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:36:52 | HSK 1: HSK1 Core A | Review All
 ✓ 头 (3.2s)
 ✓ 窗 (2.3s)
 ✓ 衣 (2.3s)
@@ -1083,7 +1083,7 @@
 ✓ 走 (3.2s)
 < 15:37:16 24.3s 10/10
 
-> 2025-08-04 15:37:18 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:37:18 | HSK 1: HSK1 Core A | Review All
 ✓ 走 (2.7s)
 ✓ 窗 (1.8s)
 ✓ 饮 (2.2s)
@@ -1096,7 +1096,7 @@
 ✓ 衣 (2.2s)
 < 15:37:39 20.2s 10/10
 
-> 2025-08-04 15:37:40 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:37:40 | HSK 1: HSK1 Core A | Review All
 ✓ 窗 (2.1s)
 ✓ 头 (1.6s)
 ✓ 食 (3.2s)
@@ -1109,7 +1109,7 @@
 ✓ 身 (1.7s)
 < 15:38:02 21.6s 10/10
 
-> 2025-08-04 15:38:17 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:38:17 | HSK 1: HSK1 Core A | Review All
 ✓ 食 (1.7s)
 ✓ 屋 (1.7s)
 ✓ 头 (1.6s)
@@ -1122,7 +1122,7 @@
 ✓ 身 (2.0s)
 < 15:38:37 19.5s 10/10
 
-> 2025-08-04 15:38:47 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:38:47 | HSK 1: HSK1 Core A | Review All
 ✓ 屋 (2.0s)
 ✓ 走 (3.2s)
 ✓ 食 (1.4s)
@@ -1135,7 +1135,7 @@
 ✓ 身 (1.7s)
 < 15:39:06 19.0s 10/10
 
-> 2025-08-04 15:39:07 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-04 15:39:07 | HSK 1: HSK1 Core A | Review All
 ✓ 走 (2.0s)
 ✓ 衣 (2.2s)
 ✓ 窗 (1.7s)
@@ -1148,7 +1148,7 @@
 ✓ 身 (1.6s)
 < 15:39:25 17.7s 10/10
 
-> 2025-08-04 15:39:31 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:39:31 | HSK 1: HSK1 Core A | Review All
 ✓ 教 (2.5s)
 ✓ 说 (4.3s)
 ✓ 来 (2.5s)
@@ -1161,7 +1161,7 @@
 ✓ 写 (3.7s)
 < 15:40:02 30.5s 9/10
 
-> 2025-08-04 15:40:05 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:40:05 | HSK 1: HSK1 Core A | Review All
 ✓ 教 (2.1s)
 ✓ 去 (1.5s)
 ✓ 听 (2.4s)
@@ -1174,7 +1174,7 @@
 ✓ 说 (3.3s)
 < 15:40:25 20.8s 10/10
 
-> 2025-08-04 15:40:35 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:40:35 | HSK 1: HSK1 Core A | Review All
 ✓ 说 (3.5s)
 ✓ 看 (2.1s)
 ✓ 来 (1.5s)
@@ -1187,7 +1187,7 @@
 ✓ 听 (2.1s)
 < 15:40:58 22.6s 10/10
 
-> 2025-08-04 15:40:59 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:40:59 | HSK 1: HSK1 Core A | Review All
 ✓ 听 (1.8s)
 ✓ 读 (1.8s)
 ✓ 说 (2.7s)
@@ -1200,7 +1200,7 @@
 ✓ 教 (2.3s)
 < 15:41:18 19.7s 10/10
 
-> 2025-08-04 15:41:28 | Chinese→English Foundation: Radicals 08 | Review All
+> 2025-08-04 15:41:28 | HSK 1: HSK1 Core A | Review All
 ✓ 买 (2.6s)
 ✓ 卖 (1.4s)
 ✓ 车 (3.9s)
@@ -1213,7 +1213,7 @@
 ✓ 工 (2.1s)
 < 15:41:51 23.1s 10/10
 
-> 2025-08-04 15:41:53 | Chinese→English Foundation: Radicals 08 | Review All
+> 2025-08-04 15:41:53 | HSK 1: HSK1 Core A | Review All
 ✓ 马 (2.0s)
 ✓ 工 (2.1s)
 ✓ 猫 (2.1s)
@@ -1226,7 +1226,7 @@
 ✓ 卖 (1.4s)
 < 15:42:11 18.8s 10/10
 
-> 2025-08-04 15:47:02 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-04 15:47:02 | HSK 1: HSK1 Core A | Review All
 ✓ 说 (4.0s)
 ✓ 听 (2.0s)
 ✓ 教 (2.1s)
@@ -1239,7 +1239,7 @@
 ✓ 去 (2.1s)
 < 15:47:27 24.9s 10/10
 
-> 2025-08-04 15:47:35 | Chinese→English Foundation: Radicals 08 | Review All
+> 2025-08-04 15:47:35 | HSK 1: HSK1 Core A | Review All
 ✓ 钱 (2.5s)
 ✓ 工 (1.8s)
 ✓ 车 (1.7s)
@@ -1252,7 +1252,7 @@
 ✓ 鸟 (1.8s)
 < 15:47:56 21.0s 10/10
 
-> 2025-08-04 15:48:23 | Chinese→English Foundation: Numbers | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 15:48:23 | HSK 1: HSK1 Core A | Category Review
 ✓ 七 (6.9s)
 ✓ 马 (2.3s)
 ✓ 火 (1.8s)
@@ -1355,7 +1355,7 @@
 ✗ 言 A:look (11.2s)
 < 15:53:29 306.8s 92/100
 
-> 2025-08-04 15:53:39 | Chinese→English Foundation: Numbers | Review All
+> 2025-08-04 15:53:39 | HSK 1: HSK1 Core A | Review All
 ✓ 二 (2.6s)
 ✓ 八 (4.0s)
 ✓ 四 (2.0s)
@@ -1368,7 +1368,7 @@
 ✓ 十 (1.5s)
 < 15:54:00 20.7s 10/10
 
-> 2025-08-04 15:54:07 | Chinese→English Foundation: Numbers | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 15:54:07 | HSK 1: HSK1 Core A | Category Review
 ✓ 九 (2.6s)
 ✓ 心 (2.7s)
 ✓ 金 (2.9s)
@@ -1471,7 +1471,7 @@
 ✓ 跑 (1.7s)
 < 15:58:28 260.4s 95/100
 
-> 2025-08-04 16:11:24 | Chinese→English Foundation: Radicals 01 | Review All
+> 2025-08-04 16:11:24 | HSK 1: HSK1 Core A | Review All
 ✓ 人 (2.1s)
 ✓ 土 (2.8s)
 ✓ 口 (2.3s)
@@ -1484,7 +1484,7 @@
 ✓ 金 (2.4s)
 < 16:11:49 24.4s 10/10
 
-> 2025-08-04 16:11:58 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 16:11:58 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 什么 A:idk (4.9s)
 ✗ 这 A:idk (5.2s)
 ✗ 哪里 A:idk (11.8s)
@@ -1497,7 +1497,7 @@
 ✗ 我们 A:idk (4.9s)
 < 16:12:50 52.2s 0/10
 
-> 2025-08-04 16:12:59 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 16:12:59 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪里 (3.9s)
 ✓ 她 (3.4s)
 ✓ 什么 (2.0s)
@@ -1510,7 +1510,7 @@
 ✗ 你 A:i (4.6s)
 < 16:13:45 46.1s 6/10
 
-> 2025-08-04 16:13:51 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 16:13:51 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 我们 (4.3s)
 ✓ 他们 (4.6s)
 ✓ 哪里 (6.9s)
@@ -1523,7 +1523,7 @@
 ✓ 那 (2.8s)
 < 16:14:28 37.7s 9/10
 
-> 2025-08-04 16:14:31 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 16:14:31 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 这 (9.0s)
 ✓ 哪里 (2.8s)
 ✓ 她 (2.2s)
@@ -1536,7 +1536,7 @@
 ✓ 那 (2.2s)
 < 16:15:05 33.9s 9/10
 
-> 2025-08-04 16:15:07 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 16:15:07 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 这 (3.1s)
 ✓ 我 (5.4s)
 ✓ 我们 (2.2s)
@@ -1549,7 +1549,7 @@
 ✓ 她 (2.4s)
 < 16:15:34 27.0s 10/10
 
-> 2025-08-04 16:15:36 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 16:15:36 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 她 (2.5s)
 ✓ 我们 (2.8s)
 ✓ 他们 (1.7s)
@@ -1562,7 +1562,7 @@
 ✓ 哪里 (2.5s)
 < 16:16:04 27.8s 9/10
 
-> 2025-08-04 16:16:06 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 16:16:06 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 那 (2.9s)
 ✓ 我 (2.0s)
 ✓ 哪里 (3.0s)
@@ -1575,7 +1575,7 @@
 ✓ 你 (2.7s)
 < 16:16:33 26.6s 10/10
 
-> 2025-08-04 16:16:35 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 16:16:35 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 她 (2.5s)
 ✓ 我 (5.2s)
 ✓ 他们 (3.8s)
@@ -1588,7 +1588,7 @@
 ✓ 什么 (1.6s)
 < 16:17:02 26.7s 10/10
 
-> 2025-08-04 16:17:04 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 16:17:04 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 他 (3.1s)
 ✓ 什么 (1.5s)
 ✓ 你 (1.7s)
@@ -1601,9 +1601,9 @@
 ✓ 这 (2.1s)
 < 16:17:36 32.1s 10/10
 
-> 2025-08-04 16:17:58 | Chinese→English Vocabulary: Basic 01 | Category Review: Chinese→English Vocabulary (Recognition)
+> 2025-08-04 16:17:58 | HSK 1: HSK1 Extended B (Family & Verbs) | Category Review
 ✗ 奶 A:her (2.5s)
-> 2025-08-04 16:18:13 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:18:13 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 是 A:idk (4.4s)
 ✗ 有 A:idk (3.8s)
 ✗ 是 A:yes (11.0s)
@@ -1616,11 +1616,11 @@
 ✗ 什么时候 A:idk (2.5s)
 < 16:19:26 72.5s 0/10
 
-> 2025-08-04 16:19:30 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:19:30 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 有 (4.9s)
 ✓ 为什么 (3.2s)
 ✗ 是 A:yes (2.9s)
-> 2025-08-04 16:21:57 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:21:57 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 谁 A:why (3.5s)
 ✓ 是 (3.9s)
 ✗ 什么时候 A:why (7.1s)
@@ -1632,7 +1632,7 @@
 ✗ 为什么 A:when (4.7s)
 < 16:22:46 49.2s 4/9
 
-> 2025-08-04 16:22:59 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:22:59 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 谁 (5.8s)
 ✓ 是 (7.2s)
 ✓ 什么时候 (6.6s)
@@ -1644,7 +1644,7 @@
 ✓ 有 (11.2s)
 < 16:23:48 49.2s 8/9
 
-> 2025-08-04 16:23:53 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:23:53 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 谁 (2.8s)
 ✗ 怎么 A:not have (4.7s)
 ✗ 不 A:not (3.6s)
@@ -1656,7 +1656,7 @@
 ✗ 什么时候 A:why (2.3s)
 < 16:24:30 37.1s 5/9
 
-> 2025-08-04 16:24:35 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:24:35 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 谁 (2.3s)
 ✓ 有 (4.3s)
 ✓ 不 (3.6s)
@@ -1668,7 +1668,7 @@
 ✓ 哪个 (1.8s)
 < 16:25:01 26.0s 9/9
 
-> 2025-08-04 16:25:13 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:25:13 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 怎么 A:have not (4.4s)
 ✓ 不 (5.5s)
 ✓ 哪个 (2.3s)
@@ -1680,15 +1680,15 @@
 ✓ 是 (1.7s)
 < 16:25:46 33.1s 7/9
 
-> 2025-08-04 16:25:48 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:25:48 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 什么时候 A:why (2.4s)
-> 2025-08-04 16:25:56 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:25:56 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪个 (2.1s)
 ✓ 不 (1.9s)
 ✓ 是 (1.6s)
 ✓ 谁 (1.9s)
 ✗ 没有 A:have not (3.6s)
-> 2025-08-04 16:26:12 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:26:12 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 是 (1.9s)
 ✓ 为什么 (3.6s)
 ✓ 没有 (7.5s)
@@ -1700,7 +1700,7 @@
 ✓ 有 (2.3s)
 < 16:26:43 30.8s 8/9
 
-> 2025-08-04 16:26:48 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:26:48 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 怎么 (4.3s)
 ✓ 哪个 (1.9s)
 ✗ 什么时候 A:why (5.5s)
@@ -1712,7 +1712,7 @@
 ✓ 为什么 (2.1s)
 < 16:27:20 31.9s 8/9
 
-> 2025-08-04 16:27:23 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:27:23 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪个 (1.9s)
 ✓ 有 (2.1s)
 ✓ 什么时候 (2.8s)
@@ -1724,7 +1724,7 @@
 ✓ 怎么 (2.9s)
 < 16:27:44 20.7s 8/9
 
-> 2025-08-04 16:27:47 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:27:47 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 没有 (8.5s)
 ✓ 有 (5.6s)
 ✓ 为什么 (3.5s)
@@ -1736,7 +1736,7 @@
 ✓ 是 (1.5s)
 < 16:28:20 33.3s 9/9
 
-> 2025-08-04 16:28:25 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:28:25 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 为什么 (3.0s)
 ✓ 哪个 (2.1s)
 ✓ 什么时候 (3.7s)
@@ -1748,7 +1748,7 @@
 ✓ 不 (2.0s)
 < 16:28:52 27.1s 9/9
 
-> 2025-08-04 16:28:55 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:28:55 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 什么时候 (4.2s)
 ✓ 不 (2.0s)
 ✓ 没有 (5.3s)
@@ -1760,7 +1760,7 @@
 ✓ 有 (1.8s)
 < 16:29:19 23.7s 9/9
 
-> 2025-08-04 16:29:21 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:29:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 为什么 (2.2s)
 ✓ 谁 (2.3s)
 ✓ 有 (2.8s)
@@ -1772,7 +1772,7 @@
 ✓ 是 (1.5s)
 < 16:29:51 30.0s 8/9
 
-> 2025-08-04 16:29:53 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:29:53 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 怎么 (2.0s)
 ✓ 没有 (3.1s)
 ✓ 不 (1.6s)
@@ -1784,7 +1784,7 @@
 ✓ 为什么 (2.0s)
 < 16:30:14 20.6s 8/9
 
-> 2025-08-04 16:30:15 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:30:15 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 为什么 (2.1s)
 ✓ 不 (1.2s)
 ✓ 谁 (2.3s)
@@ -1796,7 +1796,7 @@
 ✓ 是 (1.6s)
 < 16:30:35 19.4s 9/9
 
-> 2025-08-04 16:30:38 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:30:38 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪个 (2.2s)
 ✓ 为什么 (2.2s)
 ✓ 有 (2.7s)
@@ -1808,7 +1808,7 @@
 ✓ 不 (1.4s)
 < 16:30:58 19.8s 9/9
 
-> 2025-08-04 16:31:03 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:31:03 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 不 (1.6s)
 ✓ 有 (2.2s)
 ✓ 为什么 (1.9s)
@@ -1820,7 +1820,7 @@
 ✓ 是 (2.0s)
 < 16:31:23 20.4s 9/9
 
-> 2025-08-04 16:31:30 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:31:30 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 是 (2.7s)
 ✓ 什么时候 (4.0s)
 ✓ 没有 (3.4s)
@@ -1832,7 +1832,7 @@
 ✓ 怎么 (3.9s)
 < 16:31:55 25.5s 9/9
 
-> 2025-08-04 16:32:14 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:32:14 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 喜欢 A:idk (3.2s)
 ✗ 需要 A:idk (6.1s)
 ✗ 希望 A:idk (2.9s)
@@ -1845,7 +1845,7 @@
 ✗ 想 A:idk (2.8s)
 < 16:32:56 42.2s 0/10
 
-> 2025-08-04 16:33:02 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:33:02 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 帮助 (2.8s)
 ✗ 知道 A:think (2.8s)
 ✓ 想 (3.2s)
@@ -1858,7 +1858,7 @@
 ✗ 希望 A:idk (2.5s)
 < 16:33:41 38.6s 4/10
 
-> 2025-08-04 16:33:47 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:33:47 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 需要 (2.6s)
 ✓ 想 (3.2s)
 ✗ 希望 A:want (4.0s)
@@ -1871,7 +1871,7 @@
 ✓ 帮助 (6.9s)
 < 16:34:43 55.3s 5/10
 
-> 2025-08-04 16:34:45 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:34:45 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 帮助 (2.4s)
 ✓ 做 (4.4s)
 ✓ 感觉 (3.2s)
@@ -1884,7 +1884,7 @@
 ✗ 知道 A:win (23.0s)
 < 16:35:39 53.4s 8/10
 
-> 2025-08-04 16:35:47 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:35:47 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 可以 (5.1s)
 ✓ 做 (4.7s)
 ✓ 感觉 (4.6s)
@@ -1897,7 +1897,7 @@
 ✓ 想 (2.5s)
 < 16:36:35 48.6s 8/10
 
-> 2025-08-04 16:36:37 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:36:37 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 为什么 A:whywhy (52.9s)
 ✓ 是 (3.8s)
 ✓ 哪个 (2.3s)
@@ -1909,7 +1909,7 @@
 ✓ 没有 (3.7s)
 < 16:37:56 78.7s 7/9
 
-> 2025-08-04 16:38:01 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 16:38:01 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪个 (1.7s)
 ✓ 什么时候 (1.9s)
 ✓ 为什么 (3.3s)
@@ -1921,7 +1921,7 @@
 ✓ 怎么 (1.5s)
 < 16:38:19 18.4s 9/9
 
-> 2025-08-04 16:38:22 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:38:22 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 知道 (3.8s)
 ✓ 可以 (5.7s)
 ✓ 需要 (3.1s)
@@ -1934,7 +1934,7 @@
 ✓ 喜欢 (3.9s)
 < 16:39:02 40.1s 10/10
 
-> 2025-08-04 16:39:04 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:39:04 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 帮助 (5.4s)
 ✓ 做 (2.5s)
 ✓ 喜欢 (3.0s)
@@ -1947,7 +1947,7 @@
 ✓ 需要 (5.3s)
 < 16:39:36 32.1s 10/10
 
-> 2025-08-04 16:39:38 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:39:38 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 帮助 (3.3s)
 ✓ 喜欢 (2.9s)
 ✓ 可以 (2.9s)
@@ -1960,7 +1960,7 @@
 ✓ 知道 (2.5s)
 < 16:40:07 29.1s 10/10
 
-> 2025-08-04 16:40:09 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:40:09 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 想 (1.9s)
 ✓ 要 (2.3s)
 ✗ 需要 A:feel (3.2s)
@@ -1973,7 +1973,7 @@
 ✓ 知道 (4.2s)
 < 16:40:45 36.5s 7/10
 
-> 2025-08-04 16:40:47 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:40:47 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 希望 (2.2s)
 ✓ 知道 (3.1s)
 ✗ 需要 A:wish (3.5s)
@@ -1986,7 +1986,7 @@
 ✓ 帮助 (3.3s)
 < 16:41:19 32.8s 8/10
 
-> 2025-08-04 16:41:21 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:41:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 做 (4.0s)
 ✓ 知道 (2.8s)
 ✓ 可以 (3.0s)
@@ -1999,7 +1999,7 @@
 ✓ 感觉 (1.7s)
 < 16:41:50 28.8s 9/10
 
-> 2025-08-04 16:41:51 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:41:51 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 帮助 (2.8s)
 ✓ 喜欢 (2.1s)
 ✓ 可以 (3.1s)
@@ -2012,7 +2012,7 @@
 ✓ 感觉 (2.2s)
 < 16:42:20 28.5s 10/10
 
-> 2025-08-04 16:42:22 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:42:22 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 知道 (2.3s)
 ✓ 感觉 (4.5s)
 ✓ 帮助 (3.6s)
@@ -2025,7 +2025,7 @@
 ✓ 想 (2.0s)
 < 16:42:50 28.6s 10/10
 
-> 2025-08-04 16:42:53 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:42:53 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 做 (3.3s)
 ✓ 喜欢 (3.2s)
 ✓ 知道 (2.0s)
@@ -2038,7 +2038,7 @@
 ✓ 感觉 (2.0s)
 < 16:43:27 34.3s 10/10
 
-> 2025-08-04 16:43:41 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:43:41 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 知道 (20.6s)
 ✓ 想 (1.8s)
 ✓ 需要 (2.6s)
@@ -2051,7 +2051,7 @@
 ✓ 要 (1.7s)
 < 16:44:26 45.2s 10/10
 
-> 2025-08-04 16:45:12 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:45:12 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 喜欢 (3.5s)
 ✓ 感觉 (4.9s)
 ✓ 想 (2.4s)
@@ -2064,7 +2064,7 @@
 ✓ 帮助 (3.4s)
 < 16:45:42 29.2s 10/10
 
-> 2025-08-04 16:51:35 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 16:51:35 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 想 (6.0s)
 ✓ 喜欢 (2.1s)
 ✓ 做 (2.6s)
@@ -2077,7 +2077,7 @@
 ✓ 要 (1.7s)
 < 16:52:03 27.9s 10/10
 
-> 2025-08-04 16:52:14 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:52:14 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 放 A:idk (3.8s)
 ✗ 问 A:idk (5.4s)
 ✗ 拿 A:idk (3.0s)
@@ -2090,7 +2090,7 @@
 ✗ 告诉 A:idk (5.6s)
 < 16:52:54 40.2s 0/10
 
-> 2025-08-04 16:53:02 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:53:02 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 告诉 (3.7s)
 ✗ 开 A:idk (3.9s)
 ✗ 给 A:idk (4.6s)
@@ -2103,7 +2103,7 @@
 ✗ 放 A:take (3.7s)
 < 16:53:41 38.9s 5/10
 
-> 2025-08-04 16:53:57 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:53:57 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 给 A:put (4.2s)
 ✓ 回答 (6.1s)
 ✗ 告诉 A:take (8.0s)
@@ -2116,7 +2116,7 @@
 ✓ 开 (1.8s)
 < 16:54:43 45.8s 6/10
 
-> 2025-08-04 16:55:12 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:55:12 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 关 (3.1s)
 ✓ 开始 (2.3s)
 ✓ 回答 (2.3s)
@@ -2129,7 +2129,7 @@
 ✓ 问 (2.8s)
 < 16:55:56 44.2s 8/10
 
-> 2025-08-04 16:56:03 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:56:03 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 得到 (2.7s)
 ✓ 拿 (2.6s)
 ✓ 回答 (2.4s)
@@ -2142,7 +2142,7 @@
 ✓ 开始 (3.7s)
 < 16:56:50 47.4s 9/10
 
-> 2025-08-04 16:56:52 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:56:52 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 关 (2.3s)
 ✓ 告诉 (2.9s)
 ✓ 得到 (2.3s)
@@ -2155,7 +2155,7 @@
 ✓ 回答 (2.1s)
 < 16:57:24 31.7s 10/10
 
-> 2025-08-04 16:57:27 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:57:27 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 告诉 (3.4s)
 ✓ 给 (1.9s)
 ✓ 开始 (2.5s)
@@ -2168,7 +2168,7 @@
 ✓ 问 (2.1s)
 < 16:57:55 27.5s 9/10
 
-> 2025-08-04 16:57:59 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:57:59 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 问 (1.9s)
 ✓ 开 (2.1s)
 ✓ 开始 (2.0s)
@@ -2181,7 +2181,7 @@
 ✗ 拿 A:close (2.1s)
 < 16:58:21 22.3s 9/10
 
-> 2025-08-04 16:58:27 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:58:27 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 关 (2.4s)
 ✓ 得到 (2.6s)
 ✓ 开 (1.7s)
@@ -2194,7 +2194,7 @@
 ✓ 拿 (1.8s)
 < 16:58:50 23.1s 10/10
 
-> 2025-08-04 16:58:52 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:58:52 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 关 (2.8s)
 ✓ 给 (1.8s)
 ✓ 开始 (2.8s)
@@ -2207,7 +2207,7 @@
 ✓ 开 (4.2s)
 < 16:59:18 25.2s 10/10
 
-> 2025-08-04 16:59:21 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:59:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 给 (1.8s)
 ✓ 关 (2.7s)
 ✓ 回答 (2.2s)
@@ -2220,7 +2220,7 @@
 ✓ 开始 (5.3s)
 < 16:59:46 24.8s 10/10
 
-> 2025-08-04 16:59:47 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 16:59:47 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 关 (2.3s)
 ✓ 得到 (2.4s)
 ✓ 放 (1.7s)
@@ -2233,7 +2233,7 @@
 ✓ 给 (1.6s)
 < 17:00:09 22.0s 10/10
 
-> 2025-08-04 17:00:13 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 17:00:13 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 给 (2.0s)
 ✓ 回答 (2.1s)
 ✓ 问 (1.5s)
@@ -2246,9 +2246,9 @@
 ✓ 告诉 (2.1s)
 < 17:00:36 22.5s 10/10
 
-> 2025-08-04 17:01:01 | Chinese→English Foundation: Numbers | Review All
+> 2025-08-04 17:01:01 | HSK 1: HSK1 Core A | Review All
 ✗ 九 A:14 (1.4s)
-> 2025-08-04 17:01:05 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-04 17:01:05 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 问 (2.9s)
 ✓ 得到 (2.3s)
 ✓ 放 (3.6s)
@@ -2261,7 +2261,7 @@
 ✓ 回答 (2.2s)
 < 17:01:35 29.5s 10/10
 
-> 2025-08-04 17:01:50 | Chinese→English Vocabulary: Basic 04 | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:01:50 | HSK 1: HSK1 Core A | Category Review
 ✓ 五 (2.3s)
 ✓ 马 (2.1s)
 ✓ 七 (2.1s)
@@ -2364,7 +2364,7 @@
 ✓ 六 (2.0s)
 < 17:06:35 285.0s 93/100
 
-> 2025-08-04 17:08:25 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-04 17:08:25 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 想 (2.6s)
 ✓ 做 (2.6s)
 ✓ 需要 (3.8s)
@@ -2377,7 +2377,7 @@
 ✓ 喜欢 (4.1s)
 < 17:08:53 27.8s 10/10
 
-> 2025-08-04 17:09:01 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 17:09:01 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 他 A:talk (6.2s)
 ✓ 她 (2.8s)
 ✓ 他们 (4.2s)
@@ -2390,7 +2390,7 @@
 ✗ 那 A:what (6.6s)
 < 17:09:50 49.1s 5/10
 
-> 2025-08-04 17:09:56 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 17:09:56 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 我 (6.1s)
 ✗ 你 A:he (2.8s)
 ✓ 什么 (3.7s)
@@ -2403,7 +2403,7 @@
 ✓ 他们 (5.2s)
 < 17:10:36 40.0s 7/10
 
-> 2025-08-04 17:10:51 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 17:10:51 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪里 (12.2s)
 ✓ 他 (3.5s)
 ✓ 什么 (2.1s)
@@ -2416,7 +2416,7 @@
 ✓ 他们 (3.0s)
 < 17:11:27 36.0s 10/10
 
-> 2025-08-04 17:11:38 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 17:11:38 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 他们 (10.9s)
 ✓ 我们 (2.2s)
 ✓ 他 (2.1s)
@@ -2429,7 +2429,7 @@
 ✓ 我 (3.5s)
 < 17:12:11 33.2s 9/10
 
-> 2025-08-04 17:12:15 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 17:12:15 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 什么 (2.4s)
 ✓ 他们 (5.3s)
 ✓ 他 (2.9s)
@@ -2442,7 +2442,7 @@
 ✓ 你 (2.5s)
 < 17:12:41 26.2s 10/10
 
-> 2025-08-04 17:12:46 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-04 17:12:46 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 她 (3.1s)
 ✓ 这 (1.7s)
 ✓ 那 (1.6s)
@@ -2455,7 +2455,7 @@
 ✓ 什么 (2.2s)
 < 17:13:11 25.2s 10/10
 
-> 2025-08-04 17:16:15 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 17:16:15 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 有 A:think (12.2s)
 ✓ 不 (3.8s)
 ✓ 怎么 (2.4s)
@@ -2467,7 +2467,7 @@
 ✓ 为什么 (5.5s)
 < 17:17:00 44.4s 7/9
 
-> 2025-08-04 17:17:07 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 17:17:07 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪个 (2.3s)
 ✗ 没有 A:have not (5.0s)
 ✓ 不 (2.6s)
@@ -2479,7 +2479,7 @@
 ✓ 谁 (3.8s)
 < 17:17:33 25.4s 8/9
 
-> 2025-08-04 17:17:36 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-04 17:17:36 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 没有 (3.9s)
 ✓ 有 (3.3s)
 ✓ 是 (1.6s)
@@ -2491,11 +2491,11 @@
 ✓ 为什么 (1.8s)
 < 17:17:56 20.3s 9/9
 
-> 2025-08-04 17:18:30 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:18:30 | HSK 1: HSK1 Core A | Category Review
 ✓ 水 (3.3s)
 ✓ 火 (1.9s)
 ✗ 女 A:her (2.4s)
-> 2025-08-04 17:18:45 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:18:45 | HSK 1: HSK1 Core A | Category Review
 ✓ 饮 (3.5s)
 ✓ 西 (5.0s)
 ✓ 头 (2.0s)
@@ -2598,9 +2598,9 @@
 ✓ 女 (6.5s)
 < 17:23:17 272.1s 96/100
 
-> 2025-08-04 17:28:41 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:28:41 | HSK 1: HSK1 Core A | Category Review
 ✗ 竹 A:drink (8.0s)
-> 2025-08-04 17:28:54 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:28:54 | HSK 1: HSK1 Core A | Category Review
 ✓ 月 (2.8s)
 ✓ 竹 (4.2s)
 ✓ 学 (2.4s)
@@ -2703,7 +2703,7 @@
 ✓ 写 (4.0s)
 < 17:33:23 268.4s 99/100
 
-> 2025-08-04 17:42:18 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:42:18 | HSK 1: HSK1 Core A | Category Review
 ✓ 去 (2.9s)
 ✓ 跑 (1.6s)
 ✓ 百 (2.0s)
@@ -2786,7 +2786,7 @@
 ✓ 千 (1.9s)
 < 17:45:50 212.3s 79/80
 
-> 2025-08-04 17:46:00 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:46:00 | HSK 1: HSK1 Core A | Category Review
 ✓ 四 (2.0s)
 ✓ 头 (1.9s)
 ✓ 十 (1.4s)
@@ -2798,7 +2798,7 @@
 ✓ 草 (2.8s)
 ✓ 中 (2.7s)
 ✗ 说 A:listen (2.2s)
-> 2025-08-04 17:46:40 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:46:40 | HSK 1: HSK1 Core A | Category Review
 ✓ 西 (2.3s)
 ✓ 工 (1.9s)
 ✓ 二 (1.3s)
@@ -2881,7 +2881,7 @@
 ✗ 大 A:tall (2.9s)
 < 17:49:50 189.6s 79/80
 
-> 2025-08-04 17:50:00 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:50:00 | HSK 1: HSK1 Core A | Category Review
 ✓ 百 (4.9s)
 ✓ 刀 (2.0s)
 ✓ 食 (1.8s)
@@ -2891,7 +2891,7 @@
 ✓ 鱼 (1.8s)
 ✓ 十 (1.6s)
 ✗ 心 A:small (1.8s)
-> 2025-08-04 17:50:27 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 17:50:27 | HSK 1: HSK1 Core A | Category Review
 ✓ 身 (1.9s)
 ✓ 鸟 (2.1s)
 ✓ 走 (2.8s)
@@ -2974,7 +2974,7 @@
 ✓ 来 (3.0s)
 < 17:53:43 195.9s 80/80
 
-> 2025-08-04 19:00:35 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-04 19:00:35 | HSK 1: HSK1 Core A | Category Review
 ✓ 八 (3.1s)
 ✓ 跑 (1.7s)
 ✓ 竹 (5.7s)
@@ -3057,7 +3057,7 @@
 ✓ 钱 (2.5s)
 < 19:03:57 202.0s 80/80
 
-> 2025-08-05 00:23:12 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-05 00:23:12 | HSK 1: HSK1 Core A | Category Review
 ✓ 日 (3.7s)
 ✓ 火 (1.8s)
 ✓ 写 (4.1s)
@@ -3140,7 +3140,7 @@
 ✓ 狗 (8.3s)
 < 00:27:29 257.7s 77/80
 
-> 2025-08-05 10:38:26 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-05 10:38:26 | HSK 1: HSK1 Core A | Category Review
 ✓ 百 (3.1s)
 ✓ 卖 (2.6s)
 ✓ 左 (2.4s)
@@ -3223,7 +3223,7 @@
 ✓ 口 (1.9s)
 < 10:42:37 250.6s 79/80
 
-> 2025-08-05 10:50:55 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 10:50:55 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 站 A:tea (3.9s)
 ✗ 睡觉 A:study (7.4s)
 ✗ 停 A:idl (7.9s)
@@ -3236,7 +3236,7 @@
 ✗ 喝 A:idk (3.6s)
 < 10:51:55 59.7s 0/10
 
-> 2025-08-05 10:52:04 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 10:52:04 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 吃 (3.0s)
 ✓ 等 (15.9s)
 ✗ 结束 A:go (21.8s)
@@ -3249,7 +3249,7 @@
 ✗ 醒 A:wake (6.9s)
 < 10:53:14 69.9s 8/10
 
-> 2025-08-05 10:53:21 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 10:53:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 喝 (3.1s)
 ✓ 躺 (3.7s)
 ✓ 站 (2.2s)
@@ -3262,7 +3262,7 @@
 ✓ 等 (2.9s)
 < 10:54:00 38.3s 9/10
 
-> 2025-08-05 10:54:03 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 10:54:03 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 站 (2.4s)
 ✓ 等 (1.8s)
 ✓ 吃 (2.0s)
@@ -3275,7 +3275,7 @@
 ✓ 躺 (3.6s)
 < 10:54:29 26.1s 10/10
 
-> 2025-08-05 10:54:31 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 10:54:31 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 喝 (2.4s)
 ✓ 醒 (2.9s)
 ✓ 停 (2.1s)
@@ -3288,7 +3288,7 @@
 ✓ 吃 (2.1s)
 < 10:54:56 24.5s 10/10
 
-> 2025-08-05 10:54:58 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 10:54:58 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 醒 (3.6s)
 ✓ 等 (2.3s)
 ✓ 停 (2.0s)
@@ -3301,7 +3301,7 @@
 ✓ 喝 (4.7s)
 < 10:55:27 29.2s 10/10
 
-> 2025-08-05 10:55:32 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 10:55:32 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 学习 A:idk (6.3s)
 ✗ 玩 A:idk (6.2s)
 ✗ 工作 A:idk (4.5s)
@@ -3314,7 +3314,7 @@
 ✗ 洗 A:idk (4.5s)
 < 10:56:24 52.2s 1/10
 
-> 2025-08-05 10:56:29 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 10:56:29 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 脱 (3.1s)
 ✓ 洗 (2.9s)
 ✓ 玩 (4.8s)
@@ -3327,7 +3327,7 @@
 ✓ 学 (2.0s)
 < 10:57:13 43.8s 9/10
 
-> 2025-08-05 10:57:15 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 10:57:15 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 玩 (2.8s)
 ✓ 做饭 (2.3s)
 ✓ 干净 (2.4s)
@@ -3340,9 +3340,9 @@
 ✗ 学 A:study (2.3s)
 < 10:57:46 31.3s 8/10
 
-> 2025-08-05 10:58:00 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 10:58:00 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 干净 A:work (3.3s)
-> 2025-08-05 10:58:07 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 10:58:07 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 吃 (2.5s)
 ✓ 站 (1.8s)
 ✓ 醒 (3.1s)
@@ -3355,7 +3355,7 @@
 ✓ 睡觉 (4.4s)
 < 10:58:35 28.1s 10/10
 
-> 2025-08-05 10:58:38 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 10:58:38 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 学 (9.0s)
 ✓ 教 (3.8s)
 ✓ 做饭 (2.2s)
@@ -3368,7 +3368,7 @@
 ✓ 脱 (2.7s)
 < 10:59:10 32.6s 10/10
 
-> 2025-08-05 10:59:18 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 10:59:18 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 学习 (5.8s)
 ✓ 学 (2.7s)
 ✓ 教 (2.1s)
@@ -3381,7 +3381,7 @@
 ✓ 干净 (4.5s)
 < 10:59:46 28.1s 10/10
 
-> 2025-08-05 10:59:51 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 10:59:51 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 脱 (3.2s)
 ✓ 工作 (2.0s)
 ✓ 学 (3.5s)
@@ -3394,7 +3394,7 @@
 ✓ 穿 (2.5s)
 < 11:00:15 24.2s 10/10
 
-> 2025-08-05 11:00:20 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 11:00:20 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 脱 (2.7s)
 ✓ 穿 (2.6s)
 ✓ 教 (2.2s)
@@ -3407,7 +3407,7 @@
 ✓ 玩 (1.8s)
 < 11:00:51 31.4s 9/10
 
-> 2025-08-05 11:00:54 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 11:00:54 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 脱 (2.5s)
 ✓ 穿 (2.2s)
 ✓ 做饭 (1.7s)
@@ -3420,7 +3420,7 @@
 ✓ 玩 (1.7s)
 < 11:01:19 25.0s 9/10
 
-> 2025-08-05 11:01:24 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 11:01:24 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 教 (2.9s)
 ✓ 做饭 (2.5s)
 ✓ 学习 (2.0s)
@@ -3433,7 +3433,7 @@
 ✓ 脱 (2.2s)
 < 11:01:48 23.5s 10/10
 
-> 2025-08-05 11:01:50 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 11:01:50 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 坐 (1.6s)
 ✓ 站 (1.9s)
 ✓ 结束 (3.0s)
@@ -3446,7 +3446,7 @@
 ✓ 睡觉 (2.8s)
 < 11:02:13 22.4s 10/10
 
-> 2025-08-05 11:02:15 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 11:02:15 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 醒 (2.2s)
 ✓ 睡觉 (2.1s)
 ✓ 站 (2.2s)
@@ -3459,7 +3459,7 @@
 ✓ 躺 (2.2s)
 < 11:02:38 22.3s 10/10
 
-> 2025-08-05 11:02:39 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 11:02:39 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 学 (3.5s)
 ✓ 玩 (2.3s)
 ✓ 做饭 (1.9s)
@@ -3472,7 +3472,7 @@
 ✓ 脱 (2.4s)
 < 11:03:02 22.7s 10/10
 
-> 2025-08-05 11:03:09 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 11:03:09 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 可以 A:idk (10.1s)
 ✓ 要 (7.5s)
 ✗ 需要 A:feel (5.3s)
@@ -3485,7 +3485,7 @@
 ✗ 做 A:idk (5.5s)
 < 11:04:23 74.7s 3/10
 
-> 2025-08-05 11:04:35 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 11:04:35 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 喜欢 (5.8s)
 ✓ 做 (3.5s)
 ✓ 帮助 (3.5s)
@@ -3498,7 +3498,7 @@
 ✓ 可以 (2.6s)
 < 11:05:05 29.7s 10/10
 
-> 2025-08-05 11:05:11 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 11:05:11 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 可以 (2.1s)
 ✓ 做 (5.6s)
 ✓ 帮助 (4.6s)
@@ -3511,7 +3511,7 @@
 ✓ 想 (3.5s)
 < 11:05:41 29.5s 10/10
 
-> 2025-08-05 11:05:44 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 11:05:44 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 什么 (3.4s)
 ✗ 哪里 A:need (5.9s)
 ✗ 他 A:who (5.6s)
@@ -3524,7 +3524,7 @@
 ✗ 那 A:who (3.4s)
 < 11:06:34 49.5s 4/10
 
-> 2025-08-05 11:06:44 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 11:06:44 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪里 (2.7s)
 ✓ 那 (3.1s)
 ✓ 她 (2.2s)
@@ -3537,7 +3537,7 @@
 ✓ 你 (1.8s)
 < 11:07:10 26.1s 10/10
 
-> 2025-08-05 11:07:11 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 11:07:11 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 我 (3.1s)
 ✓ 什么 (2.4s)
 ✓ 哪里 (2.7s)
@@ -3550,7 +3550,7 @@
 ✓ 她 (1.9s)
 < 11:07:33 22.4s 10/10
 
-> 2025-08-05 11:07:36 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 11:07:36 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 谁 A:that (5.0s)
 ✗ 有 A:above (12.4s)
 ✓ 没有 (9.9s)
@@ -3562,7 +3562,7 @@
 ✗ 怎么 A:who (7.8s)
 < 11:08:27 51.7s 4/9
 
-> 2025-08-05 11:08:31 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 11:08:31 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 是 (2.3s)
 ✓ 没有 (3.8s)
 ✗ 怎么 A:what (1.9s)
@@ -3574,7 +3574,7 @@
 ✓ 为什么 (2.8s)
 < 11:09:03 31.9s 7/9
 
-> 2025-08-05 11:09:07 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 11:09:07 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 是 (1.8s)
 ✓ 为什么 (2.0s)
 ✓ 谁 (5.6s)
@@ -3586,7 +3586,7 @@
 ✓ 没有 (2.4s)
 < 11:09:33 25.2s 9/9
 
-> 2025-08-05 11:09:52 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 11:09:52 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 喜欢 (5.0s)
 ✓ 帮助 (5.9s)
 ✗ 做 A:idk (28.6s)
@@ -3599,7 +3599,7 @@
 ✓ 可以 (2.0s)
 < 11:11:10 78.0s 7/10
 
-> 2025-08-05 11:11:13 | Chinese→English Vocabulary: Basic 03 | Category Review: Chinese→English Vocabulary (Recognition)
+> 2025-08-05 11:11:13 | HSK 1: HSK1 Extended B (Family & Verbs) | Category Review
 ✗ 现在 A:ifk (3.8s)
 ✓ 跑 (3.8s)
 ✓ 学习 (8.2s)
@@ -3721,7 +3721,7 @@
 ✗ 看 A:speech (3.7s)
 < 11:17:48 394.5s 40/119
 
-> 2025-08-05 11:18:08 | Chinese→English Vocabulary: Daily Verbs | Review All
+> 2025-08-05 11:18:08 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 拿 A:love (7.2s)
 ✓ 喝 (4.1s)
 ✓ 站 (2.0s)
@@ -3754,7 +3754,7 @@
 ✓ 睡 (4.7s)
 < 11:19:43 95.1s 23/30
 
-> 2025-08-05 11:19:52 | Chinese→English Vocabulary: Daily Verbs | Review All
+> 2025-08-05 11:19:52 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 站 (2.7s)
 ✓ 听 (3.2s)
 ✓ 喝 (2.3s)
@@ -3787,7 +3787,7 @@
 ✓ 爱 (2.0s)
 < 11:21:55 122.3s 28/30
 
-> 2025-08-05 11:22:03 | Chinese→English Vocabulary: Daily Verbs | Review All
+> 2025-08-05 11:22:03 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 爱 (1.9s)
 ✓ 开 (3.2s)
 ✓ 教 (1.9s)
@@ -3820,7 +3820,7 @@
 ✓ 要 (1.6s)
 < 11:23:21 78.9s 29/30
 
-> 2025-08-05 11:23:24 | Chinese→English Vocabulary: Daily Verbs | Review All
+> 2025-08-05 11:23:24 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 写 (2.4s)
 ✓ 喜欢 (1.9s)
 ✓ 拿 (1.8s)
@@ -3853,7 +3853,7 @@
 ✓ 学 (2.1s)
 < 11:24:40 75.4s 28/30
 
-> 2025-08-05 11:24:42 | Chinese→English Vocabulary: Daily Verbs | Review All
+> 2025-08-05 11:24:42 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 放 (2.7s)
 ✓ 给 (2.0s)
 ✓ 买 (2.1s)
@@ -3886,7 +3886,7 @@
 ✓ 坐 (1.5s)
 < 11:25:45 63.2s 30/30
 
-> 2025-08-05 11:34:24 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 11:34:24 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 忘记 A:idk (3.2s)
 ✗ 懂 A:ca (4.2s)
 ✗ 付钱 A:expensive (4.8s)
@@ -3899,8 +3899,8 @@
 ✗ 记得 A:idk (3.5s)
 < 11:35:03 39.1s 1/10
 
-> 2025-08-05 11:35:15 | Chinese→English Foundation: Numbers | Review All
-> 2025-08-05 11:42:02 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 11:35:15 | HSK 1: HSK1 Core A | Review All
+> 2025-08-05 11:42:02 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 你 (4.7s)
 ✓ 什么 (2.4s)
 ✗ 她 A:idk (3.7s)
@@ -3913,7 +3913,7 @@
 ✓ 他们 (2.1s)
 < 11:42:36 34.4s 7/10
 
-> 2025-08-05 11:44:32 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 11:44:32 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 我们 (3.0s)
 ✓ 这 (7.9s)
 ✓ 他们 (2.7s)
@@ -3926,7 +3926,7 @@
 ✓ 那 (2.5s)
 < 11:45:03 31.2s 10/10
 
-> 2025-08-05 12:05:44 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 12:05:44 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 我们 (9.3s)
 ✓ 他们 (2.7s)
 ✓ 这 (2.9s)
@@ -3939,10 +3939,10 @@
 ✓ 你 (2.0s)
 < 12:06:18 34.0s 8/10
 
-> 2025-08-05 12:08:59 | Chinese→English Vocabulary: Basic 01 | Review All
-> 2025-08-05 12:21:07 | Chinese→English Vocabulary: Basic 01 | Review All
-> 2025-08-05 12:22:00 | Chinese→English Vocabulary: Basic 01 | Review All
-> 2025-08-05 12:22:24 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 12:08:59 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 12:21:07 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 12:22:00 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 12:22:24 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 她 (3.9s)
 ✓ 什么 (2.0s)
 ✓ 他们 (4.1s)
@@ -3955,7 +3955,7 @@
 ✓ 哪里 (3.7s)
 < 12:22:52 28.1s 10/10
 
-> 2025-08-05 12:24:09 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 12:24:09 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 你 A:a (3.3s)
 ✗ 什么 A:a (1.4s)
 ✗ 我 A:a (1.3s)
@@ -3968,7 +3968,7 @@
 ✗ 他 A:a (1.3s)
 < 12:24:24 15.2s 0/10
 
-> 2025-08-05 12:24:50 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 12:24:50 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 什么 (4.1s)
 ✓ 哪里 (3.9s)
 ✓ 他们 (2.7s)
@@ -3981,7 +3981,7 @@
 ✓ 她 (2.0s)
 < 12:25:17 27.3s 10/10
 
-> 2025-08-05 12:27:12 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 12:27:12 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 他 (4.6s)
 ✓ 他们 (2.2s)
 ✓ 我们 (2.4s)
@@ -3994,7 +3994,7 @@
 ✓ 她 (2.3s)
 < 12:27:39 26.4s 10/10
 
-> 2025-08-05 12:28:21 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 12:28:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 是 (3.7s)
 ✓ 为什么 (2.9s)
 ✓ 怎么 (2.0s)
@@ -4006,8 +4006,8 @@
 ✓ 有 (14.3s)
 < 12:29:05 44.4s 7/9
 
-> 2025-08-05 12:39:23 | Chinese→English Vocabulary: Basic 02 | Review All
-> 2025-08-05 12:42:30 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 12:39:23 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 12:42:30 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 你 A:he (2.7s)
 ✓ 他们 (3.4s)
 ✓ 他 (1.9s)
@@ -4020,7 +4020,7 @@
 ✗ 哪里 A:who (3.4s)
 < 12:42:58 27.5s 8/10
 
-> 2025-08-05 12:43:12 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 12:43:12 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 你 (9.8s)
 ✓ 他们 (3.8s)
 ✓ 什么 (2.2s)
@@ -4033,7 +4033,7 @@
 ✗ 哪里 A:who (2.2s)
 < 12:43:43 30.4s 9/10
 
-> 2025-08-05 13:11:27 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 13:11:27 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 放 A:do (12.8s)
 ✗ 开始 A:idk (8.8s)
 ✗ 告诉 A:idk (7.0s)
@@ -4046,7 +4046,7 @@
 ✗ 开 A:idk (1.7s)
 < 13:12:16 48.5s 3/10
 
-> 2025-08-05 13:14:35 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 13:14:35 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 关 (5.8s)
 ✓ 放 (4.5s)
 ✓ 回答 (2.6s)
@@ -4059,7 +4059,7 @@
 ✓ 问 (3.4s)
 < 13:15:19 43.8s 6/10
 
-> 2025-08-05 13:16:47 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 13:16:47 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 放 (3.6s)
 ✓ 问 (1.6s)
 ✓ 回答 (2.1s)
@@ -4072,7 +4072,7 @@
 ✓ 告诉 (8.2s)
 < 13:17:26 39.6s 9/10
 
-> 2025-08-05 13:18:22 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 13:18:22 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 告诉 (4.2s)
 ✓ 回答 (2.5s)
 ✓ 关 (2.0s)
@@ -4085,7 +4085,7 @@
 ✓ 拿 (2.1s)
 < 13:18:57 35.6s 10/10
 
-> 2025-08-05 13:20:29 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 13:20:29 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 开 (2.3s)
 ✓ 告诉 (2.3s)
 ✓ 拿 (2.7s)
@@ -4098,7 +4098,7 @@
 ✓ 放 (3.2s)
 < 13:20:55 25.6s 10/10
 
-> 2025-08-05 13:21:59 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 13:21:59 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 关 (7.7s)
 ✓ 问 (1.5s)
 ✓ 得到 (2.2s)
@@ -4111,7 +4111,7 @@
 ✓ 开始 (3.5s)
 < 13:22:25 26.8s 10/10
 
-> 2025-08-05 13:32:42 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 13:32:42 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 那 (3.1s)
 ✓ 这 (3.0s)
 ✓ 我们 (2.6s)
@@ -4124,7 +4124,7 @@
 ✓ 我 (16.9s)
 < 13:33:24 41.9s 10/10
 
-> 2025-08-05 13:34:57 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 13:34:57 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 她 (3.3s)
 ✗ 你 A:he (1.5s)
 ✓ 那 (3.2s)
@@ -4137,7 +4137,7 @@
 ✓ 哪里 (3.1s)
 < 13:35:19 21.7s 9/10
 
-> 2025-08-05 13:37:27 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 13:37:27 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 你 (5.2s)
 ✓ 他们 (2.8s)
 ✓ 这 (1.7s)
@@ -4150,7 +4150,7 @@
 ✓ 那 (1.8s)
 < 13:37:54 27.2s 10/10
 
-> 2025-08-05 13:46:41 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 13:46:41 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 他们 (3.5s)
 ✓ 你 (2.3s)
 ✓ 什么 (1.7s)
@@ -4163,7 +4163,7 @@
 ✓ 我们 (1.7s)
 < 13:47:03 22.7s 10/10
 
-> 2025-08-05 13:47:55 | Chinese→English Foundation: Numbers | Review All
+> 2025-08-05 13:47:55 | HSK 1: HSK1 Core A | Review All
 ✓ 二 (2.3s)
 ✓ 五 (1.6s)
 ✓ 八 (1.8s)
@@ -4176,7 +4176,7 @@
 ✓ 六 (1.8s)
 < 13:48:12 17.8s 9/10
 
-> 2025-08-05 13:50:37 | Chinese→English Foundation: Numbers | Review All
+> 2025-08-05 13:50:37 | HSK 1: HSK1 Core A | Review All
 ✓ 十 (3.0s)
 ✓ 二 (1.4s)
 ✓ 八 (1.7s)
@@ -4189,7 +4189,7 @@
 ✓ 六 (1.6s)
 < 13:50:55 17.7s 10/10
 
-> 2025-08-05 14:08:33 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 14:08:33 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪里 (8.4s)
 ✓ 那 (2.3s)
 ✓ 我 (3.6s)
@@ -4202,7 +4202,7 @@
 ✓ 你 (2.3s)
 < 14:09:09 35.5s 10/10
 
-> 2025-08-05 14:11:34 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 14:11:34 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 哪个 (2.2s)
 ✓ 不 (1.8s)
 ✓ 是 (2.0s)
@@ -4214,7 +4214,7 @@
 ✓ 怎么 (3.3s)
 < 14:12:11 37.3s 9/9
 
-> 2025-08-05 14:14:05 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 14:14:05 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 他们 A:where (3.0s)
 ✓ 我 (6.3s)
 ✓ 什么 (2.3s)
@@ -4227,7 +4227,7 @@
 ✓ 哪里 (2.8s)
 < 14:14:33 28.0s 9/10
 
-> 2025-08-05 14:18:46 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 14:18:46 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 怎么 (2.6s)
 ✓ 什么时候 (2.7s)
 ✓ 哪个 (1.8s)
@@ -4239,8 +4239,8 @@
 ✓ 有 (12.5s)
 < 14:19:30 43.6s 8/9
 
-> 2025-08-05 14:22:10 | Chinese→English Vocabulary: Basic 03 | Review All
-> 2025-08-05 14:22:28 | Chinese→English Foundation: Starter | Review All
+> 2025-08-05 14:22:10 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 14:22:28 | HSK 1: HSK1 Core A | Review All
 ✗ 人 A:eight (3.2s)
 ✓ 水 (3.2s)
 ✓ 手 (2.0s)
@@ -4253,7 +4253,7 @@
 ✓ 女 (2.6s)
 < 14:22:53 24.3s 9/10
 
-> 2025-08-05 14:23:20 | Chinese→English Foundation: Starter | Review All
+> 2025-08-05 14:23:20 | HSK 1: HSK1 Core A | Review All
 ✓ 目 (4.1s)
 ✓ 水 (3.1s)
 ✓ 女 (2.6s)
@@ -4266,7 +4266,7 @@
 ✓ 人 (1.8s)
 < 14:23:45 24.9s 10/10
 
-> 2025-08-05 14:24:56 | Chinese→English Foundation: Radicals 04 | Review All
+> 2025-08-05 14:24:56 | HSK 1: HSK1 Core A | Review All
 ✓ 百 (3.0s)
 ✓ 千 (3.2s)
 ✓ 下 (1.9s)
@@ -4279,8 +4279,8 @@
 ✗ 左 A:five (2.1s)
 < 14:25:20 24.1s 9/10
 
-> 2025-08-05 14:28:53 | Chinese→English Vocabulary: Basic 02 | Review All
-> 2025-08-05 14:33:14 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 14:28:53 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 14:33:14 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 得到 A:can (5.1s)
 ✓ 拿 (3.5s)
 ✓ 开 (2.9s)
@@ -4293,7 +4293,7 @@
 ✓ 问 (2.0s)
 < 14:34:00 46.2s 5/10
 
-> 2025-08-05 14:36:17 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 14:36:17 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 得到 (8.7s)
 ✓ 开 (2.2s)
 ✗ 告诉 A:can (8.6s)
@@ -4306,7 +4306,7 @@
 ✓ 问 (1.8s)
 < 14:37:06 48.9s 9/10
 
-> 2025-08-05 14:37:28 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 14:37:28 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 关 (2.4s)
 ✓ 开 (1.6s)
 ✓ 告诉 (2.4s)
@@ -4319,7 +4319,7 @@
 ✓ 开始 (2.2s)
 < 14:38:07 39.5s 9/10
 
-> 2025-08-05 14:38:29 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 14:38:29 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 回答 (2.5s)
 ✓ 告诉 (2.6s)
 ✓ 关 (2.0s)
@@ -4332,7 +4332,7 @@
 ✓ 给 (3.2s)
 < 14:39:04 35.3s 10/10
 
-> 2025-08-05 14:39:09 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 14:39:09 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 告诉 (4.9s)
 ✓ 放 (2.0s)
 ✓ 拿 (1.4s)
@@ -4345,7 +4345,7 @@
 ✓ 给 (2.0s)
 < 14:39:35 25.9s 10/10
 
-> 2025-08-05 14:39:41 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 14:39:41 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 开 (1.8s)
 ✓ 问 (1.6s)
 ✓ 开始 (2.2s)
@@ -4358,7 +4358,7 @@
 ✓ 拿 (1.7s)
 < 14:40:02 21.0s 10/10
 
-> 2025-08-05 14:40:29 | Chinese→English Foundation: Numbers | Review All
+> 2025-08-05 14:40:29 | HSK 1: HSK1 Core A | Review All
 ✓ 十 (2.6s)
 ✓ 一 (1.4s)
 ✓ 五 (1.4s)
@@ -4371,7 +4371,7 @@
 ✗ 七 A:five (1.7s)
 < 14:40:47 18.1s 8/10
 
-> 2025-08-05 14:41:07 | Chinese→English Foundation: Radicals 01 | Review All
+> 2025-08-05 14:41:07 | HSK 1: HSK1 Core A | Review All
 ✓ 火 (1.8s)
 ✗ 言 A:say (9.0s)
 ✓ 心 (2.7s)
@@ -4384,7 +4384,7 @@
 ✓ 金 (2.2s)
 < 14:41:34 26.8s 9/10
 
-> 2025-08-05 14:42:06 | Chinese→English Foundation: Radicals 02 | Review All
+> 2025-08-05 14:42:06 | HSK 1: HSK1 Core A | Review All
 ✓ 男 (5.2s)
 ✗ 糸 A:give (2.9s)
 ✓ 竹 (4.7s)
@@ -4397,7 +4397,7 @@
 ✓ 草 (2.4s)
 < 14:42:39 33.5s 9/10
 
-> 2025-08-05 14:42:55 | Chinese→English Foundation: Radicals 06 | Review All
+> 2025-08-05 14:42:55 | HSK 1: HSK1 Core A | Review All
 ✓ 家 (2.8s)
 ✓ 食 (1.7s)
 ✓ 足 (2.1s)
@@ -4410,7 +4410,7 @@
 ✓ 身 (2.0s)
 < 14:43:18 23.4s 10/10
 
-> 2025-08-05 14:43:26 | Chinese→English Foundation: Radicals 07 | Review All
+> 2025-08-05 14:43:26 | HSK 1: HSK1 Core A | Review All
 ✓ 来 (4.1s)
 ✓ 看 (3.8s)
 ✓ 去 (2.2s)
@@ -4423,7 +4423,7 @@
 ✓ 教 (6.2s)
 < 14:44:00 34.3s 10/10
 
-> 2025-08-05 14:44:12 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 14:44:12 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 开 (2.0s)
 ✓ 告诉 (6.5s)
 ✓ 回答 (6.3s)
@@ -4436,7 +4436,7 @@
 ✓ 拿 (4.0s)
 < 14:45:05 53.5s 9/10
 
-> 2025-08-05 14:45:26 | Chinese→English Vocabulary: Basic 04 | Category Review: Chinese→English Vocabulary (Recognition)
+> 2025-08-05 14:45:26 | HSK 1: HSK1 Extended B (Family & Verbs) | Category Review
 ✗ 穿 A:south (9.9s)
 ✗ 今天 A:idk (7.3s)
 ✓ 问 (3.9s)
@@ -4558,7 +4558,7 @@
 ✗ 早上 A:idk (2.2s)
 < 14:54:03 517.6s 46/119
 
-> 2025-08-05 14:54:27 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 14:54:27 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 需要 A:man (36.2s)
 ✓ 知道 (11.5s)
 ✓ 想 (2.8s)
@@ -4571,7 +4571,7 @@
 ✗ 要 A:man (25.1s)
 < 14:56:10 103.8s 5/10
 
-> 2025-08-05 14:57:01 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 14:57:01 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 要 (3.9s)
 ✗ 知道 A:where (11.4s)
 ✓ 需要 (12.7s)
@@ -4584,7 +4584,7 @@
 ✓ 做 (3.2s)
 < 14:57:56 54.6s 8/10
 
-> 2025-08-05 14:58:13 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 14:58:13 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 感觉 (2.1s)
 ✓ 喜欢 (2.7s)
 ✗ 知道 A:can (5.1s)
@@ -4597,7 +4597,7 @@
 ✓ 做 (3.6s)
 < 14:58:49 36.1s 7/10
 
-> 2025-08-05 14:58:57 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 14:58:57 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 做 (2.7s)
 ✓ 希望 (1.9s)
 ✓ 需要 (1.9s)
@@ -4610,7 +4610,7 @@
 ✓ 帮助 (2.1s)
 < 14:59:19 22.0s 10/10
 
-> 2025-08-05 14:59:22 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 14:59:22 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 做 (2.2s)
 ✓ 想 (2.0s)
 ✓ 帮助 (1.7s)
@@ -4623,7 +4623,7 @@
 ✓ 希望 (2.0s)
 < 14:59:45 22.1s 10/10
 
-> 2025-08-05 14:59:48 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 14:59:48 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 希望 (2.1s)
 ✓ 感觉 (1.9s)
 ✓ 需要 (3.5s)
@@ -4636,7 +4636,7 @@
 ✓ 帮助 (1.9s)
 < 15:00:13 25.1s 10/10
 
-> 2025-08-05 15:00:23 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 15:00:23 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 问 (1.6s)
 ✓ 给 (1.6s)
 ✓ 回答 (2.6s)
@@ -4649,7 +4649,7 @@
 ✗ 得到 A:end (8.1s)
 < 15:00:53 30.2s 9/10
 
-> 2025-08-05 15:01:08 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 15:01:08 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 告诉 (3.7s)
 ✓ 拿 (1.9s)
 ✓ 回答 (2.0s)
@@ -4662,7 +4662,7 @@
 ✓ 放 (2.5s)
 < 15:01:30 22.3s 10/10
 
-> 2025-08-05 15:01:37 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 15:01:37 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 得到 (2.0s)
 ✓ 开 (1.6s)
 ✓ 问 (1.4s)
@@ -4675,7 +4675,7 @@
 ✓ 开始 (2.6s)
 < 15:01:57 20.0s 10/10
 
-> 2025-08-05 15:02:05 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 15:02:05 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 给 (2.0s)
 ✓ 得到 (2.6s)
 ✓ 回答 (2.2s)
@@ -4688,7 +4688,7 @@
 ✓ 开 (1.8s)
 < 15:02:30 24.4s 10/10
 
-> 2025-08-05 15:02:42 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 15:02:42 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 买 (2.4s)
 ✗ 付钱 A:expensive (4.9s)
 ✓ 卖 (4.4s)
@@ -4701,7 +4701,7 @@
 ✗ 免费 A:expensive (7.9s)
 < 15:03:34 51.7s 5/10
 
-> 2025-08-05 15:04:34 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 15:04:34 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 记得 (6.6s)
 ✓ 懂 (2.8s)
 ✓ 价格 (3.9s)
@@ -4714,19 +4714,19 @@
 ✓ 卖 (1.8s)
 < 15:05:16 41.7s 10/10
 
-> 2025-08-05 15:08:32 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 15:08:32 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 夜里 A:where (4.6s)
 ✗ 今天 A:idk (3.7s)
 ✗ 现在 A:idk (5.3s)
 ✗ 明天 A:idk (5.1s)
 ✗ 下午 A:gr (3.8s)
-> 2025-08-05 15:10:06 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 15:10:06 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 帮助 (2.4s)
 ✓ 喜欢 (10.5s)
-> 2025-08-05 15:11:13 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 15:11:13 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 是 (3.0s)
 ✓ 什么时候 (5.8s)
-> 2025-08-05 15:11:45 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 15:11:45 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 为什么 (1.9s)
 ✓ 没有 (10.1s)
 ✗ 有 A:go (4.4s)
@@ -4738,7 +4738,7 @@
 ✓ 不 (2.8s)
 < 15:12:18 33.1s 8/9
 
-> 2025-08-05 15:12:45 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 15:12:45 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 便宜 (4.1s)
 ✓ 付钱 (3.9s)
 ✓ 懂 (3.4s)
@@ -4751,7 +4751,7 @@
 ✓ 记得 (1.9s)
 < 15:13:18 33.3s 9/10
 
-> 2025-08-05 15:13:32 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 15:13:32 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 便宜 (3.4s)
 ✓ 贵 (2.4s)
 ✓ 懂 (3.3s)
@@ -4764,7 +4764,7 @@
 ✓ 付钱 (6.3s)
 < 15:14:06 33.8s 9/10
 
-> 2025-08-05 15:14:13 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 15:14:13 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 记得 (3.5s)
 ✓ 懂 (3.0s)
 ✓ 买 (1.6s)
@@ -4777,7 +4777,7 @@
 ✓ 免费 (2.5s)
 < 15:14:39 25.8s 10/10
 
-> 2025-08-05 15:14:44 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 15:14:44 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 以前 A:get (6.8s)
 ✗ 现在 A:idk (2.8s)
 ✗ 今天 A:idk (2.3s)
@@ -4790,7 +4790,7 @@
 ✗ 下午 A:before (5.1s)
 < 15:15:15 31.1s 1/10
 
-> 2025-08-05 15:15:20 | Chinese→English Vocabulary: Basic 08 | Practice Difficult
+> 2025-08-05 15:15:20 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✗ 今天 A:idk (5.8s)
 ✗ 以后 A:before (12.1s)
 ✗ 早上 A:afternoon (8.1s)
@@ -4803,8 +4803,8 @@
 ✗ 明天 A:idk (4.4s)
 < 15:16:35 75.2s 1/10
 
-> 2025-08-05 15:16:47 | Chinese→English Vocabulary: Basic 08 | Review All
-> 2025-08-05 15:17:08 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 15:16:47 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 15:17:08 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 早上 (4.6s)
 ✓ 明天 (5.7s)
 ✗ 晚上 A:after (5.5s)
@@ -4817,8 +4817,8 @@
 ✗ 今天 A:day (2.0s)
 < 15:18:05 56.7s 5/10
 
-> 2025-08-05 15:18:51 | Chinese→English Vocabulary: Basic 08 | Review All
-> 2025-08-05 15:22:48 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 15:18:51 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 15:22:48 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 他们 (3.7s)
 ✓ 哪里 (5.0s)
 ✓ 他 (3.9s)
@@ -4831,7 +4831,7 @@
 ✓ 我们 (2.8s)
 < 15:23:17 28.5s 10/10
 
-> 2025-08-05 15:23:24 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 15:23:24 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 怎么 (5.2s)
 ✓ 是 (4.0s)
 ✓ 不 (1.6s)
@@ -4843,7 +4843,7 @@
 ✓ 没有 (2.6s)
 < 15:23:54 30.1s 9/9
 
-> 2025-08-05 15:29:31 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 15:29:31 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 什么 (3.8s)
 ✓ 他们 (3.1s)
 ✓ 这 (4.0s)
@@ -4856,7 +4856,7 @@
 ✓ 那 (5.8s)
 < 15:30:14 42.9s 10/10
 
-> 2025-08-05 15:30:31 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 15:30:31 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 什么 (2.3s)
 ✓ 哪里 (9.9s)
 ✓ 她 (2.4s)
@@ -4869,7 +4869,7 @@
 ✓ 我 (2.5s)
 < 15:31:01 29.8s 10/10
 
-> 2025-08-05 15:31:40 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 15:31:40 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 我 (3.6s)
 ✓ 他们 (2.4s)
 ✓ 他 (1.8s)
@@ -4882,7 +4882,7 @@
 ✓ 哪里 (2.9s)
 < 15:32:01 20.9s 10/10
 
-> 2025-08-05 15:34:56 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 15:34:56 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 他 (3.1s)
 ✓ 他们 (1.9s)
 ✓ 哪里 (2.1s)
@@ -4895,7 +4895,7 @@
 ✓ 她 (2.7s)
 < 15:35:19 22.8s 10/10
 
-> 2025-08-05 15:35:57 | Chinese→English Vocabulary: Basic 01 | Review All
+> 2025-08-05 15:35:57 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 什么 (2.2s)
 ✓ 那 (2.7s)
 ✓ 我 (1.8s)
@@ -4908,7 +4908,7 @@
 ✓ 这 (2.0s)
 < 15:36:22 25.6s 10/10
 
-> 2025-08-05 15:36:28 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 15:36:28 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 为什么 (2.2s)
 ✓ 不 (1.7s)
 ✓ 什么时候 (2.2s)
@@ -4920,7 +4920,7 @@
 ✗ 有 A:get (5.1s)
 < 15:37:00 32.1s 7/9
 
-> 2025-08-05 15:38:31 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 15:38:31 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 怎么 (2.8s)
 ✓ 是 (1.6s)
 ✓ 为什么 (1.7s)
@@ -4932,7 +4932,7 @@
 ✓ 什么时候 (1.9s)
 < 15:38:50 19.1s 9/9
 
-> 2025-08-05 15:39:05 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 15:39:05 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 什么时候 (3.1s)
 ✓ 有 (1.8s)
 ✓ 谁 (2.1s)
@@ -4944,7 +4944,7 @@
 ✓ 怎么 (2.4s)
 < 15:39:25 20.5s 9/9
 
-> 2025-08-05 15:39:29 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 15:39:29 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 没有 (3.0s)
 ✓ 是 (1.6s)
 ✓ 怎么 (1.5s)
@@ -4956,7 +4956,7 @@
 ✓ 谁 (2.8s)
 < 15:39:48 19.1s 9/9
 
-> 2025-08-05 15:40:16 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 15:40:16 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 希望 (6.3s)
 ✓ 感觉 (2.5s)
 ✓ 需要 (2.6s)
@@ -4969,7 +4969,7 @@
 ✓ 做 (5.9s)
 < 15:40:56 39.9s 9/10
 
-> 2025-08-05 15:43:38 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 15:43:38 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 可以 (5.1s)
 ✗ 想 A:know (2.0s)
 ✓ 喜欢 (3.0s)
@@ -4982,7 +4982,7 @@
 ✓ 感觉 (1.9s)
 < 15:44:06 28.1s 9/10
 
-> 2025-08-05 15:45:27 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 15:45:27 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 知道 (2.7s)
 ✓ 喜欢 (2.5s)
 ✓ 需要 (2.1s)
@@ -4995,7 +4995,7 @@
 ✗ 想 A:want (2.3s)
 < 15:45:51 23.6s 9/10
 
-> 2025-08-05 15:46:19 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 15:46:19 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 做 (2.3s)
 ✓ 要 (1.9s)
 ✓ 感觉 (6.1s)
@@ -5008,7 +5008,7 @@
 ✓ 想 (2.5s)
 < 15:46:47 27.9s 10/10
 
-> 2025-08-05 15:46:54 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 15:46:54 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 感觉 (3.2s)
 ✓ 想 (2.2s)
 ✓ 做 (2.1s)
@@ -5021,7 +5021,7 @@
 ✓ 喜欢 (1.9s)
 < 15:47:17 23.0s 10/10
 
-> 2025-08-05 15:47:25 | Chinese→English Vocabulary: Basic 03 | Review All
+> 2025-08-05 15:47:25 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 做 (2.2s)
 ✓ 想 (3.7s)
 ✓ 喜欢 (1.8s)
@@ -5034,7 +5034,7 @@
 ✓ 要 (2.2s)
 < 15:47:48 23.7s 10/10
 
-> 2025-08-05 15:48:21 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 15:48:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 拿 (3.5s)
 ✓ 问 (1.7s)
 ✓ 回答 (1.8s)
@@ -5047,7 +5047,7 @@
 ✓ 给 (3.2s)
 < 15:48:50 28.5s 9/10
 
-> 2025-08-05 15:48:54 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 15:48:54 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 放 (2.7s)
 ✓ 给 (1.6s)
 ✓ 开始 (2.5s)
@@ -5060,7 +5060,7 @@
 ✓ 问 (2.0s)
 < 15:49:20 26.3s 10/10
 
-> 2025-08-05 15:49:35 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 15:49:35 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 回答 (2.8s)
 ✓ 问 (1.3s)
 ✓ 拿 (1.4s)
@@ -5073,7 +5073,7 @@
 ✓ 放 (1.8s)
 < 15:49:55 20.0s 10/10
 
-> 2025-08-05 15:49:59 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 15:49:59 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 关 (1.9s)
 ✓ 拿 (1.6s)
 ✓ 开 (1.5s)
@@ -5086,7 +5086,7 @@
 ✓ 得到 (2.6s)
 < 15:50:18 19.5s 10/10
 
-> 2025-08-05 15:50:45 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 15:50:45 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 停 (2.6s)
 ✓ 躺 (4.2s)
 ✓ 醒 (4.1s)
@@ -5099,7 +5099,7 @@
 ✓ 喝 (1.8s)
 < 15:51:23 38.0s 7/10
 
-> 2025-08-05 15:52:11 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 15:52:11 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 喝 (2.4s)
 ✓ 躺 (2.4s)
 ✓ 吃 (1.5s)
@@ -5112,7 +5112,7 @@
 ✓ 结束 (4.3s)
 < 15:52:36 25.0s 10/10
 
-> 2025-08-05 15:52:41 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 15:52:41 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 结束 (2.8s)
 ✓ 停 (1.9s)
 ✓ 喝 (1.8s)
@@ -5125,7 +5125,7 @@
 ✓ 站 (1.9s)
 < 15:53:04 22.7s 10/10
 
-> 2025-08-05 15:53:19 | Chinese→English Vocabulary: Basic 05 | Review All
+> 2025-08-05 15:53:19 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 躺 (2.4s)
 ✓ 吃 (1.5s)
 ✓ 等 (2.1s)
@@ -5138,7 +5138,7 @@
 ✓ 站 (2.1s)
 < 15:53:48 29.0s 10/10
 
-> 2025-08-05 15:54:31 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 15:54:31 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 学习 (6.3s)
 ✓ 洗 (7.6s)
 ✗ 穿 A:south (4.7s)
@@ -5151,7 +5151,7 @@
 ✓ 做饭 (2.1s)
 < 15:55:12 41.0s 8/10
 
-> 2025-08-05 15:56:06 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 15:56:06 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 学习 (3.5s)
 ✓ 干净 (3.2s)
 ✓ 工作 (2.8s)
@@ -5164,7 +5164,7 @@
 ✓ 学 (2.4s)
 < 15:56:37 30.7s 10/10
 
-> 2025-08-05 15:56:42 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 15:56:42 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 玩 (1.9s)
 ✓ 学习 (2.5s)
 ✓ 穿 (2.9s)
@@ -5177,7 +5177,7 @@
 ✓ 学 (1.9s)
 < 15:57:05 23.5s 10/10
 
-> 2025-08-05 15:57:24 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 15:57:24 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 学习 (2.5s)
 ✓ 玩 (1.9s)
 ✓ 干净 (2.9s)
@@ -5190,7 +5190,7 @@
 ✓ 学 (1.9s)
 < 15:57:53 29.3s 10/10
 
-> 2025-08-05 16:00:35 | Chinese→English Vocabulary: Basic 06 | Review All
+> 2025-08-05 16:00:35 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 穿 (3.4s)
 ✓ 脱 (3.9s)
 ✓ 工作 (2.5s)
@@ -5203,7 +5203,7 @@
 ✓ 玩 (2.1s)
 < 16:01:04 29.0s 10/10
 
-> 2025-08-05 16:01:20 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 16:01:20 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 记得 (3.6s)
 ✗ 免费 A:expensive (4.8s)
 ✓ 贵 (4.4s)
@@ -5216,7 +5216,7 @@
 ✓ 卖 (2.1s)
 < 16:01:52 32.5s 9/10
 
-> 2025-08-05 16:02:02 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 16:02:02 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 价格 (2.4s)
 ✓ 懂 (3.0s)
 ✓ 便宜 (1.9s)
@@ -5229,7 +5229,7 @@
 ✓ 卖 (1.9s)
 < 16:02:29 27.2s 10/10
 
-> 2025-08-05 16:02:37 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 16:02:37 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 忘记 (4.3s)
 ✓ 贵 (2.8s)
 ✓ 价格 (2.1s)
@@ -5242,7 +5242,7 @@
 ✓ 记得 (4.2s)
 < 16:03:05 27.8s 10/10
 
-> 2025-08-05 16:03:10 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 16:03:10 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 免费 (4.0s)
 ✓ 付钱 (2.4s)
 ✓ 卖 (2.0s)
@@ -5255,7 +5255,7 @@
 ✓ 买 (2.0s)
 < 16:03:36 26.1s 10/10
 
-> 2025-08-05 16:03:42 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 16:03:42 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 忘记 (2.4s)
 ✓ 贵 (2.2s)
 ✓ 记得 (2.5s)
@@ -5268,7 +5268,7 @@
 ✓ 买 (1.8s)
 < 16:04:06 24.5s 10/10
 
-> 2025-08-05 16:04:13 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 16:04:13 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 免费 (3.0s)
 ✓ 懂 (2.8s)
 ✓ 付钱 (3.2s)
@@ -5281,7 +5281,7 @@
 ✓ 买 (2.2s)
 < 16:04:37 24.2s 10/10
 
-> 2025-08-05 16:04:44 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 16:04:44 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 付钱 (2.3s)
 ✓ 忘记 (2.2s)
 ✓ 免费 (2.7s)
@@ -5294,7 +5294,7 @@
 ✓ 便宜 (1.9s)
 < 16:05:11 27.1s 10/10
 
-> 2025-08-05 16:05:17 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 16:05:17 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 价格 (2.2s)
 ✓ 懂 (2.5s)
 ✓ 记得 (3.4s)
@@ -5307,7 +5307,7 @@
 ✓ 便宜 (1.9s)
 < 16:05:44 26.6s 10/10
 
-> 2025-08-05 16:05:48 | Chinese→English Vocabulary: Basic 07 | Review All
+> 2025-08-05 16:05:48 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 价格 (2.7s)
 ✓ 忘记 (3.7s)
 ✓ 懂 (3.0s)
@@ -5320,7 +5320,7 @@
 ✓ 买 (1.6s)
 < 16:06:14 26.3s 10/10
 
-> 2025-08-05 16:06:24 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:06:24 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 夜里 A:where (2.6s)
 ✗ 早上 A:afternoon (7.3s)
 ✗ 明天 A:afternoon (7.8s)
@@ -5333,7 +5333,7 @@
 ✗ 晚上 A:after (10.5s)
 < 16:07:26 62.3s 5/10
 
-> 2025-08-05 16:07:38 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:07:38 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 下午 (5.9s)
 ✓ 夜里 (3.5s)
 ✓ 明天 (8.4s)
@@ -5346,7 +5346,7 @@
 ✓ 以后 (6.0s)
 < 16:08:36 58.5s 7/10
 
-> 2025-08-05 16:08:43 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:08:43 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 夜里 (3.4s)
 ✓ 以前 (2.8s)
 ✓ 明天 (3.5s)
@@ -5359,7 +5359,7 @@
 ✓ 今天 (2.8s)
 < 16:09:13 30.4s 10/10
 
-> 2025-08-05 16:09:19 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:09:19 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 今天 (2.8s)
 ✓ 夜里 (2.9s)
 ✓ 昨天 (3.5s)
@@ -5372,7 +5372,7 @@
 ✓ 晚上 (3.4s)
 < 16:09:49 30.3s 10/10
 
-> 2025-08-05 16:09:54 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:09:54 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 早上 (3.7s)
 ✓ 以后 (2.5s)
 ✓ 明天 (2.8s)
@@ -5385,7 +5385,7 @@
 ✓ 现在 (2.1s)
 < 16:10:21 27.3s 10/10
 
-> 2025-08-05 16:10:26 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:10:26 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 以前 (3.2s)
 ✓ 今天 (1.9s)
 ✓ 下午 (3.0s)
@@ -5398,7 +5398,7 @@
 ✓ 早上 (1.9s)
 < 16:10:52 25.8s 10/10
 
-> 2025-08-05 16:10:56 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:10:56 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 明天 (2.7s)
 ✓ 以前 (3.7s)
 ✓ 昨天 (3.2s)
@@ -5411,7 +5411,7 @@
 ✓ 以后 (2.1s)
 < 16:11:23 26.9s 10/10
 
-> 2025-08-05 16:11:28 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:11:28 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 早上 (2.0s)
 ✓ 下午 (4.0s)
 ✓ 以后 (2.1s)
@@ -5424,7 +5424,7 @@
 ✓ 昨天 (2.9s)
 < 16:11:55 27.1s 10/10
 
-> 2025-08-05 16:12:00 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:12:00 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 今天 (2.1s)
 ✓ 以后 (2.1s)
 ✓ 明天 (2.0s)
@@ -5437,7 +5437,7 @@
 ✓ 早上 (1.9s)
 < 16:12:24 24.4s 10/10
 
-> 2025-08-05 16:12:28 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:12:28 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 下午 (2.6s)
 ✓ 晚上 (2.2s)
 ✓ 以前 (2.5s)
@@ -5450,7 +5450,7 @@
 ✓ 以后 (1.9s)
 < 16:12:52 23.6s 10/10
 
-> 2025-08-05 16:12:58 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:12:58 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 今天 (2.0s)
 ✓ 现在 (1.8s)
 ✓ 昨天 (2.6s)
@@ -5463,7 +5463,7 @@
 ✓ 早上 (2.0s)
 < 16:13:23 24.9s 10/10
 
-> 2025-08-05 16:13:29 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:13:29 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 早上 (1.8s)
 ✓ 明天 (3.5s)
 ✓ 以后 (1.8s)
@@ -5476,7 +5476,7 @@
 ✓ 昨天 (3.6s)
 < 16:13:53 24.5s 10/10
 
-> 2025-08-05 16:13:58 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:13:58 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 现在 (2.0s)
 ✓ 以前 (2.2s)
 ✓ 明天 (2.4s)
@@ -5489,7 +5489,7 @@
 ✓ 夜里 (5.0s)
 < 16:14:28 30.0s 10/10
 
-> 2025-08-05 16:14:49 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:14:49 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 今天 (2.0s)
 ✓ 昨天 (2.5s)
 ✓ 夜里 (2.4s)
@@ -5502,7 +5502,7 @@
 ✓ 早上 (2.3s)
 < 16:15:17 27.8s 10/10
 
-> 2025-08-05 16:15:23 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:15:23 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 现在 (1.7s)
 ✓ 以前 (2.0s)
 ✓ 早上 (1.8s)
@@ -5515,7 +5515,7 @@
 ✓ 今天 (1.9s)
 < 16:15:45 23.0s 10/10
 
-> 2025-08-05 16:15:52 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:15:52 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 早上 (1.9s)
 ✓ 下午 (2.2s)
 ✓ 以前 (2.4s)
@@ -5528,7 +5528,7 @@
 ✓ 夜里 (6.3s)
 < 16:16:21 29.4s 10/10
 
-> 2025-08-05 16:18:10 | Chinese→English Vocabulary: Daily Verbs | Review All
+> 2025-08-05 16:18:10 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 喝 (2.4s)
 ✓ 听 (5.7s)
 ✓ 关 (2.6s)
@@ -5561,8 +5561,8 @@
 ✓ 做 (2.5s)
 < 16:19:44 93.5s 28/30
 
-> 2025-08-05 16:21:11 | Chinese→English Vocabulary: Basic 08 | Review All
-> 2025-08-05 16:21:28 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:21:11 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 16:21:28 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 早上 (7.2s)
 ✓ 以前 (2.5s)
 ✓ 下午 (2.5s)
@@ -5575,9 +5575,9 @@
 ✓ 昨天 (2.5s)
 < 16:21:56 27.8s 10/10
 
-> 2025-08-05 16:24:46 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:24:46 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 晚上 A:morning (2.7s)
-> 2025-08-05 16:25:22 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:25:22 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 现在 (3.4s)
 ✓ 早上 (2.4s)
 ✓ 夜里 (2.5s)
@@ -5590,7 +5590,7 @@
 ✓ 晚上 (2.3s)
 < 16:25:47 25.6s 10/10
 
-> 2025-08-05 16:30:40 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:30:40 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 以前 (3.9s)
 ✓ 明天 (5.3s)
 ✓ 以后 (3.8s)
@@ -5603,7 +5603,7 @@
 ✓ 早上 (3.0s)
 < 16:31:14 33.7s 10/10
 
-> 2025-08-05 16:31:21 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:31:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 夜里 (3.3s)
 ✓ 昨天 (3.5s)
 ✓ 下午 (3.5s)
@@ -5616,7 +5616,7 @@
 ✓ 明天 (4.3s)
 < 16:31:51 30.2s 9/10
 
-> 2025-08-05 16:31:57 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:31:57 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 夜里 (2.8s)
 ✓ 明天 (2.5s)
 ✓ 以后 (6.3s)
@@ -5629,7 +5629,7 @@
 ✓ 早上 (2.3s)
 < 16:32:30 33.3s 10/10
 
-> 2025-08-05 16:32:34 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:32:34 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 现在 (1.8s)
 ✓ 晚上 (2.9s)
 ✓ 昨天 (3.2s)
@@ -5642,7 +5642,7 @@
 ✓ 夜里 (2.3s)
 < 16:32:57 23.4s 10/10
 
-> 2025-08-05 16:33:01 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 16:33:01 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 以后 (2.7s)
 ✓ 下午 (2.5s)
 ✓ 夜里 (2.6s)
@@ -5655,9 +5655,9 @@
 ✓ 以前 (1.8s)
 < 16:33:26 25.1s 10/10
 
-> 2025-08-05 16:34:05 | Chinese→English Vocabulary: Basic 08 | Review All
-> 2025-08-05 16:35:27 | Chinese→English Vocabulary: Basic 08 | Review All
-> 2025-08-05 16:37:29 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-05 16:34:05 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 16:35:27 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 16:37:29 | HSK 1: HSK1 Core A | Category Review
 ✓ 男 (5.7s)
 ✓ 木 (5.0s)
 ✓ 足 (2.6s)
@@ -5740,7 +5740,7 @@
 ✓ 食 (1.7s)
 < 16:41:01 212.6s 74/80
 
-> 2025-08-05 16:42:15 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-05 16:42:15 | HSK 1: HSK1 Core A | Category Review
 ✓ 心 (2.2s)
 ✓ 八 (2.5s)
 ✓ 土 (1.9s)
@@ -5823,7 +5823,7 @@
 ✓ 食 (1.9s)
 < 16:45:36 200.4s 74/80
 
-> 2025-08-05 16:47:01 | Ruby | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-05 16:47:01 | HSK 1: HSK1 Core A | Category Review
 ✓ 鸟 (3.6s)
 ✓ 前 (2.4s)
 ✓ 窗 (3.0s)
@@ -5906,7 +5906,7 @@
 ✓ 八 (2.3s)
 < 16:50:15 193.5s 76/80
 
-> 2025-08-05 16:51:01 | Chinese→English Foundation: Numbers | Review All
+> 2025-08-05 16:51:01 | HSK 1: HSK1 Core A | Review All
 ✓ 八 (2.1s)
 ✓ 五 (1.9s)
 ✓ 四 (1.4s)
@@ -5919,8 +5919,8 @@
 ✓ 二 (1.3s)
 < 16:51:18 17.1s 10/10
 
-> 2025-08-05 16:51:31 | Chinese→English Vocabulary: Family | Review All
-> 2025-08-05 16:52:01 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 16:51:31 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 16:52:01 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 家 (4.1s)
 ✗ 侄子 A:son (4.4s)
 ✗ 叔 A:idk (5.2s)
@@ -5951,7 +5951,7 @@
 ✗ 男孩 A:grandfather (8.0s)
 < 16:54:02 121.0s 3/28
 
-> 2025-08-05 16:55:38 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 16:55:38 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 妻 A:idk (3.4s)
 ✗ 夫 A:father (3.9s)
 ✗ 爷 A:father (10.9s)
@@ -5982,7 +5982,7 @@
 ✗ 姨 A:idk (5.6s)
 < 16:58:32 173.4s 11/28
 
-> 2025-08-05 17:00:08 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 17:00:08 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 舅 A:idk (5.8s)
 ✗ 侄子 A:boy (7.2s)
 ✗ 父 A:husband (4.2s)
@@ -6013,7 +6013,7 @@
 ✗ 叔 A:idk (3.3s)
 < 17:02:39 150.9s 16/28
 
-> 2025-08-05 17:04:27 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 17:04:27 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 母 (2.5s)
 ✓ 男孩 (4.5s)
 ✗ 舅 A:wife (6.2s)
@@ -6044,7 +6044,7 @@
 ✗ 夫 A:father (16.0s)
 < 17:07:33 185.8s 19/28
 
-> 2025-08-05 17:09:15 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 17:09:15 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 婴儿 (3.2s)
 ✗ 表姐 A:aunt (mother's sister) (18.4s)
 ✓ 爷 (10.5s)
@@ -6075,7 +6075,7 @@
 ✓ 姐 (7.5s)
 < 17:12:40 205.1s 20/28
 
-> 2025-08-05 17:12:47 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 17:12:47 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 父母 (2.3s)
 ✓ 妹 (6.4s)
 ✓ 儿 (1.6s)
@@ -6106,7 +6106,7 @@
 ✗ 姨 A:younger sister (5.4s)
 < 17:15:42 174.9s 22/28
 
-> 2025-08-05 17:17:02 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 17:17:02 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 妹 (6.5s)
 ✓ 儿 (1.6s)
 ✓ 夫 (4.1s)
@@ -6137,7 +6137,7 @@
 ✓ 弟 (3.8s)
 < 17:19:42 160.1s 25/28
 
-> 2025-08-05 17:20:33 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 17:20:33 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 母 (2.3s)
 ✓ 侄女 (2.8s)
 ✓ 表姐 (4.9s)
@@ -6168,7 +6168,7 @@
 ✓ 夫 (9.8s)
 < 17:22:57 143.2s 28/28
 
-> 2025-08-05 17:23:55 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 17:23:55 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 姐 (3.9s)
 ✓ 婴儿 (2.1s)
 ✓ 爷 (4.3s)
@@ -6199,7 +6199,7 @@
 ✓ 孩子 (3.1s)
 < 17:26:15 139.3s 26/28
 
-> 2025-08-05 17:26:23 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 17:26:23 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 婴儿 (3.1s)
 ✓ 侄女 (7.4s)
 ✓ 舅 (5.8s)
@@ -6230,7 +6230,7 @@
 ✓ 姐 (3.6s)
 < 17:28:38 134.8s 28/28
 
-> 2025-08-05 17:28:48 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 17:28:48 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 女孩 (3.9s)
 ✓ 父母 (2.5s)
 ✓ 儿 (1.4s)
@@ -6261,7 +6261,7 @@
 ✓ 表哥 (7.5s)
 < 17:30:40 112.2s 28/28
 
-> 2025-08-05 19:22:11 | Chinese→English Vocabulary: Basic 04 | Review All
+> 2025-08-05 19:22:11 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 开始 (9.0s)
 ✓ 问 (2.6s)
 ✓ 告诉 (14.0s)
@@ -6274,7 +6274,7 @@
 ✓ 关 (3.0s)
 < 19:23:05 53.6s 9/10
 
-> 2025-08-05 19:24:49 | Chinese→English Vocabulary: Basic 02 | Review All
+> 2025-08-05 19:24:49 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 为什么 (12.7s)
 ✓ 不 (2.5s)
 ✓ 哪个 (2.2s)
@@ -6286,8 +6286,8 @@
 ✗ 什么时候 A:where (8.9s)
 < 19:25:40 51.7s 7/9
 
-> 2025-08-05 19:27:36 | Chinese→English Vocabulary: Basic 08 | Review All
-> 2025-08-05 19:28:00 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 19:27:36 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 19:28:00 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✗ 明天 A:idk (17.5s)
 ✓ 昨天 (8.9s)
 ✓ 今天 (2.5s)
@@ -6300,7 +6300,7 @@
 ✓ 下午 (3.7s)
 < 19:29:01 60.2s 9/10
 
-> 2025-08-05 19:29:08 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 19:29:08 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 现在 (3.0s)
 ✓ 晚上 (18.8s)
 ✓ 早上 (2.3s)
@@ -6313,7 +6313,7 @@
 ✓ 以前 (4.6s)
 < 19:29:58 49.9s 10/10
 
-> 2025-08-05 19:30:33 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 19:30:33 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 晚上 (3.3s)
 ✓ 昨天 (3.9s)
 ✓ 以后 (2.3s)
@@ -6326,7 +6326,7 @@
 ✓ 下午 (6.5s)
 < 19:31:05 31.8s 10/10
 
-> 2025-08-05 19:31:17 | Chinese→English Vocabulary: Basic 08 | Review All
+> 2025-08-05 19:31:17 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 现在 (4.6s)
 ✓ 晚上 (3.1s)
 ✓ 以后 (2.3s)
@@ -6339,7 +6339,7 @@
 ✓ 早上 (2.2s)
 < 19:31:48 31.7s 10/10
 
-> 2025-08-05 19:32:15 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 19:32:15 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 弟 (4.6s)
 ✓ 婴儿 (2.4s)
 ✓ 男孩 (5.2s)
@@ -6370,7 +6370,7 @@
 ✓ 母 (3.5s)
 < 19:35:16 181.5s 26/28
 
-> 2025-08-05 19:37:25 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 19:37:25 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 母 (2.6s)
 ✓ 姨 (6.2s)
 ✓ 父母 (3.2s)
@@ -6401,7 +6401,7 @@
 ✓ 弟 (4.1s)
 < 19:40:11 166.4s 28/28
 
-> 2025-08-05 19:41:08 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 19:41:08 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 家 (2.4s)
 ✓ 侄女 (4.5s)
 ✗ 侄子 A:children (7.2s)
@@ -6432,36 +6432,36 @@
 ✓ 舅 (8.2s)
 < 19:43:43 155.6s 27/28
 
-> 2025-08-05 19:44:26 | Chinese→English Vocabulary: Family | Review All
-> 2025-08-05 19:44:41 | Chinese→English Vocabulary: Family | Review All
-> 2025-08-05 19:47:15 | Chinese→English Vocabulary: Family | Review All
-> 2025-08-05 19:47:31 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 19:44:26 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 19:44:41 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 19:47:15 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 19:47:31 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 姑 (12.3s)
 ✓ 侄子 (6.0s)
 ✓ 姨 (7.7s)
 < 19:47:57 26.0s 3/3
 
-> 2025-08-05 19:48:00 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 19:48:00 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 侄子 (10.7s)
 ✓ 姨 (5.6s)
 < 19:48:16 16.3s 2/2
 
-> 2025-08-05 19:48:21 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 19:48:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 姨 (6.9s)
 ✓ 侄子 (6.2s)
 < 19:48:34 13.1s 2/2
 
-> 2025-08-05 19:48:37 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 19:48:37 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 姨 (4.8s)
 ✓ 侄子 (10.5s)
 < 19:48:52 15.3s 2/2
 
-> 2025-08-05 19:50:06 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 19:50:06 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 姨 (6.2s)
 ✓ 侄子 (1.7s)
 < 19:50:14 7.9s 2/2
 
-> 2025-08-05 19:51:11 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 19:51:11 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 姑 (9.9s)
 ✓ 男孩 (4.8s)
 ✓ 母 (3.2s)
@@ -6492,8 +6492,8 @@
 ✓ 叔 (6.3s)
 < 19:53:23 132.7s 28/28
 
-> 2025-08-05 19:57:02 | Chinese→English Vocabulary: Family | Review All
-> 2025-08-05 20:03:28 | Chinese→English Vocabulary: Family | Review All
+> 2025-08-05 19:57:02 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 20:03:28 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
 ✓ 女 (19.5s)
 ✓ 侄女 (3.9s)
 ✓ 父 (2.0s)
@@ -6524,7 +6524,7 @@
 ✓ 女孩 (6.6s)
 < 20:06:00 152.6s 28/28
 
-> 2025-08-05 20:07:43 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:07:43 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 妹 (5.8s)
 ✓ 女孩 (4.8s)
 ✓ 爷 (6.4s)
@@ -6547,7 +6547,7 @@
 ✓ 外婆 (7.4s)
 < 20:09:46 122.9s 20/20
 
-> 2025-08-05 20:10:12 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:10:12 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 舅 (7.0s)
 ✓ 姑 (6.0s)
 ✓ 表哥 (6.1s)
@@ -6570,7 +6570,7 @@
 ✓ 男孩 (2.6s)
 < 20:11:58 105.1s 19/20
 
-> 2025-08-05 20:12:14 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:12:14 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 奶 (7.1s)
 ✓ 外婆 (6.1s)
 ✓ 妻 (1.7s)
@@ -6590,7 +6590,7 @@
 ✓ 妹 (4.2s)
 < 20:14:02 108.5s 16/17
 
-> 2025-08-05 20:14:21 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:14:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 舅 (6.6s)
 ✓ 姑 (6.3s)
 ✓ 夫 (2.6s)
@@ -6610,7 +6610,7 @@
 ✓ 姨 (10.8s)
 < 20:16:01 99.9s 17/17
 
-> 2025-08-05 20:16:09 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:16:09 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 舅 (6.8s)
 ✓ 奶 (5.1s)
 ✓ 妻 (2.0s)
@@ -6630,7 +6630,7 @@
 ✓ 表哥 (3.8s)
 < 20:17:32 83.0s 17/17
 
-> 2025-08-05 20:17:53 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:17:53 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 侄女 (3.6s)
 ✓ 夫 (2.9s)
 ✓ 姨 (5.8s)
@@ -6650,7 +6650,7 @@
 ✓ 外婆 (5.2s)
 < 20:19:20 86.6s 17/17
 
-> 2025-08-05 20:19:33 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:19:33 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 奶 (5.9s)
 ✓ 外公 (6.1s)
 ✓ 妹 (4.0s)
@@ -6670,8 +6670,8 @@
 ✓ 外婆 (5.8s)
 < 20:20:59 85.8s 17/17
 
-> 2025-08-05 20:21:19 | Chinese→English Vocabulary: Family | Review All
-> 2025-08-05 20:21:43 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:21:19 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+> 2025-08-05 20:21:43 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 姑 (7.2s)
 ✓ 妹 (4.3s)
 ✓ 姨 (5.4s)
@@ -6684,7 +6684,7 @@
 ✓ 舅 (4.5s)
 < 20:22:33 50.1s 10/10
 
-> 2025-08-05 20:23:21 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:23:21 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 姑 (6.1s)
 ✓ 外婆 (5.9s)
 ✓ 妹 (4.2s)
@@ -6697,7 +6697,7 @@
 ✓ 奶 (15.6s)
 < 20:24:21 60.7s 9/10
 
-> 2025-08-05 20:27:13 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:27:13 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 叔 (7.1s)
 ✓ 外婆 (7.0s)
 ✓ 舅 (5.9s)
@@ -6710,7 +6710,7 @@
 ✓ 姑 (5.3s)
 < 20:28:07 53.5s 10/10
 
-> 2025-08-05 20:28:39 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:28:39 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 奶 (6.7s)
 ✓ 表姐 (4.8s)
 ✓ 侄女 (3.6s)
@@ -6723,7 +6723,7 @@
 ✓ 妹 (4.2s)
 < 20:29:40 61.2s 9/10
 
-> 2025-08-05 20:30:01 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:30:01 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 侄子 (4.7s)
 ✓ 表姐 (5.4s)
 ✓ 姑 (7.3s)
@@ -6736,7 +6736,7 @@
 ✓ 妹 (4.2s)
 < 20:30:53 51.9s 10/10
 
-> 2025-08-05 20:31:06 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:31:06 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 姑 (5.4s)
 ✓ 舅 (4.5s)
 ✓ 妹 (4.8s)
@@ -6746,7 +6746,7 @@
 ✓ 侄子 (3.7s)
 < 20:31:43 37.0s 7/7
 
-> 2025-08-05 20:31:55 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:31:55 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 姨 (9.1s)
 ✓ 妹 (5.7s)
 ✓ 姑 (9.2s)
@@ -6756,7 +6756,7 @@
 ✓ 叔 (5.3s)
 < 20:32:41 46.4s 7/7
 
-> 2025-08-05 20:32:58 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:32:58 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✗ 叔 A:aunt (father's sister) C:uncle (father's brother) (5.7s)
 ✓ 侄子 (5.0s)
 ✓ 妹 (4.4s)
@@ -6766,7 +6766,7 @@
 ✓ 姑 (6.8s)
 < 20:33:43 45.9s 6/7
 
-> 2025-08-05 20:33:48 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:33:48 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 奶 (7.8s)
 ✓ 侄子 (2.6s)
 ✓ 妹 (3.7s)
@@ -6776,7 +6776,7 @@
 ✓ 姨 (11.1s)
 < 20:34:32 44.1s 7/7
 
-> 2025-08-05 20:35:14 | Chinese→English Vocabulary: Family | Category Review: Chinese→English Vocabulary (Recognition)
+> 2025-08-05 20:35:14 | HSK 1: HSK1 Extended B (Family & Verbs) | Category Review
 ✓ 哪里 (6.8s)
 ✓ 姐 (9.0s)
 ✓ 侄女 (4.0s)
@@ -6898,7 +6898,7 @@
 ✓ 我 (2.4s)
 < 20:46:21 667.6s 103/119
 
-> 2025-08-05 20:47:00 | Chinese→English Vocabulary: Family | Practice Difficult
+> 2025-08-05 20:47:00 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
 ✓ 舅 (6.5s)
 ✓ 侄子 (3.3s)
 ✓ 外公 (6.7s)
@@ -6909,7 +6909,7 @@
 ✓ 姑 (5.1s)
 < 20:47:38 38.4s 8/8
 
-> 2025-08-05 20:49:49 | Chinese→English Vocabulary: Family | Category Review: Chinese→English Foundation (Recognition)
+> 2025-08-05 20:49:49 | HSK 1: HSK1 Core A | Category Review
 ✓ 四 (5.3s)
 ✓ 右 (2.8s)
 ✓ 六 (1.6s)
@@ -6992,7 +6992,7 @@
 ✓ 饮 (3.8s)
 < 20:54:01 251.8s 72/80
 
-> 2025-08-06 09:50:50 | Chinese→English Vocabulary: Family | Practice Difficult Category: Chinese→English Foundation (Recognition)
+> 2025-08-06 09:50:50 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult Category: Chinese→English Foundation (Recognition)
 ✓ 土 (2.7s)
 ✓ 米 (4.7s)
 ✓ 糸 (5.7s)
@@ -7000,7 +7000,7 @@
 ✓ 言 (2.8s)
 < 09:51:09 19.2s 5/5
 
-> 2025-08-06 09:51:15 | Chinese→English Vocabulary: Family | Practice Difficult Category: Chinese→English Vocabulary (Recognition)
+> 2025-08-06 09:51:15 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult Category: Chinese→English Vocabulary (Recognition)
 ✓ 贵 (6.8s)
 ✓ 可以 (9.8s)
 ✓ 穿 (7.9s)
@@ -7039,7 +7039,7 @@
 ✓ 什么时候 (2.5s)
 < 09:57:12 357.3s 29/36
 
-> 2025-08-06 10:06:57 | Chinese→English Vocabulary: Family | Practice Difficult Category: Chinese→English Foundation (Recognition)
+> 2025-08-06 10:06:57 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult Category: Chinese→English Foundation (Recognition)
 ✗ 糸 A:east C:thread; silk (9.5s)
 ✓ 看 (6.4s)
 ✓ 言 (3.3s)
@@ -7047,7 +7047,7 @@
 ✓ 土 (1.9s)
 < 10:07:21 24.1s 4/5
 
-> 2025-08-06 10:07:28 | Chinese→English Vocabulary: Family | Practice Difficult Category: Chinese→English Vocabulary (Recognition)
+> 2025-08-06 10:07:28 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult Category: Chinese→English Vocabulary (Recognition)
 ✓ 姨 (9.2s)
 ✓ 知道 (5.1s)
 ✓ 价格 (3.3s)
@@ -7081,4 +7081,1548 @@
 ✓ 结束 (4.6s)
 ✓ 需要 (3.2s)
 < 10:10:44 195.8s 28/32
+
+> 2025-08-06 11:59:41 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 12:01:23 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+✓ 姑 (12.8s)
+✓ 孩子 (2.9s)
+✓ 妹 (4.4s)
+✓ 女 (2.1s)
+✓ 妻 (1.6s)
+✓ 父母 (2.0s)
+✓ 哥 (2.8s)
+✓ 叔 (4.8s)
+✓ 侄女 (3.5s)
+✓ 婴儿 (1.7s)
+✓ 舅 (8.4s)
+✓ 表姐 (8.3s)
+✓ 侄子 (3.0s)
+✓ 奶 (5.4s)
+✓ 弟 (3.6s)
+✓ 姐 (3.2s)
+✓ 母 (2.2s)
+✓ 外婆 (6.1s)
+✓ 家 (2.0s)
+✓ 父 (1.8s)
+✓ 姨 (6.5s)
+✓ 爷 (4.6s)
+✓ 男孩 (2.3s)
+✓ 外公 (6.1s)
+✓ 女孩 (2.6s)
+✓ 表哥 (5.7s)
+✓ 夫 (2.6s)
+✓ 儿 (1.6s)
+< 12:03:17 114.7s 28/28
+
+> 2025-08-06 13:36:41 | HSK 1: HSK1 Core A | Category Review
+✓ 土 (4.4s)
+✓ 写 (2.5s)
+✓ 工 (2.2s)
+✓ 上 (2.2s)
+✗ 小 A:heart C:small; little (2.2s)
+✓ 十 (4.4s)
+✓ 猫 (3.0s)
+✓ 卖 (2.2s)
+✓ 鸟 (2.7s)
+✓ 右 (2.3s)
+✓ 心 (2.3s)
+✓ 三 (1.9s)
+✓ 前 (5.9s)
+✓ 去 (1.7s)
+✓ 买 (2.0s)
+✓ 目 (1.7s)
+✓ 车 (2.4s)
+✓ 中 (2.8s)
+✓ 内 (1.5s)
+✗ 月 A:knife C:moon; month (5.1s)
+✓ 人 (2.7s)
+✓ 跑 (1.7s)
+✓ 走 (2.8s)
+✓ 千 (4.1s)
+✓ 日 (4.6s)
+✓ 屋 (3.1s)
+✓ 衣 (2.7s)
+✓ 水 (1.8s)
+✓ 东 (2.8s)
+✓ 头 (1.8s)
+✓ 学 (2.6s)
+✓ 左 (2.0s)
+✓ 九 (1.8s)
+✓ 听 (2.1s)
+✓ 南 (3.6s)
+✓ 六 (1.7s)
+✓ 一 (1.4s)
+✓ 竹 (2.3s)
+✓ 北 (2.3s)
+✗ 足 A:go C:foot; leg (1.7s)
+✗ 钱 A:price C:money (8.4s)
+✓ 草 (5.8s)
+✓ 七 (4.2s)
+✓ 读 (4.7s)
+✓ 力 (3.2s)
+✓ 门 (2.0s)
+✓ 女 (2.3s)
+✓ 说 (3.4s)
+✓ 下 (1.8s)
+✓ 子 (2.7s)
+✓ 火 (1.5s)
+✓ 身 (2.1s)
+✓ 窗 (3.0s)
+✓ 金 (1.8s)
+✓ 狗 (2.3s)
+✓ 来 (4.3s)
+✗ 家 A:family C:house; home (2.4s)
+✓ 马 (5.8s)
+✓ 鱼 (2.5s)
+✓ 刀 (2.8s)
+✓ 看 (2.4s)
+✓ 米 (5.0s)
+✓ 食 (1.6s)
+✓ 西 (4.1s)
+✓ 手 (2.2s)
+✓ 饮 (2.8s)
+✓ 大 (3.1s)
+✓ 教 (12.5s)
+✓ 四 (2.5s)
+✓ 口 (2.0s)
+✓ 木 (2.0s)
+✓ 言 (3.5s)
+✓ 五 (2.1s)
+✗ 外 A:front C:outside; out (3.4s)
+✓ 百 (3.4s)
+✓ 后 (2.7s)
+✓ 男 (2.0s)
+✓ 二 (1.5s)
+✓ 糸 (2.0s)
+✓ 八 (2.4s)
+< 13:40:37 235.8s 74/80
+
+> 2025-08-06 13:41:19 | HSK 1: HSK1 Extended B (Family & Verbs) | Category Review
+✓ 怎么 (4.7s)
+✓ 给 (4.3s)
+✓ 晚上 (4.5s)
+✓ 没有 (2.6s)
+✓ 睡 (2.7s)
+✓ 爱 (2.2s)
+✓ 买 (1.8s)
+✓ 这 (1.9s)
+✓ 走 (1.9s)
+✓ 为什么 (2.0s)
+✓ 醒 (2.9s)
+✓ 帮助 (5.4s)
+✓ 关 (3.4s)
+✓ 哥 (2.6s)
+✓ 有 (3.7s)
+✓ 感觉 (2.0s)
+✓ 要 (2.4s)
+✓ 洗 (2.9s)
+✓ 女孩 (3.8s)
+✓ 奶 (6.3s)
+✓ 拿 (2.5s)
+✓ 什么时候 (2.8s)
+✓ 躺 (3.2s)
+✓ 妻 (3.1s)
+✓ 读 (4.0s)
+✓ 玩 (2.5s)
+✓ 说 (2.6s)
+✓ 价格 (4.7s)
+✓ 昨天 (4.5s)
+✓ 做 (12.4s)
+✓ 免费 (12.4s)
+✓ 问 (3.8s)
+✓ 下午 (3.7s)
+✓ 睡觉 (5.4s)
+✓ 今天 (2.1s)
+✓ 卖 (2.2s)
+✗ 想 A:know C:think (3.5s)
+✓ 那 (4.3s)
+✓ 喜欢 (6.2s)
+✓ 希望 (5.7s)
+✓ 回答 (8.4s)
+✗ 妹 A:aunt (mother's sister) C:younger sister (6.0s)
+✓ 跑 (4.6s)
+✓ 喝 (5.3s)
+✓ 叔 (7.0s)
+✓ 表姐 (8.7s)
+✓ 可以 (8.7s)
+✓ 不 (2.7s)
+✓ 母 (1.9s)
+✓ 开始 (5.5s)
+✓ 什么 (3.9s)
+✓ 来 (4.0s)
+✓ 弟 (10.0s)
+✓ 需要 (2.5s)
+✓ 姐 (4.9s)
+✓ 她 (4.7s)
+✓ 帮 (4.3s)
+✓ 我 (4.7s)
+✗ 告诉 A:think C:tell; speak (11.8s)
+✓ 看 (6.1s)
+✓ 穿 (3.0s)
+✓ 现在 (4.7s)
+✓ 外公 (7.5s)
+✓ 懂 (3.4s)
+✓ 坐 (1.5s)
+✓ 教 (2.3s)
+✗ 脱 A:say C:take off (3.2s)
+✗ 女 A:woman C:daughter (4.4s)
+✓ 婴儿 (3.4s)
+✓ 男孩 (4.4s)
+✓ 忘记 (3.2s)
+✓ 夫 (2.6s)
+✓ 写 (2.0s)
+✓ 孩子 (2.9s)
+✓ 舅 (5.9s)
+✓ 放 (2.8s)
+✗ 明天 A:idk C:tomorrow (35.1s)
+✓ 便宜 (7.1s)
+✓ 记得 (3.5s)
+✓ 付钱 (2.0s)
+✓ 早上 (2.3s)
+✓ 等 (2.5s)
+✓ 侄女 (4.8s)
+✓ 你 (2.0s)
+✓ 儿 (1.6s)
+✓ 姨 (5.7s)
+✓ 父 (1.9s)
+✗ 做饭 A:get C:cook (16.6s)
+✓ 吃 (7.2s)
+✓ 他们 (3.8s)
+✗ 以前 A:behind C:before (4.5s)
+✓ 他 (4.6s)
+✓ 贵 (3.9s)
+✓ 姑 (6.4s)
+✗ 得到 A:begin C:get; obtain (21.1s)
+✓ 家 (5.0s)
+✓ 干净 (3.9s)
+✓ 哪里 (2.5s)
+✓ 我们 (3.1s)
+✓ 结束 (5.5s)
+✓ 学习 (3.7s)
+✓ 是 (3.5s)
+✓ 哪个 (1.9s)
+✓ 夜里 (2.4s)
+✓ 外婆 (6.8s)
+✓ 侄子 (4.0s)
+✓ 爷 (7.1s)
+✓ 工作 (2.8s)
+✓ 停 (5.5s)
+✓ 去 (1.6s)
+✓ 表哥 (6.6s)
+✓ 开 (5.6s)
+✓ 听 (3.1s)
+✓ 父母 (2.5s)
+✓ 学 (3.2s)
+✗ 谁 A:that C:who (2.2s)
+✓ 站 (7.0s)
+✓ 以后 (5.5s)
+✓ 知道 (5.7s)
+< 13:50:45 566.5s 109/119
+
+> 2025-08-06 13:53:39 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 13:53:55 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
+✓ 女 (3.3s)
+✓ 姑 (4.7s)
+✓ 妹 (4.8s)
+✓ 侄子 (4.6s)
+✓ 姨 (5.8s)
+< 13:54:18 23.2s 5/5
+
+> 2025-08-06 13:55:10 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+✓ 拿 (3.1s)
+✓ 给 (4.3s)
+✓ 开始 (3.7s)
+✓ 得到 (5.3s)
+✓ 告诉 (21.0s)
+✓ 问 (2.4s)
+✓ 开 (2.5s)
+✓ 放 (2.4s)
+✓ 回答 (3.5s)
+✓ 关 (5.4s)
+< 13:56:03 53.6s 10/10
+
+> 2025-08-06 14:35:17 | HSK 1: HSK1 Core A | Review All
+✓ 六 (4.1s)
+✓ 九 (2.8s)
+✓ 七 (2.9s)
+✓ 二 (2.5s)
+✓ 五 (5.4s)
+✓ 八 (2.1s)
+✓ 一 (2.4s)
+✓ 十 (3.3s)
+✓ 三 (3.0s)
+✓ 四 (2.2s)
+< 14:35:48 30.8s 10/10
+
+> 2025-08-06 14:36:50 | HSK 1: HSK1 Core A | Review All
+✓ 三 (1.8s)
+✓ 二 (1.6s)
+✓ 四 (1.8s)
+✓ 十 (1.5s)
+✓ 八 (1.6s)
+✓ 一 (1.2s)
+✓ 五 (1.8s)
+✓ 六 (1.2s)
+✓ 七 (1.6s)
+✓ 九 (1.5s)
+< 14:37:06 15.8s 10/10
+
+> 2025-08-06 14:39:40 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+✓ 夫 (9.4s)
+✓ 外公 (7.6s)
+✓ 姐 (2.9s)
+✓ 叔 (6.6s)
+✓ 爷 (5.0s)
+✓ 妻 (1.5s)
+✓ 儿 (1.4s)
+✓ 家 (3.6s)
+✓ 女孩 (4.5s)
+✓ 外婆 (9.7s)
+✓ 母 (2.2s)
+✓ 女 (4.2s)
+✓ 奶 (8.4s)
+✓ 孩子 (4.5s)
+✓ 姑 (6.3s)
+✓ 哥 (2.9s)
+✓ 父 (2.3s)
+✓ 舅 (4.6s)
+✓ 表哥 (4.7s)
+✗ 姨 A:aunt (mother C:aunt (mother's sister) (6.2s)
+✓ 男孩 (6.9s)
+✓ 侄子 (8.7s)
+✓ 婴儿 (6.5s)
+✓ 弟 (3.4s)
+✓ 妹 (3.9s)
+✓ 父母 (2.1s)
+✓ 侄女 (3.2s)
+✗ 表姐 A:counsin (female) C:cousin (female) (9.3s)
+< 14:42:03 142.9s 26/28
+
+> 2025-08-06 14:54:39 | HSK 1: HSK1 Core A | Review All
+✓ 八 (1.9s)
+✓ 十 (1.8s)
+✓ 二 (1.6s)
+✓ 六 (3.4s)
+✓ 九 (2.0s)
+✓ 一 (1.3s)
+✓ 五 (1.6s)
+✓ 三 (1.9s)
+✓ 七 (3.5s)
+✓ 四 (2.9s)
+< 14:55:01 22.0s 10/10
+
+> 2025-08-06 15:01:04 | HSK 1: HSK1 Core A | Review All
+✓ 一 (2.8s)
+✓ 五 (3.2s)
+✓ 四 (2.7s)
+✓ 七 (2.9s)
+✓ 八 (2.1s)
+✓ 九 (2.5s)
+✓ 二 (1.8s)
+✓ 六 (1.8s)
+✓ 三 (1.7s)
+✓ 十 (1.9s)
+< 15:01:40 36.7s 10/10
+
+> 2025-08-06 15:06:25 | HSK 1: HSK1 Core A | Review All
+✓ 四 (4.1s)
+✓ 二 (1.9s)
+✓ 九 (2.4s)
+✓ 一 (2.2s)
+✓ 十 (2.5s)
+✓ 六 (1.7s)
+✓ 三 (2.0s)
+✓ 八 (1.9s)
+✓ 五 (2.7s)
+✓ 七 (2.2s)
+< 15:07:02 36.8s 10/10
+
+> 2025-08-06 15:09:16 | HSK 1: HSK1 Core A | Review All
+✓ 人 (5.0s)
+✓ 木 (2.8s)
+✓ 金 (3.9s)
+✓ 手 (1.9s)
+✓ 口 (2.1s)
+✓ 土 (2.9s)
+✓ 心 (2.3s)
+✓ 水 (3.6s)
+✓ 言 (2.9s)
+✓ 火 (5.3s)
+< 15:10:02 46.1s 10/10
+
+> 2025-08-06 15:10:11 | HSK 1: HSK1 Core A | Review All
+✓ 二 (2.3s)
+✓ 三 (3.1s)
+✓ 四 (6.5s)
+> 2025-08-06 15:20:40 | HSK 1: HSK1 Core A | Review All
+✗ 子 A:seven C:child (5.6s)
+✓ 草 (5.0s)
+✓ 草 (2.7s)
+> 2025-08-06 15:23:41 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 15:24:52 | HSK 1: HSK1 Core A | Review All
+✓ 五 (4.3s)
+✗ 九 A:five C:nine (3.2s)
+✓ 七 (25.5s)
+> 2025-08-06 15:27:31 | HSK 1: HSK1 Core A | Review All
+✓ 一 (3.6s)
+✓ 四 (2.3s)
+✓ 八 (30.2s)
+> 2025-08-06 15:28:58 | HSK 1: HSK1 Core A | Review All
+✓ 六 (3.0s)
+> 2025-08-06 15:30:02 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 15:30:12 | HSK 1: HSK1 Core A | Review All
+✓ 五 (27.8s)
+> 2025-08-06 15:31:02 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 15:31:46 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 15:34:14 | HSK 1: HSK1 Core A | Review All
+✓ 十 (2.9s)
+✓ 一 (4.9s)
+> 2025-08-06 15:36:02 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 15:36:09 | HSK 1: HSK1 Core A | Review All
+✓ 二 (2.8s)
+> 2025-08-06 15:37:29 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 15:38:56 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 15:41:09 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 15:41:50 | HSK 1: HSK1 Core A | Review All
+✓ 八 (2.7s)
+✗ 十 A:[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B[B C:ten (97.3s)
+> 2025-08-06 15:47:03 | HSK 1: HSK1 Core A | Review All
+✓ 五 (2.6s)
+✓ 六 (24.5s)
+> 2025-08-06 15:48:41 | HSK 1: HSK1 Core A | Review All
+✓ 三 (2.2s)
+✓ 十 (12.6s)
+✓ 五 (17.5s)
+✓ 八 (9.3s)
+✗ 六 A:as C:six (8.7s)
+> 2025-08-06 15:50:13 | HSK 1: HSK1 Core A | Review All
+✓ 四 (2.1s)
+> 2025-08-06 15:50:43 | HSK 1: HSK1 Core A | Review All
+✓ 二 (1.9s)
+✓ 八 (13.9s)
+> 2025-08-06 15:51:53 | HSK 1: HSK1 Core A | Review All
+✓ 三 (2.0s)
+✓ 六 (5.9s)
+> 2025-08-06 15:52:12 | HSK 1: HSK1 Core A | Review All
+✓ 三 (2.1s)
+✓ 六 (4.3s)
+✓ 一 (2.4s)
+✓ 七 (4.9s)
+> 2025-08-06 15:55:27 | HSK 1: HSK1 Core A | Review All
+✓ 草 (2.9s)
+> 2025-08-06 15:55:46 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 15:56:26 | HSK 1: HSK1 Core A | Review All
+✓ 竹 (13.3s)
+✗ 米 A:come C:rice; food (7.2s)
+✓ 目 (6.5s)
+✓ 日 (2.7s)
+✓ 草 (5.5s)
+✓ 男 (9.6s)
+✓ 月 (12.6s)
+✗ 子 A:seven C:child (2.6s)
+✓ 糸 (2.7s)
+> 2025-08-06 15:59:12 | HSK 1: HSK1 Core A | Review All
+✓ 一 (2.1s)
+✓ 二 (2.8s)
+✓ 九 (4.5s)
+> 2025-08-06 16:01:08 | HSK 1: HSK1 Core A | Review All
+✓ 日 (2.2s)
+> 2025-08-06 16:02:39 | HSK 1: HSK1 Core A | Review All
+✓ 糸 (3.8s)
+✓ 竹 (4.9s)
+✓ 目 (2.7s)
+> 2025-08-06 16:03:02 | HSK 1: HSK1 Core A | Review All
+✓ 米 (3.7s)
+✓ 男 (2.8s)
+✓ 日 (2.0s)
+✓ 女 (3.6s)
+✓ 子 (3.0s)
+✓ 目 (3.6s)
+✓ 草 (2.2s)
+✓ 糸 (2.9s)
+✓ 月 (4.7s)
+✓ 竹 (3.9s)
+< 16:03:48 45.9s 10/10
+
+> 2025-08-06 16:04:04 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+✓ 开 (3.5s)
+✗ 得到 A:before C:get; obtain (6.9s)
+✓ 问 (2.1s)
+✓ 回答 (2.6s)
+✓ 拿 (2.1s)
+✓ 告诉 (8.1s)
+✓ 给 (6.3s)
+✓ 关 (2.1s)
+✓ 放 (4.0s)
+✓ 开始 (2.4s)
+< 16:04:57 53.0s 9/10
+
+> 2025-08-06 16:05:10 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult
+✓ 放 (3.6s)
+✓ 关 (2.0s)
+✓ 得到 (6.5s)
+✓ 告诉 (3.0s)
+< 16:05:30 20.1s 4/4
+
+> 2025-08-06 16:05:42 | HSK 1: HSK1 Core A | Review All
+✓ 目 (17.4s)
+> 2025-08-06 16:07:14 | HSK 1: HSK1 Core A | Review All
+✓ 七 (3.4s)
+✓ 六 (2.5s)
+> 2025-08-06 16:07:36 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+✓ 妹 (9.9s)
+✓ 女孩 (7.0s)
+✓ 夫 (4.9s)
+✓ 姐 (3.6s)
+✓ 家 (2.1s)
+✓ 孩子 (3.0s)
+✓ 叔 (7.5s)
+✓ 弟 (5.3s)
+✓ 母 (2.2s)
+✓ 儿 (1.6s)
+✓ 男孩 (2.9s)
+✓ 姑 (6.9s)
+✓ 侄子 (4.1s)
+✓ 父母 (2.7s)
+✓ 表姐 (6.5s)
+✓ 外婆 (8.8s)
+✓ 父 (2.7s)
+✓ 爷 (7.1s)
+✓ 舅 (7.0s)
+✓ 妻 (3.3s)
+✓ 奶 (5.5s)
+✓ 侄女 (3.5s)
+✓ 女 (3.0s)
+✓ 婴儿 (3.0s)
+✓ 外公 (5.8s)
+✓ 表哥 (5.0s)
+✓ 哥 (3.0s)
+✓ 姨 (7.9s)
+< 16:10:26 169.9s 28/28
+
+> 2025-08-06 16:12:57 | HSK 1: HSK1 Core A | Review All
+✓ 手 (4.2s)
+✓ 木 (5.0s)
+✓ 人 (1.9s)
+✓ 目 (1.6s)
+✓ 口 (2.0s)
+✓ 火 (1.6s)
+✓ 水 (5.1s)
+✗ 女 A:daughter C:woman; female (3.9s)
+✓ 日 (2.7s)
+✓ 心 (2.3s)
+< 16:13:40 43.3s 9/10
+
+> 2025-08-06 16:14:57 | HSK 1: HSK1 Core A | SRS Review
+> 2025-08-06 16:15:13 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 16:26:41 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+✓ 关 (4.2s)
+✓ 开始 (5.3s)
+✓ 开 (3.6s)
+✓ 回答 (2.4s)
+✓ 放 (2.4s)
+✓ 问 (1.5s)
+✓ 拿 (5.2s)
+✓ 得到 (5.9s)
+✓ 给 (2.8s)
+✓ 告诉 (3.8s)
+< 16:27:32 50.6s 10/10
+
+> 2025-08-06 16:27:47 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult Category: Chinese→English Vocabulary (Recognition)
+✗ 等 A:hope C:wait (4.7s)
+✓ 明天 (4.5s)
+✓ 需要 (2.8s)
+✓ 谁 (3.3s)
+✓ 放 (2.0s)
+✓ 姑 (5.0s)
+✓ 结束 (14.1s)
+✓ 知道 (6.3s)
+✗ 脱 A:speak C:take off (5.0s)
+✓ 价格 (4.2s)
+✓ 免费 (5.6s)
+✓ 醒 (2.7s)
+✓ 哪里 (7.2s)
+✓ 可以 (4.7s)
+✓ 得到 (6.6s)
+✓ 关 (2.3s)
+✓ 做 (14.5s)
+✓ 读 (2.6s)
+✓ 想 (2.0s)
+✓ 侄子 (4.2s)
+✓ 姨 (5.2s)
+✓ 告诉 (5.8s)
+< 16:30:11 144.4s 20/22
+
+> 2025-08-06 16:31:07 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult Category: Chinese→English Vocabulary (Recognition)
+> 2025-08-06 16:31:32 | HSK 1: HSK1 Extended B (Family & Verbs) | Practice Difficult Category: Chinese→English Vocabulary (Recognition)
+> 2025-08-06 16:32:43 | HSK 1: HSK1 Core A | Review All
+> 2025-08-06 16:33:06 | HSK 1: HSK1 Core A | Practice Difficult Category: Chinese→English Vocabulary (Recognition)
+> 2025-08-06 16:36:07 | HSK 1: HSK1 Core A | Review All
+✓ 五 (6.0s)
+✓ 四 (2.1s)
+✓ 一 (2.0s)
+✓ 八 (1.8s)
+✓ 三 (2.6s)
+✓ 十 (2.2s)
+✓ 九 (2.9s)
+✓ 六 (1.6s)
+✓ 二 (1.6s)
+✓ 七 (3.9s)
+< 16:36:46 40.0s 10/10
+
+> 2025-08-06 16:37:06 | HSK 1: HSK1 Core A | Chinese→English Foundation (Recognition)
+> 2025-08-06 16:38:25 | HSK 1: HSK1 Core A | Chinese→English Vocabulary (Recognition)
+> 2025-08-06 16:47:09 | HSK 1: HSK1 Core A | Review All
+✓ 土 (7.5s)
+✓ 金 (8.9s)
+✓ 口 (2.0s)
+✓ 手 (2.4s)
+✗ 言 A:see C:speech; words (2.2s)
+✓ 人 (2.4s)
+✓ 心 (1.9s)
+✓ 木 (2.2s)
+✓ 水 (2.0s)
+✓ 火 (2.2s)
+< 16:47:56 46.8s 9/10
+
+> 2025-08-06 16:49:03 | HSK 1: HSK1 Core A | Chinese→English Vocabulary (Recognition)
+> 2025-08-06 16:49:27 | HSK 1: HSK1 Core A | Chinese→English Vocabulary (Recognition)
+> 2025-08-06 16:50:04 | HSK 1: HSK1 Core A | Chinese→English Vocabulary (Recognition)
+✓ 得到 (7.6s)
+> 2025-08-06 16:53:58 | HSK 1: HSK1 Core A | Chinese→English Vocabulary (Recognition)
+> 2025-08-06 16:54:29 | HSK 1: HSK1 Core A | Chinese→English Vocabulary (Recognition)
+✓ 侄子 (7.2s)
+✓ 想 (3.2s)
+✓ 关 (8.6s)
+✓ 谁 (3.9s)
+✗ 可以 A:answer C:can; able to (6.5s)
+✓ 结束 (7.5s)
+✓ 哪里 (6.5s)
+✓ 读 (4.7s)
+✓ 姨 (6.7s)
+✓ 做 (4.4s)
+✓ 脱 (3.6s)
+✓ 等 (2.2s)
+✓ 价格 (2.9s)
+✓ 需要 (2.6s)
+✓ 免费 (4.2s)
+✓ 醒 (3.5s)
+✓ 知道 (7.6s)
+✓ 放 (2.2s)
+✓ 得到 (2.9s)
+✗ 告诉 A:think C:tell; speak (11.4s)
+< 16:56:36 127.6s 18/20
+
+> 2025-08-06 16:57:30 | HSK 1: HSK1 Core A | Chinese→English Vocabulary (Recognition)
+✓ 可以 (7.9s)
+✓ 得到 (5.9s)
+✓ 需要 (2.6s)
+✓ 醒 (2.5s)
+✓ 谁 (3.8s)
+✓ 结束 (3.5s)
+✓ 价格 (2.8s)
+✓ 关 (2.1s)
+✓ 告诉 (6.0s)
+✓ 做 (3.9s)
+✓ 脱 (2.9s)
+✓ 姨 (5.3s)
+✓ 免费 (4.0s)
+✓ 知道 (3.8s)
+✓ 读 (3.8s)
+✓ 放 (3.1s)
+✓ 等 (2.4s)
+✓ 哪里 (3.9s)
+< 16:59:03 92.6s 18/18
+
+> 2025-08-06 16:59:27 | HSK 1: HSK1 Core A | Chinese→English Vocabulary (Recognition)
+✓ 价格 (2.7s)
+✓ 得到 (2.5s)
+✓ 等 (2.4s)
+✗ 可以 A:get C:can; able to (4.0s)
+✓ 谁 (2.2s)
+✓ 放 (1.8s)
+✓ 脱 (2.5s)
+✓ 做 (2.1s)
+✓ 免费 (3.3s)
+✓ 醒 (2.4s)
+✓ 结束 (3.3s)
+✓ 哪里 (8.0s)
+✓ 关 (2.3s)
+✓ 知道 (3.3s)
+✓ 告诉 (6.0s)
+✓ 姨 (7.7s)
+✓ 需要 (2.4s)
+✓ 读 (2.5s)
+< 17:00:51 84.2s 17/18
+
+> 2025-08-06 17:01:58 | HSK 1: HSK1 Extended B (Family & Verbs) | Review All
+✓ 回答 (4.9s)
+✓ 放 (3.3s)
+✓ 得到 (2.5s)
+✓ 给 (4.0s)
+✓ 告诉 (2.9s)
+✓ 拿 (2.3s)
+✓ 开始 (4.6s)
+✓ 开 (4.0s)
+✓ 关 (2.2s)
+✓ 问 (1.7s)
+< 17:02:44 45.8s 10/10
+
+> 2025-08-06 17:24:52 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+✓ 大 (5.6s)
+✓ 四 (2.6s)
+✓ 千 (2.7s)
+✓ 去 (1.9s)
+✓ 跑 (2.1s)
+✓ 足 (2.5s)
+✓ 左 (2.7s)
+✓ 窗 (2.4s)
+✓ 内 (1.9s)
+✓ 右 (2.1s)
+✓ 八 (1.9s)
+✓ 买 (2.4s)
+✓ 工 (1.7s)
+✓ 来 (2.1s)
+✓ 中 (2.1s)
+✓ 七 (1.9s)
+✓ 后 (3.7s)
+✓ 卖 (4.9s)
+✓ 写 (1.9s)
+✓ 衣 (4.9s)
+✓ 上 (1.9s)
+✓ 下 (2.6s)
+✓ 三 (1.7s)
+✓ 马 (2.0s)
+✓ 食 (1.7s)
+✓ 钱 (5.7s)
+✓ 九 (2.5s)
+✓ 屋 (1.8s)
+✓ 读 (3.1s)
+✓ 前 (14.1s)
+✓ 学 (2.6s)
+✓ 饮 (3.0s)
+✓ 走 (2.3s)
+✓ 西 (4.3s)
+✓ 看 (4.8s)
+✓ 东 (3.4s)
+✓ 教 (7.6s)
+✗ 门 A:ask C:door; gate (1.7s)
+✓ 小 (2.4s)
+✓ 北 (2.7s)
+✓ 十 (1.7s)
+✓ 五 (2.1s)
+✓ 听 (5.7s)
+✓ 猫 (3.6s)
+✗ 家 A:family C:house; home (2.9s)
+✓ 刀 (4.8s)
+✓ 百 (2.2s)
+✓ 力 (1.8s)
+✓ 外 (3.2s)
+✓ 鸟 (2.3s)
+✓ 车 (3.2s)
+✓ 身 (1.9s)
+✓ 头 (2.2s)
+✓ 一 (1.8s)
+✓ 狗 (1.9s)
+✓ 二 (1.6s)
+✓ 南 (2.7s)
+✓ 说 (4.0s)
+✓ 鱼 (5.0s)
+< 17:29:04 252.1s 57/59
+
+> 2025-08-06 18:00:08 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:00:28 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+✓ 给 (3.2s)
+✗ 希望 A:wait C:hope (6.5s)
+✓ 免费 (4.4s)
+✓ 结束 (4.2s)
+> 2025-08-06 18:01:21 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+✓ 怎么 (3.4s)
+✓ 他们 (4.3s)
+✓ 下午 (2.9s)
+✓ 免费 (1.9s)
+✓ 今天 (2.4s)
+✓ 学 (5.4s)
+✓ 夜里 (5.2s)
+✓ 想 (4.9s)
+✓ 做 (2.2s)
+✓ 他 (2.7s)
+✓ 买 (4.4s)
+✓ 忘记 (3.2s)
+✓ 现在 (4.3s)
+✓ 教 (4.0s)
+✓ 睡 (2.7s)
+✓ 开 (3.8s)
+✓ 学习 (3.4s)
+✓ 爱 (3.3s)
+✓ 走 (3.0s)
+✓ 不 (2.4s)
+✓ 喜欢 (5.4s)
+✓ 要 (3.6s)
+✓ 昨天 (4.4s)
+✓ 卖 (2.6s)
+✓ 她 (2.9s)
+✓ 等 (3.7s)
+✓ 醒 (2.9s)
+✓ 喝 (4.6s)
+✓ 有 (2.7s)
+✓ 教 (5.6s)
+✓ 什么时候 (3.0s)
+✓ 学 (3.0s)
+✓ 你 (2.0s)
+✓ 洗 (3.5s)
+✗ 玩 A:sleep C:play (3.0s)
+✓ 吃 (2.6s)
+✓ 是 (2.4s)
+✓ 便宜 (3.0s)
+✓ 拿 (3.1s)
+✓ 读 (7.4s)
+✓ 可以 (3.2s)
+✓ 干净 (2.8s)
+✓ 做 (2.1s)
+✓ 帮 (2.4s)
+✓ 记得 (3.5s)
+✓ 关 (2.3s)
+✓ 晚上 (2.9s)
+✓ 为什么 (3.0s)
+✓ 这 (3.2s)
+✓ 要 (2.9s)
+✗ 以后 A:before C:after (6.6s)
+✓ 穿 (3.2s)
+✓ 写 (2.2s)
+✓ 价格 (2.5s)
+✓ 看 (2.6s)
+✓ 去 (2.8s)
+✓ 喝 (4.4s)
+✓ 哪里 (2.8s)
+✓ 听 (2.1s)
+✓ 什么 (3.3s)
+✓ 以前 (4.5s)
+✓ 坐 (2.2s)
+✓ 懂 (3.0s)
+✓ 知道 (4.9s)
+✓ 放 (2.4s)
+✓ 买 (2.2s)
+✓ 站 (3.7s)
+✓ 结束 (4.9s)
+✓ 希望 (3.4s)
+✓ 哪个 (6.5s)
+✓ 吃 (3.0s)
+✓ 做饭 (5.3s)
+✓ 感觉 (2.2s)
+✓ 早上 (2.3s)
+✓ 脱 (3.0s)
+✓ 工作 (2.1s)
+✓ 卖 (3.5s)
+✓ 工作 (2.1s)
+✓ 需要 (2.9s)
+✓ 没有 (2.5s)
+✓ 停 (2.8s)
+✓ 站 (2.5s)
+✓ 付钱 (3.0s)
+✓ 帮助 (2.8s)
+✓ 睡觉 (4.3s)
+✓ 贵 (2.6s)
+✓ 那 (4.3s)
+✓ 喜欢 (5.0s)
+✓ 跑 (2.2s)
+✓ 躺 (3.6s)
+✓ 说 (3.6s)
+✓ 醒 (4.4s)
+✓ 我 (3.7s)
+✓ 来 (1.9s)
+✓ 明天 (5.0s)
+✓ 坐 (1.7s)
+✗ 谁 A:that C:who (2.6s)
+✓ 我们 (3.8s)
+✓ 给 (2.7s)
+< 18:08:50 449.1s 96/99
+
+> 2025-08-06 18:26:31 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+✓ 来 (2.9s)
+✓ 力 (2.4s)
+✓ 左 (3.7s)
+✓ 听 (3.3s)
+✓ 读 (2.8s)
+✓ 二 (1.9s)
+✓ 东 (2.5s)
+✓ 去 (1.9s)
+✓ 八 (2.3s)
+✓ 身 (2.2s)
+✓ 马 (2.2s)
+✓ 七 (3.1s)
+✓ 鸟 (2.8s)
+✗ 西 A:in C:west (2.8s)
+✓ 小 (2.5s)
+✓ 窗 (2.3s)
+✓ 一 (1.5s)
+✓ 足 (2.4s)
+✓ 九 (2.2s)
+✓ 下 (1.9s)
+✓ 后 (5.6s)
+✓ 十 (2.2s)
+✓ 中 (2.1s)
+✓ 四 (2.2s)
+✓ 饮 (3.2s)
+✓ 五 (2.4s)
+✓ 食 (4.9s)
+✓ 上 (2.9s)
+✓ 买 (3.3s)
+✓ 走 (3.0s)
+✓ 南 (3.6s)
+✓ 猫 (2.9s)
+✓ 钱 (4.0s)
+✓ 鱼 (4.7s)
+✓ 跑 (1.9s)
+✓ 千 (2.5s)
+✓ 教 (4.2s)
+✓ 卖 (3.4s)
+✓ 说 (3.0s)
+✓ 内 (2.6s)
+✗ 家 A:love C:house; home (4.5s)
+✓ 刀 (3.6s)
+✓ 狗 (1.8s)
+✓ 大 (3.0s)
+✓ 车 (1.6s)
+✓ 写 (1.9s)
+✓ 看 (2.8s)
+✓ 学 (2.3s)
+✓ 衣 (2.8s)
+✓ 外 (3.9s)
+✓ 屋 (1.7s)
+✓ 北 (3.2s)
+✓ 门 (3.1s)
+✓ 百 (3.0s)
+✓ 前 (9.8s)
+✓ 右 (2.3s)
+✓ 头 (1.7s)
+✓ 三 (2.6s)
+✓ 工 (1.7s)
+< 18:30:37 246.0s 57/59
+
+> 2025-08-06 18:31:07 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:34:11 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:34:22 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:34:44 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:38:34 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:39:45 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:41:51 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:46:28 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:46:33 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+✓ 刀 (3.3s)
+✓ 南 (2.2s)
+✓ 力 (2.4s)
+✓ 外 (2.0s)
+✓ 家 (6.6s)
+✓ 衣 (3.1s)
+✓ 内 (3.8s)
+✓ 后 (4.2s)
+✓ 狗 (1.6s)
+✓ 头 (1.9s)
+✓ 鸟 (5.5s)
+✓ 二 (1.8s)
+✓ 门 (2.1s)
+✓ 十 (1.5s)
+✓ 教 (2.3s)
+✓ 读 (3.6s)
+✓ 北 (2.0s)
+✓ 看 (1.8s)
+✓ 西 (2.5s)
+✓ 来 (2.0s)
+✓ 大 (3.0s)
+✓ 五 (1.5s)
+✓ 听 (2.3s)
+✓ 八 (1.9s)
+✓ 马 (4.2s)
+✓ 一 (1.2s)
+✓ 九 (2.6s)
+✓ 右 (1.7s)
+✓ 千 (2.0s)
+✓ 小 (1.7s)
+✓ 工 (1.5s)
+✓ 猫 (1.6s)
+✓ 足 (1.6s)
+✓ 说 (2.7s)
+✓ 三 (1.9s)
+✓ 卖 (1.8s)
+✓ 下 (2.0s)
+✓ 身 (2.2s)
+✓ 东 (2.9s)
+✓ 四 (2.3s)
+✓ 车 (1.8s)
+✓ 百 (2.7s)
+✓ 左 (1.9s)
+✓ 窗 (2.5s)
+✓ 钱 (2.5s)
+✓ 屋 (1.9s)
+✓ 买 (1.9s)
+✓ 食 (2.3s)
+✓ 去 (1.6s)
+✓ 前 (2.9s)
+✓ 上 (1.8s)
+✓ 学 (2.2s)
+✓ 鱼 (2.0s)
+✓ 饮 (2.5s)
+✓ 写 (1.9s)
+✓ 走 (2.4s)
+✓ 跑 (1.9s)
+✓ 七 (2.0s)
+✓ 中 (1.9s)
+< 18:49:58 205.5s 59/59
+
+> 2025-08-06 18:50:30 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:54:12 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-06 18:55:24 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+✓ 千 (3.3s)
+✓ 刀 (3.4s)
+✓ 北 (3.1s)
+✓ 身 (1.7s)
+✓ 八 (1.9s)
+✓ 力 (2.5s)
+✓ 猫 (3.0s)
+✓ 写 (2.4s)
+✓ 门 (2.0s)
+✓ 大 (2.2s)
+✓ 四 (1.8s)
+✓ 鸟 (2.3s)
+✓ 上 (1.9s)
+✓ 五 (1.6s)
+✓ 外 (4.8s)
+✓ 南 (4.3s)
+✓ 下 (3.8s)
+✓ 听 (1.8s)
+✓ 十 (1.7s)
+✓ 说 (2.3s)
+✓ 三 (1.6s)
+✓ 小 (1.8s)
+✓ 足 (1.7s)
+✓ 屋 (1.7s)
+✓ 工 (1.4s)
+✓ 衣 (2.5s)
+✓ 右 (2.8s)
+✓ 内 (1.6s)
+✓ 西 (1.8s)
+✓ 狗 (1.8s)
+✓ 鱼 (2.0s)
+✓ 百 (2.1s)
+✓ 七 (2.0s)
+✓ 学 (2.1s)
+✓ 中 (2.0s)
+✓ 饮 (1.9s)
+✓ 读 (2.2s)
+✓ 前 (5.6s)
+✓ 东 (4.2s)
+✓ 窗 (2.8s)
+✓ 左 (2.5s)
+✓ 卖 (3.0s)
+✓ 家 (4.7s)
+✗ 车 A:hand C:car; vehicle (2.9s)
+✓ 钱 (3.5s)
+✓ 二 (1.8s)
+✓ 来 (1.8s)
+✓ 去 (1.6s)
+✓ 看 (3.3s)
+✓ 食 (1.8s)
+✗ 买 A:sel;l C:buy (2.1s)
+✗ 买 A:sell C:buy (2.1s)
+✓ 买 (1.9s)
+✓ 教 (3.0s)
+✓ 头 (2.8s)
+✓ 后 (4.5s)
+✓ 马 (2.9s)
+✓ 一 (2.1s)
+✓ 跑 (2.9s)
+✓ 九 (2.0s)
+✓ 走 (2.8s)
+< 18:59:16 231.6s 58/59
+
+> 2025-08-06 18:59:36 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-07 09:17:31 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+✓ 饮 (13.1s)
+✓ 口 (6.0s)
+✓ 猫 (2.8s)
+✓ 家 (4.1s)
+✓ 九 (3.7s)
+✓ 头 (2.4s)
+✓ 读 (3.3s)
+✓ 目 (2.0s)
+✓ 三 (2.1s)
+✓ 鸟 (2.2s)
+✓ 外 (3.1s)
+✓ 小 (2.8s)
+✓ 左 (2.1s)
+✓ 下 (2.9s)
+✓ 八 (2.4s)
+✓ 东 (2.5s)
+✗ 刀 A:power C:knife (2.1s)
+✓ 北 (2.6s)
+✓ 教 (3.0s)
+✓ 心 (3.6s)
+✓ 水 (2.3s)
+✓ 去 (1.9s)
+✓ 人 (2.1s)
+✓ 草 (2.5s)
+✓ 二 (1.9s)
+✓ 五 (1.9s)
+✓ 内 (1.9s)
+✓ 女 (2.9s)
+✓ 九 (5.6s)
+✓ 屋 (1.9s)
+✓ 目 (2.3s)
+✓ 狗 (2.1s)
+✓ 跑 (1.9s)
+✓ 八 (2.3s)
+✓ 西 (4.2s)
+✓ 男 (3.8s)
+✓ 糸 (2.6s)
+✓ 火 (1.9s)
+✓ 钱 (2.9s)
+✓ 听 (2.4s)
+✓ 米 (4.5s)
+✓ 三 (2.0s)
+✓ 七 (2.1s)
+✓ 六 (1.8s)
+✓ 食 (2.0s)
+✓ 十 (1.9s)
+✓ 窗 (2.9s)
+✓ 看 (2.2s)
+✓ 千 (2.9s)
+✓ 五 (3.0s)
+✓ 车 (2.6s)
+✓ 手 (2.2s)
+✓ 足 (2.5s)
+✓ 说 (2.9s)
+✓ 七 (2.4s)
+✓ 身 (2.3s)
+✓ 人 (2.1s)
+✓ 言 (3.1s)
+✓ 子 (2.3s)
+✓ 土 (2.4s)
+✓ 一 (1.9s)
+✓ 门 (2.2s)
+✓ 竹 (2.6s)
+✓ 十 (1.8s)
+✓ 衣 (3.1s)
+✓ 六 (2.2s)
+✓ 木 (2.1s)
+✓ 四 (2.1s)
+✓ 口 (2.3s)
+✓ 水 (2.9s)
+✓ 火 (1.8s)
+✓ 右 (2.0s)
+✓ 学 (2.1s)
+✓ 后 (4.4s)
+✓ 中 (1.9s)
+✓ 上 (1.9s)
+✓ 一 (1.7s)
+✓ 工 (1.5s)
+✓ 心 (1.7s)
+✓ 木 (1.6s)
+✓ 日 (1.8s)
+✓ 金 (2.3s)
+✓ 二 (1.7s)
+✓ 卖 (2.2s)
+✓ 四 (1.9s)
+✓ 女 (2.3s)
+✓ 写 (1.9s)
+✓ 鱼 (1.9s)
+✓ 月 (3.9s)
+✓ 买 (2.0s)
+✓ 南 (4.1s)
+✓ 来 (2.2s)
+✓ 手 (2.2s)
+✓ 百 (2.4s)
+✓ 马 (2.1s)
+✓ 走 (3.0s)
+✓ 前 (3.0s)
+✓ 日 (2.4s)
+✓ 大 (3.0s)
+✓ 力 (3.9s)
+< 09:23:47 375.5s 99/100
+
+> 2025-08-07 09:27:57 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-07 09:28:35 | HSK 1: HSK1 Extended B (Family & Verbs) | SRS Review
+> 2025-08-07 09:29:00 | HSK 1: HSK1 Core A | Category Review
+✓ 教 (10.0s)
+✓ 八 (2.4s)
+✓ 车 (2.1s)
+✓ 木 (1.9s)
+✓ 家 (2.6s)
+✓ 走 (2.0s)
+✓ 足 (3.7s)
+✓ 买 (2.0s)
+✓ 前 (2.8s)
+✓ 食 (1.9s)
+✓ 鱼 (2.0s)
+✓ 钱 (3.6s)
+✓ 五 (2.2s)
+✓ 月 (2.7s)
+✓ 读 (10.6s)
+✓ 屋 (2.7s)
+✓ 三 (2.8s)
+✓ 卖 (2.2s)
+✓ 草 (2.3s)
+✓ 七 (2.9s)
+✓ 去 (1.5s)
+✓ 竹 (4.7s)
+✓ 马 (2.1s)
+✓ 水 (2.0s)
+✓ 口 (2.1s)
+✓ 东 (3.1s)
+✓ 饮 (2.6s)
+✓ 头 (2.4s)
+✓ 左 (2.0s)
+✓ 男 (2.4s)
+✓ 猫 (2.3s)
+✓ 六 (1.8s)
+✗ 大 A:tree C:big; large (2.2s)
+✓ 大 (2.3s)
+✓ 糸 (4.3s)
+✓ 日 (2.0s)
+✓ 下 (1.9s)
+✓ 狗 (1.6s)
+✓ 力 (2.8s)
+✓ 十 (1.8s)
+✓ 目 (3.6s)
+✓ 看 (1.9s)
+✓ 手 (1.9s)
+✓ 跑 (1.8s)
+✓ 小 (2.6s)
+✓ 上 (1.6s)
+✓ 听 (1.7s)
+✓ 四 (1.8s)
+✓ 内 (1.4s)
+✓ 窗 (1.5s)
+✓ 人 (2.0s)
+✓ 刀 (2.6s)
+✓ 土 (2.3s)
+✓ 衣 (3.4s)
+✓ 学 (2.3s)
+✓ 米 (3.9s)
+✓ 一 (1.5s)
+✓ 中 (1.6s)
+✓ 工 (2.7s)
+✓ 外 (2.6s)
+✓ 女 (2.7s)
+✓ 北 (2.6s)
+✓ 百 (2.3s)
+✓ 西 (4.1s)
+✓ 火 (1.8s)
+✓ 门 (2.5s)
+✓ 金 (2.0s)
+✓ 鸟 (2.1s)
+✓ 说 (3.4s)
+✓ 千 (2.3s)
+✓ 右 (2.0s)
+✓ 后 (3.5s)
+✓ 子 (3.0s)
+✓ 九 (1.9s)
+✓ 心 (2.2s)
+✓ 南 (3.4s)
+✓ 言 (6.5s)
+✓ 身 (5.8s)
+✓ 二 (1.6s)
+✓ 写 (2.0s)
+✓ 来 (1.8s)
+< 09:34:16 316.2s 80/80
+
+> 2025-08-07 09:34:32 | HSK 1: HSK1 Extended B (Family & Verbs) | Category Review
+✓ 这 (14.9s)
+✓ 为什么 (2.2s)
+✓ 没有 (2.8s)
+✓ 跑 (1.8s)
+✓ 姑 (6.7s)
+✓ 睡觉 (3.0s)
+✓ 那 (3.3s)
+✓ 关 (3.1s)
+✓ 想 (3.4s)
+✓ 脱 (3.1s)
+✓ 听 (2.3s)
+✓ 爱 (2.3s)
+✓ 姐 (4.5s)
+✗ 干净 A:wash C:clean (3.0s)
+✓ 你 (2.1s)
+✓ 站 (4.5s)
+✓ 免费 (3.8s)
+✓ 帮 (2.6s)
+✓ 贵 (4.5s)
+✓ 怎么 (2.2s)
+✓ 哪个 (3.8s)
+✓ 表姐 (6.1s)
+✓ 睡 (4.4s)
+✓ 醒 (5.9s)
+✓ 母 (1.8s)
+✓ 侄子 (9.8s)
+✓ 哪里 (6.8s)
+✓ 感觉 (3.9s)
+✓ 奶 (5.8s)
+✓ 他们 (3.3s)
+✓ 以前 (11.1s)
+✓ 姨 (5.9s)
+✓ 爷 (5.7s)
+✓ 读 (2.9s)
+✓ 夜里 (2.3s)
+✓ 婴儿 (2.2s)
+✓ 说 (2.8s)
+✓ 弟 (3.5s)
+✓ 哥 (6.0s)
+✓ 外婆 (9.9s)
+✓ 需要 (2.1s)
+✓ 表哥 (6.1s)
+✓ 开始 (3.9s)
+✓ 明天 (6.4s)
+✓ 问 (1.9s)
+✓ 什么 (4.1s)
+✓ 等 (2.9s)
+✓ 得到 (3.3s)
+✓ 家 (3.1s)
+✓ 做 (4.3s)
+✓ 我 (3.2s)
+✓ 希望 (3.5s)
+✓ 结束 (5.2s)
+✓ 开 (2.3s)
+✗ 可以 A:answer C:can; able to (2.6s)
+✓ 穿 (11.4s)
+✓ 女孩 (4.2s)
+✓ 去 (1.8s)
+✓ 夫 (4.5s)
+✓ 下午 (3.1s)
+✓ 有 (4.4s)
+✓ 记得 (4.3s)
+✓ 学 (2.6s)
+✓ 她 (4.5s)
+✓ 谁 (3.0s)
+✓ 知道 (3.0s)
+✓ 吃 (2.3s)
+✓ 我们 (3.3s)
+✓ 走 (2.3s)
+✓ 侄女 (3.7s)
+✓ 卖 (2.3s)
+✓ 父 (2.5s)
+✓ 今天 (2.3s)
+✓ 来 (2.2s)
+✓ 儿 (3.4s)
+✓ 现在 (3.3s)
+✓ 做饭 (3.9s)
+✓ 帮助 (3.2s)
+✓ 停 (2.6s)
+✓ 喜欢 (3.2s)
+✓ 写 (2.4s)
+✓ 放 (3.4s)
+✓ 忘记 (2.5s)
+✗ 回答 A:hope C:answer (20.8s)
+✓ 教 (15.4s)
+✓ 便宜 (5.0s)
+✗ 告诉 A:think C:tell; speak (6.6s)
+✓ 妹 (6.1s)
+✓ 妻 (2.7s)
+✓ 他 (2.5s)
+✓ 工作 (2.3s)
+✓ 学习 (4.4s)
+✓ 躺 (4.3s)
+✓ 什么时候 (2.3s)
+✓ 坐 (1.8s)
+✓ 叔 (5.8s)
+✓ 男孩 (5.0s)
+✓ 付钱 (2.8s)
+✓ 玩 (1.9s)
+✓ 要 (3.0s)
+✓ 给 (2.6s)
+✓ 价格 (2.3s)
+✓ 晚上 (2.6s)
+✓ 父母 (2.6s)
+✓ 女 (3.3s)
+✓ 孩子 (4.0s)
+✓ 外公 (5.5s)
+✓ 不 (2.0s)
+✓ 拿 (4.0s)
+✓ 舅 (5.5s)
+✓ 是 (3.0s)
+✓ 喝 (4.5s)
+✓ 昨天 (3.3s)
+✓ 看 (2.7s)
+✗ 以后 A:behind C:after (5.4s)
+✓ 早上 (2.3s)
+✓ 懂 (3.2s)
+✓ 洗 (3.0s)
+✓ 买 (2.0s)
+< 09:45:02 630.7s 114/119
+
+> 2025-08-07 10:25:51 | HSK 1: HSK1 Core A | Category Review
+✓ 东 (8.0s)
+✓ 目 (4.2s)
+✓ 三 (2.2s)
+✓ 大 (3.0s)
+✓ 足 (2.4s)
+✓ 鱼 (2.0s)
+✓ 力 (2.8s)
+✓ 门 (2.0s)
+✓ 九 (1.6s)
+✓ 来 (1.7s)
+✓ 屋 (1.6s)
+✓ 学 (3.1s)
+✓ 头 (2.5s)
+✓ 中 (2.5s)
+✓ 十 (2.1s)
+✓ 五 (2.0s)
+✓ 上 (3.4s)
+✓ 食 (1.9s)
+✓ 刀 (2.0s)
+✓ 右 (1.9s)
+✓ 二 (1.5s)
+✓ 四 (1.7s)
+✓ 说 (3.9s)
+✓ 饮 (2.4s)
+✓ 六 (2.2s)
+✓ 一 (1.3s)
+✓ 窗 (1.8s)
+✓ 车 (2.2s)
+✓ 猫 (1.8s)
+✓ 下 (1.8s)
+✓ 米 (3.1s)
+✓ 听 (2.4s)
+✓ 工 (1.9s)
+✓ 衣 (2.5s)
+✓ 日 (1.8s)
+✓ 家 (9.1s)
+✓ 竹 (3.9s)
+✓ 千 (2.1s)
+✓ 男 (1.7s)
+✓ 鸟 (1.8s)
+✓ 身 (2.5s)
+✓ 草 (2.3s)
+✗ 写 A:horse C:write (3.4s)
+✓ 写 (2.0s)
+✓ 手 (3.1s)
+✓ 子 (2.1s)
+✓ 百 (2.4s)
+✓ 人 (1.9s)
+✓ 北 (1.9s)
+✓ 木 (1.7s)
+✓ 卖 (2.6s)
+✓ 糸 (3.3s)
+✓ 读 (2.0s)
+✓ 教 (4.2s)
+✓ 外 (2.4s)
+✓ 七 (1.9s)
+✓ 走 (2.1s)
+✓ 水 (2.2s)
+✓ 前 (3.6s)
+✓ 后 (3.8s)
+✓ 看 (1.5s)
+✗ 西 A:four C:west (1.7s)
+✓ 西 (2.2s)
+✓ 言 (2.5s)
+✓ 狗 (1.7s)
+✓ 金 (1.8s)
+✓ 口 (4.1s)
+✓ 南 (2.0s)
+✓ 内 (1.8s)
+✓ 心 (1.8s)
+✓ 买 (2.9s)
+✓ 钱 (2.7s)
+✓ 跑 (3.3s)
+✓ 月 (3.7s)
+✓ 左 (2.5s)
+✓ 小 (1.9s)
+✓ 八 (2.2s)
+✓ 女 (4.2s)
+✗ 去 A:wife C:go (2.5s)
+✓ 去 (1.9s)
+✓ 马 (2.1s)
+✓ 土 (3.2s)
+✓ 火 (1.5s)
+< 10:31:07 316.2s 80/80
+
+> 2025-08-07 11:23:18 | HSK 1: Hsk1 Set 01 | Review All
+> 2025-08-07 11:44:47 | HSK 1: Hsk1 Set 01 | Review All
+✗ 下雨 A:idk C:MISSING_MEANING (7.1s)
+✗ 猫 A:p C:cat (22.0s)
+✗ 椅子 A:p C:chair (0.7s)
+> 2025-08-07 11:46:00 | HSK 1: Hsk1 Set 01 | Review All
+✗ 了 A:idk C:MISSING_MEANING (5.0s)
+> 2025-08-07 11:56:28 | HSK 1: Hsk1 Set 01 | Review All
+✗ 里 A:place C:inside (4.9s)
+✗ 电影 A:idk C:movie (4.1s)
+✗ 块 A:idk C:yuan (currency) (3.4s)
+✗ 小姐 A:sister C:Miss; young lady (6.7s)
+✓ 谢谢 (3.7s)
+✗ 几 A:idk C:how many (3.5s)
+✗ 了 A:idk C:(modal particle intensifying preceding clause); (completed action marker) (2.4s)
+✗ 字 A:idk C:character; word (3.0s)
+✗ 杯子 A:idk C:cup; glass (2.1s)
+✓ 来 (1.8s)
+✗ 学生 A:learn C:student (4.8s)
+✓ 猫 (3.7s)
+✓ 我 (4.0s)
+✗ 再见 A:now C:goodbye (4.2s)
+✗ 书 A:idk C:book (1.8s)
+✗ 请 A:think C:please; to invite (5.6s)
+✓ 爱 (2.3s)
+✓ 有 (2.8s)
+✓ 下午 (2.9s)
+✓ 九 (4.2s)
+✗ 会 A:go C:can; be able to; will; meeting (6.0s)
+✓ 水 (2.3s)
+✗ 椅子 A:idk C:chair (1.7s)
+✗ 下雨 A:rain C:to rain (2.3s)
+✗ 菜 A:idk C:dish; vegetable (2.1s)
+< 11:58:28 120.4s 9/25
+
+> 2025-08-07 15:07:12 | HSK 1: Hsk1 Set 01 | SRS Review
+✗ 会 A:go C:can; be able to; will; meeting (4.0s)
+✗ 菜 A:idk C:dish; vegetable (3.6s)
+✓ 谢谢 (3.4s)
+✗ 学生 A:learn C:student (6.8s)
+✓ 九 (2.6s)
+✗ 请 A:idk C:please; to invite (2.7s)
+✓ 爱 (2.6s)
+✗ 几 A:idk C:how many (2.8s)
+✓ 猫 (1.9s)
+✗ 小姐 A:idk C:Miss; young lady (13.3s)
+✗ 电影 A:idk C:movie (2.3s)
+✗ 字 A:idk C:character; word (1.8s)
+✓ 我 (3.3s)
+✗ 里 A:place C:inside (3.3s)
+✗ 杯子 A:idk C:cup; glass (2.8s)
+✗ 了 A:idk C:(modal particle intensifying preceding clause); (completed action marker) (3.4s)
+✓ 水 (2.0s)
+✗ 椅子 A:idk C:chair (2.6s)
+✗ 再见 A:now C:goodbye (3.1s)
+✓ 下午 (3.1s)
+✓ 来 (2.4s)
+✗ 块 A:idk C:yuan (currency) (2.0s)
+✗ 书 A:idk C:book (1.9s)
+✓ 下雨 (3.0s)
+✓ 有 (4.2s)
+< 15:09:09 117.5s 10/25
+
+> 2025-08-07 15:09:16 | HSK 1: Hsk1 Set 01 | SRS Review
+> 2025-08-07 15:20:05 | HSK 1: Hsk1 Set 01 | SRS Review
+✓ 水 (2.5s)
+✓ 里 (3.8s)
+✓ 爱 (2.0s)
+✓ 下午 (3.4s)
+✓ 电影 (3.6s)
+✓ 有 (2.0s)
+✗ 椅子 A:idk C:chair (4.3s)
+✗ 会 A:go C:can; be able to; will; meeting (1.8s)
+✓ 小姐 (3.4s)
+✗ 杯子 A:idk C:cup; glass (2.1s)
+✗ 书 A:idk C:book (2.2s)
+✓ 九 (1.7s)
+✓ 下雨 (3.1s)
+✗ 再见 A:good night C:goodbye (6.0s)
+✗ 块 A:idk C:yuan (currency) (1.7s)
+✓ 我 (1.8s)
+✓ 来 (2.2s)
+✗ 请 A:idk C:please; to invite (1.9s)
+✓ 谢谢 (2.6s)
+✓ 字 (3.2s)
+✗ 几 A:idl C:how many (2.8s)
+✗ 菜 A:idk C:dish; vegetable (3.9s)
+✗ 学生 A:idk C:student (2.8s)
+✗ 了 A:idk C:(modal particle intensifying preceding clause); (completed action marker) (1.6s)
+✓ 猫 (2.4s)
+< 15:21:47 101.3s 14/25
 
