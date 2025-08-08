@@ -1,11 +1,9 @@
 import csv
 import os
 from pathlib import Path
-from .audio_handler import AudioHandler
 
 class SetManager:
     def __init__(self):
-        self.audio_handler = AudioHandler()
         self.current_set = self.load_current_set()
         self.current_category = self.load_current_category()
 

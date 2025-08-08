@@ -9,12 +9,9 @@ from datetime import datetime
 
 from lib.set_manager import SetManager
 from lib.session_tracker import SessionTracker
-from lib.review_engine import ReviewEngine
-from lib.practice_manager import PracticeManager
 from lib.srs import SRSManager
-from lib.llm_manager import LLMManager
-from lib.coin_system import CoinSystem
 from lib.pinyin_converter import PinyinConverter
+from lib.answer_utils import validate_answer
 
 
 app = FastAPI(title="Flashcards API")
@@ -65,14 +62,10 @@ class WebSession:
 SESSIONS: Dict[str, WebSession] = {}
 
 
-# Instantiate core singletons that read/write same files as CLI
+# Instantiate core singletons used by the web API
 set_manager = SetManager()
 session_tracker = SessionTracker(set_manager)
-coin_system = CoinSystem()
-review_engine = ReviewEngine(set_manager, session_tracker, coin_system)
 srs_manager = SRSManager()
-llm_manager = LLMManager(session_tracker)
-practice_manager = PracticeManager(set_manager, review_engine, llm_manager, srs_manager)
 pinyin_converter = PinyinConverter()
 
 
@@ -549,7 +542,7 @@ def submit_answer(session_id: str, payload: SubmitAnswerRequest) -> Dict[str, An
     else:
         question = row[0]
         correct_answer = row[1]
-        is_correct = review_engine._validate_answer(payload.answer, correct_answer)
+        is_correct = validate_answer(payload.answer, correct_answer)
 
     # Update counts in-memory
     try:

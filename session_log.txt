@@ -10285,3 +10285,12 @@
 ✗ 都 A:idk C:all; both (7.1s)
 < 17:46:06 232.9s 22/45
 
+> 2025-08-08 18:48:34 | HSK 1: Hsk1 Set 01 | Review All
+✓ 猫 (17.5s)
+✗ 有 A:wrong C:have; there is (4.9s)
+> 2025-08-08 18:49:02 | Review Incorrect | Review Incorrect
+> 2025-08-08 18:50:31 | HSK Level 1 (Recognition) (Filtered) | Practice by Difficulty
+✓ 去 (2.5s)
+> 2025-08-08 18:50:47 | HSK 1: Hsk1 Set 01 | Practice by Difficulty
+> 2025-08-08 18:54:19 | HSK 1: Hsk1 Set 01 | Practice by Difficulty
+✗ 块 A:idk C:yuan (currency) (2.1s)
