@@ -1,11 +1,7 @@
-# GEMINI.md
+This file provides guidance for working with code in this repository.
 
-This file provides guidance to Gemini when working with code in this repository.
+## Important Instructions
 
-## Important Instructions for Gemini
-
-- **Update this GEMINI.md, CLAUDE.md, and AGENTS.md files after making any changes to the codebase**
-- **Confirm with the user before updating GEMINI.md**
 - Keep this documentation current with the actual implementation
 
 ## Running the Application
@@ -184,15 +180,15 @@ Session data: `session_log.txt` (compact format)
 
 ### Persistent Session Management (Default Behavior)
 
-**Practice Set**, **Practice Category**, **Practice Difficult Cards**, and **Practice Difficult Category** options support persistent Gemini sessions:
+**Practice Set**, **Practice Category**, **Practice Difficult Cards**, and **Practice Difficult Category** options support persistent LLM sessions:
 
 1. Run `python flashcards.py`
 2. Choose option **1. Practice Set**, **2. Practice Category**, **3. Practice Difficult Cards**, or **4. Practice Difficult Category**
 3. **First session**: Script prompts for LLM choice (Gemini/Claude/None)
 4. **Subsequent sessions**: Script automatically reuses existing LLM session without prompting
 5. Script automatically:
-   - Detects existing Gemini Code window or launches new one
-   - Reuses existing Gemini session for multi-turn conversations
+   - Detects existing LLM window or launches new one
+   - Reuses existing LLM session for multi-turn conversations
    - Maintains session continuity across multiple practice sessions
    - Sends session summaries for ongoing pattern analysis
    - Preserves conversation history for better insights
@@ -208,7 +204,7 @@ Session data: `session_log.txt` (compact format)
 
 ### Session Summary Integration
 
-After each practice session (for all LLM-enabled options), Gemini automatically receives:
+After each practice session (for all LLM-enabled options), the LLM automatically receives:
 
 - Session type and set name
 - Score and duration

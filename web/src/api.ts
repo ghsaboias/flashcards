@@ -75,7 +75,7 @@ export async function answer(sessionId: string, answerText: string) {
         progress: { current: number; total: number };
         evaluation?: { question: string; correct: boolean; correct_answer: string };
         result?: { correct: number; total: number };
-        results?: Array<{ question: string; user_answer: string; correct_answer: string; correct: boolean }>
+        results?: Array<{ question: string; pinyin?: string; user_answer: string; correct_answer: string; correct: boolean }>
     };
 }
 

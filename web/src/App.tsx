@@ -21,11 +21,19 @@ function App() {
   const [progress, setProgress] = useState<{ current: number, total: number }>({ current: 0, total: 0 })
   const [input, setInput] = useState<string>("")
   const [lastEval, setLastEval] = useState<{ correct: boolean; correct_answer: string } | null>(null)
-  const [results, setResults] = useState<Array<{ question: string; user_answer: string; correct_answer: string; correct: boolean }>>([])
+  const [results, setResults] = useState<Array<{ question: string; pinyin?: string; user_answer: string; correct_answer: string; correct: boolean }>>([])
   const [streak, setStreak] = useState<number>(0)
   const [bestStreak, setBestStreak] = useState<number>(0)
+  // Local review mode (replay incorrect from last session)
+  const [inReviewMode, setInReviewMode] = useState<boolean>(false)
+  const [reviewCards, setReviewCards] = useState<Array<{ question: string; pinyin?: string; correct_answer: string }>>([])
+  const [reviewPosition, setReviewPosition] = useState<number>(0)
+  // Difficulty filters for practice-by-difficulty
+  const [diffEasy, setDiffEasy] = useState<boolean>(false)
+  const [diffMedium, setDiffMedium] = useState<boolean>(false)
+  const [diffHard, setDiffHard] = useState<boolean>(true)
   // Removed per request: previous answers panel
-  const canAnswer = useMemo(() => !!sessionId && !!question, [sessionId, question])
+  const canAnswer = useMemo(() => (!!sessionId || inReviewMode) && !!question, [sessionId, inReviewMode, question])
   const progressPercent = useMemo(() => (
     progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0
   ), [progress])
@@ -39,6 +47,15 @@ function App() {
     const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0
     return { total, correct, incorrect, accuracy }
   }, [results])
+
+  const selectedDifficulties = useMemo(() => {
+    const vals: Array<'easy' | 'medium' | 'hard'> = []
+    if (diffEasy) vals.push('easy')
+    if (diffMedium) vals.push('medium')
+    if (diffHard) vals.push('hard')
+    return vals
+  }, [diffEasy, diffMedium, diffHard])
+  const canStartByDifficulty = selectedDifficulties.length > 0
 
   // Helpers for SRS due count
   function parseSrsDate(raw: string): Date | null {
@@ -168,6 +185,13 @@ function App() {
   // Keyboard shortcuts
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      // Ignore shortcuts while the user is typing in an input/textarea/contentEditable
+      const target = e.target as HTMLElement | null
+      if (target) {
+        const tag = (target.tagName || '').toLowerCase()
+        const isTyping = tag === 'input' || tag === 'textarea' || (target as HTMLElement).isContentEditable
+        if (isTyping) return
+      }
       if (e.key === 'r' || e.key === 'R') {
         if (question && hasChinese(question)) speak(question)
       } else if (e.key === '1') {
@@ -275,6 +299,9 @@ function App() {
     setResults([])
     setStreak(0)
     setBestStreak(0)
+    setInReviewMode(false)
+    setReviewCards([])
+    setReviewPosition(0)
     // previous answers state removed
     setShowSrs(false)
     setSrsRows([])
@@ -302,7 +329,7 @@ function App() {
 
   async function beginDifficultSet() {
     resetSessionUI()
-    const res = await startSession({ mode: 'difficult_set', set_name: selectedSet })
+    const res = await startSession({ mode: 'difficulty_set', set_name: selectedSet, difficulty_levels: selectedDifficulties })
     setSessionId(res.session_id)
     setQuestion(res.card?.question || "")
     setPinyin(res.card?.pinyin || "")
@@ -311,7 +338,7 @@ function App() {
 
   async function beginDifficultCategory() {
     resetSessionUI()
-    const res = await startSession({ mode: 'difficult_category', category: selectedCategory })
+    const res = await startSession({ mode: 'difficulty_category', category: selectedCategory, difficulty_levels: selectedDifficulties })
     setSessionId(res.session_id)
     setQuestion(res.card?.question || "")
     setPinyin(res.card?.pinyin || "")
@@ -380,11 +407,74 @@ function App() {
     }
   }
 
+  function validateUserAnswer(userAnswer: string, answer: string): boolean {
+    const ua = userAnswer.toLowerCase().trim()
+    const ans = answer.toLowerCase().trim()
+    if (ans.includes(';') || ans.includes(' or ')) {
+      const correctParts = ans.split(/;|\s+or\s+/).map(p => p.trim()).filter(Boolean)
+      const userParts = ua.split(/\s+or\s+/).map(p => p.trim()).filter(Boolean)
+      return userParts.some(p => correctParts.includes(p))
+    }
+    return ua === ans
+  }
+
   async function submitAnswer() {
     if (!canAnswer) return
+    // Local review mode branch
+    if (inReviewMode) {
+      const current = reviewCards[reviewPosition]
+      const isCorrect = validateUserAnswer(input, current?.correct_answer || '')
+      setInput("")
+      setLastEval({ correct: isCorrect, correct_answer: current?.correct_answer || '' })
+      if (isCorrect) {
+        playCorrectChime()
+        setStreak(s => {
+          const next = s + 1
+          setBestStreak(b => Math.max(b, next))
+          return next
+        })
+      } else {
+        setStreak(0)
+      }
+      // Append to session results
+      setResults(prev => ([
+        ...prev,
+        {
+          question: current?.question || '',
+          pinyin: current?.pinyin || '',
+          user_answer: input,
+          correct_answer: current?.correct_answer || '',
+          correct: isCorrect,
+        }
+      ]))
+
+      const nextPos = reviewPosition + 1
+      if (nextPos >= reviewCards.length) {
+        // complete
+        setQuestion("")
+        setPinyin("")
+        setProgress({ current: reviewCards.length, total: reviewCards.length })
+        setInReviewMode(false) // end review mode but keep results visible
+      } else {
+        setReviewPosition(nextPos)
+        const next = reviewCards[nextPos]
+        setQuestion(next.question)
+        setPinyin(next.pinyin || '')
+        setProgress({ current: nextPos, total: reviewCards.length })
+      }
+      return
+    }
+
+    // Normal server-backed session
     const res = await answer(sessionId, input)
     setInput("")
     if (res.done) {
+      if (res.results && res.results.length > 0) {
+        const last = res.results[res.results.length - 1]
+        if (last && last.correct) {
+          playCorrectChime()
+        }
+      }
       setQuestion("")
       setProgress(res.progress)
       setResults(res.results || [])
@@ -397,7 +487,6 @@ function App() {
       if (res.results) setResults(res.results)
       if (res.evaluation) {
         if (res.evaluation.correct) {
-          // Play chime on correct answer (user-initiated event)
           playCorrectChime()
           setStreak(s => {
             const next = s + 1
@@ -419,6 +508,46 @@ function App() {
   function practiceDifficultNow() {
     if (mode === 'set') return beginDifficultSet()
     return beginDifficultCategory()
+  }
+
+  async function beginReviewIncorrect() {
+    const wrong = results.filter(r => !r.correct)
+    if (wrong.length === 0) return
+
+    // Prepare backend payload; include set_name only in set mode to enable SRS persistence
+    const reviewItems = wrong.map(r => ({
+      question: r.question,
+      answer: r.correct_answer,
+      ...(mode === 'set' && selectedSet ? { set_name: selectedSet } as any : {})
+    }))
+
+    try {
+      const res = await startSession({ mode: 'review_incorrect', review_items: reviewItems })
+      if (!res.done) {
+        resetSessionUI()
+        setSessionId(res.session_id)
+        setQuestion(res.card?.question || "")
+        setPinyin(res.card?.pinyin || "")
+        setProgress(res.progress)
+        return
+      }
+      // If backend returns done (empty), fall through to local
+    } catch {
+      // Fall back to local-only review if backend unavailable
+    }
+
+    // Local review fallback
+    resetSessionUI()
+    setInReviewMode(true)
+    setReviewCards(wrong.map(r => ({ question: r.question, pinyin: r.pinyin, correct_answer: r.correct_answer })))
+    setReviewPosition(0)
+    setResults([])
+    setStreak(0)
+    setBestStreak(0)
+    const first = wrong[0]
+    setQuestion(first.question)
+    setPinyin(first.pinyin || '')
+    setProgress({ current: 0, total: wrong.length })
   }
 
   function humanizeSetLabel(raw: string): string {
@@ -486,9 +615,29 @@ function App() {
             </div>
           )}
 
+          {/* Difficulty selection */}
+          <fieldset className="group">
+            <legend>Difficulty</legend>
+            <div className="row" role="group" aria-label="Select difficulties">
+              <label className="radio">
+                <input type="checkbox" checked={diffHard} onChange={(e) => setDiffHard(e.target.checked)} />
+                <span className="statusPill hard"><span className="dot" />Hard</span>
+              </label>
+              <label className="radio">
+                <input type="checkbox" checked={diffMedium} onChange={(e) => setDiffMedium(e.target.checked)} />
+                <span className="statusPill medium"><span className="dot" />Medium</span>
+              </label>
+              <label className="radio">
+                <input type="checkbox" checked={diffEasy} onChange={(e) => setDiffEasy(e.target.checked)} />
+                <span className="statusPill easy"><span className="dot" />Easy</span>
+              </label>
+            </div>
+            <div className="muted" style={{ marginTop: 4 }}>Combine any to practice selected difficulties</div>
+          </fieldset>
+
           <div className="row">
             <button className="btn-primary" onClick={mode === 'set' ? beginSetSession : beginCategorySession} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Start Practice</button>
-            <button className="btn-secondary" onClick={mode === 'set' ? beginDifficultSet : beginDifficultCategory} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Practice Difficult</button>
+            <button className="btn-secondary" onClick={mode === 'set' ? beginDifficultSet : beginDifficultCategory} disabled={(mode === 'set' ? !selectedSet : !selectedCategory) || !canStartByDifficulty}>Practice by Difficulty</button>
             <button className="btn-secondary" title="Spaced Repetition System" onClick={mode === 'set' ? beginSrsSets : beginSrsCategories} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Practice SRS</button>
             <button className="btn-tertiary" title="View SRS schedule" onClick={viewSrs} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>View SRS</button>
             <button className="btn-tertiary" title="View performance stats" onClick={viewStats} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>View Stats</button>
@@ -504,7 +653,9 @@ function App() {
                   <tr>
                     <th>#</th>
                     <th>Question</th>
+                    <th>Pinyin</th>
                     <th>Your Answer</th>
+                    <th>Answer</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -512,9 +663,11 @@ function App() {
                     <tr key={i}>
                       <td>{i + 1}</td>
                       <td>{r.question}</td>
+                      <td className="muted">{r.pinyin || ''}</td>
                       <td className={String(r.correct)}>
-                        {r.correct ? '✓' : `✗`} {r.correct_answer}
+                        {r.correct ? '✓' : '✗'} {r.user_answer || '—'}
                       </td>
+                      <td title="Correct answer">{r.correct_answer}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -579,6 +732,7 @@ function App() {
                         <tr>
                           <th>#</th>
                           <th>Question</th>
+                          <th>Pinyin</th>
                           <th>Meaning (Correct)</th>
                           <th>Your Answer</th>
                         </tr>
@@ -588,8 +742,9 @@ function App() {
                           <tr key={`inc-${i}`}>
                             <td>{i + 1}</td>
                             <td>{r.question}</td>
-                            <td className="bad" title="Correct answer">{r.correct_answer}</td>
-                            <td title="Your answer">{r.user_answer || '—'}</td>
+                            <td className="muted">{r.pinyin || ''}</td>
+                            <td title="Correct answer">{r.correct_answer}</td>
+                            <td className="bad" title="Your answer">{r.user_answer || '—'}</td>
                           </tr>
                         ) : null)}
                       </tbody>
@@ -601,7 +756,8 @@ function App() {
 
                 <div className="row" style={{ marginTop: 12 }}>
                   <button className="btn-primary" onClick={restartPractice}>Restart</button>
-                  <button className="btn-secondary" onClick={practiceDifficultNow} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Practice Difficult</button>
+                  <button className="btn-secondary" onClick={beginReviewIncorrect} disabled={!results.some(r => !r.correct)}>Review Incorrect</button>
+                  <button className="btn-secondary" onClick={practiceDifficultNow} disabled={(mode === 'set' ? !selectedSet : !selectedCategory) || !canStartByDifficulty}>Practice by Difficulty</button>
                   <button className="btn-tertiary" onClick={viewStats}>View Stats</button>
                   <button className="btn-tertiary" onClick={viewSrs}>View SRS</button>
                 </div>

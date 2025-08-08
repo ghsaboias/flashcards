@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 import random
+import csv
+import time
+from datetime import datetime
 
 from lib.set_manager import SetManager
 from lib.session_tracker import SessionTracker
@@ -26,11 +29,13 @@ app.add_middleware(
 
 
 class StartSessionRequest(BaseModel):
-    mode: str  # one of: set_all, category_all, difficult_set, difficult_category, srs_sets, srs_categories
+    mode: str  # one of: set_all, category_all, difficult_set, difficult_category, difficulty_set, difficulty_category, srs_sets, srs_categories
     set_name: Optional[str] = None
     category: Optional[str] = None
     selected_sets: Optional[List[str]] = None
     selected_categories: Optional[List[str]] = None
+    difficulty_levels: Optional[List[str]] = None  # e.g., ["easy", "medium", "hard"]
+    review_items: Optional[List[Dict[str, Any]]] = None  # for review_incorrect: [{question, answer, set_name?}]
 
 
 class SubmitAnswerRequest(BaseModel):
@@ -49,6 +54,11 @@ class WebSession:
         self.card_set_mapping = card_set_mapping or {}
         self.practice_name = practice_name
         self.correct_count = 0
+        # Logging/session timing
+        self.session_start_time: Optional[datetime] = None
+        self.question_start_time: Optional[float] = None
+        self.log_name: Optional[str] = None
+        self.session_type: Optional[str] = None
 
 
 # In-memory store for active web sessions (simple; replace with redis later if needed)
@@ -169,6 +179,24 @@ def _compute_stats_rows(cards: List[List[str]]) -> List[Dict[str, Any]]:
         })
     return rows
 
+
+def _classify_status_from_counts(correct: int, incorrect: int, reviewed: int) -> str:
+    """Classify a card's difficulty status based on attempts and accuracy.
+
+    Rules (aligned with web UI):
+    - hard: attempts <= 10 OR accuracy <= 80
+    - medium: attempts > 10 AND accuracy > 80
+    - easy: attempts > 10 AND accuracy > 90
+    """
+    attempts = reviewed if reviewed else (correct + incorrect)
+    if attempts <= 10:
+        return "hard"
+    accuracy = (correct / attempts) * 100 if attempts > 0 else 0.0
+    if accuracy > 90:
+        return "easy"
+    if accuracy > 80:
+        return "medium"
+    return "hard"
 
 def _summarize_stats(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
     total_correct = sum(r.get("correct", 0) for r in rows)
@@ -294,6 +322,62 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
         indices = list(range(len(cards)))
         mapping = {i: item['set_name'] for i, item in enumerate(due_cards)}
         practice_name = "Selected Categories"
+    elif mode == "difficulty_set":
+        if not payload.set_name:
+            raise HTTPException(status_code=400, detail="set_name is required for difficulty_set")
+        if not payload.difficulty_levels:
+            raise HTTPException(status_code=400, detail="difficulty_levels is required for difficulty_set")
+        requested = {d.lower() for d in payload.difficulty_levels}
+        set_manager.current_set = payload.set_name
+        set_manager.save_current_set()
+        all_cards = set_manager.load_flashcards_from_set(payload.set_name)
+        filtered: List[int] = []
+        for i, row in enumerate(all_cards):
+            try:
+                c = int(row[2]) if len(row) > 2 else 0
+                ic = int(row[3]) if len(row) > 3 else 0
+                rv = int(row[4]) if len(row) > 4 else 0
+            except (ValueError, IndexError):
+                c = ic = rv = 0
+            status = _classify_status_from_counts(c, ic, rv)
+            if status in requested:
+                filtered.append(i)
+        cards = all_cards
+        indices = filtered
+        practice_name = set_manager.display_set_name(payload.set_name)
+    elif mode == "difficulty_category":
+        if not payload.category:
+            raise HTTPException(status_code=400, detail="category is required for difficulty_category")
+        if not payload.difficulty_levels:
+            raise HTTPException(status_code=400, detail="difficulty_levels is required for difficulty_category")
+        requested = {d.lower() for d in payload.difficulty_levels}
+        data = _load_category_cards(payload.category)
+        cards = data["flashcards"]
+        filtered: List[int] = []
+        for i, row in enumerate(cards):
+            try:
+                c = int(row[2]) if len(row) > 2 else 0
+                ic = int(row[3]) if len(row) > 3 else 0
+                rv = int(row[4]) if len(row) > 4 else 0
+            except (ValueError, IndexError):
+                c = ic = rv = 0
+            status = _classify_status_from_counts(c, ic, rv)
+            if status in requested:
+                filtered.append(i)
+        indices = filtered
+        practice_name = f"{set_manager.get_category_display_name(payload.category)} (Filtered)"
+    elif mode == "review_incorrect":
+        # Build a session from client-provided incorrect items
+        if not payload.review_items:
+            raise HTTPException(status_code=400, detail="review_items is required for review_incorrect")
+        items = [it for it in payload.review_items if isinstance(it, dict) and it.get("question") and it.get("answer")]
+        if not items:
+            return {"session_id": str(uuid4()), "done": True, "progress": {"current": 0, "total": 0}}
+        cards = [[it["question"], it["answer"]] for it in items]
+        indices = list(range(len(cards)))
+        # Optional mapping for SRS persistence if set_name provided per item
+        mapping = {i: it["set_name"] for i, it in enumerate(items) if it.get("set_name")}
+        practice_name = "Review Incorrect"
     else:
         raise HTTPException(status_code=400, detail="invalid mode")
 
@@ -313,7 +397,41 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
     if not indices:
         return {"session_id": session_id, "done": True, "progress": {"current": 0, "total": 0}}
 
+    # Prepare logging details to mirror CLI session_log.txt format
+    sess = SESSIONS[session_id]
+    # Map mode -> session type label
+    session_type_map = {
+        "set_all": "Review All",
+        "category_all": "Category Review",
+        "difficult_set": "Practice Difficult",
+        "difficult_category": "Difficult Category Review",
+        "srs_sets": "SRS Review",
+        "srs_categories": "SRS Review",
+        "difficulty_set": "Practice by Difficulty",
+        "difficulty_category": "Practice by Difficulty",
+        "review_incorrect": "Review Incorrect",
+    }
+    session_type = session_type_map.get(mode, mode)
+    # Determine log name (set display name or category/practice label)
+    log_name = practice_name or set_manager.display_set_name(set_manager.current_set)
+    # Clean up any difficult suffix for category logs to keep name clean
+    if ("Category" in session_type) and isinstance(log_name, str) and log_name.endswith(" (Difficult)"):
+        log_name = log_name.rsplit(" (Difficult)", 1)[0]
+
+    # Set timing and write session header
+    sess.session_start_time = datetime.now()
+    sess.session_type = session_type
+    sess.log_name = log_name
+    try:
+        with open("session_log.txt", "a", encoding="utf-8") as f:
+            f.write(f"> {sess.session_start_time.strftime('%Y-%m-%d %H:%M:%S')} | {log_name} | {session_type}\n")
+    except Exception:
+        # Do not interrupt session if logging fails
+        pass
+
     first_idx = indices[0]
+    # Start timer for first question
+    sess.question_start_time = time.time()
     return {
         "session_id": session_id,
         "done": False,
@@ -368,12 +486,17 @@ def submit_answer(session_id: str, payload: SubmitAnswerRequest) -> Dict[str, An
     except ValueError:
         correct_count = incorrect_count = reviewed_count = 0
 
+    # Compute duration since question was shown
+    now_ts = time.time()
+    question_duration = round(now_ts - sess.question_start_time, 1) if sess.question_start_time else 0.0
+
     if is_correct:
         if len(row) < 5:
             # pad to at least 5 columns
             while len(row) < 5:
                 row.append("0")
         row[2] = str(correct_count + 1)
+        sess.correct_count += 1
     else:
         if len(row) < 5:
             while len(row) < 5:
@@ -381,13 +504,14 @@ def submit_answer(session_id: str, payload: SubmitAnswerRequest) -> Dict[str, An
         row[3] = str(incorrect_count + 1)
     row[4] = str(reviewed_count + 1)
 
-    # SRS update: choose set name (mapping for SRS sessions)
+    # SRS update: choose set name (mapping for SRS sessions). If none, skip update to avoid misattribution
     set_name_for_srs = sess.card_set_mapping.get(sess.position, set_manager.current_set) if sess.card_set_mapping else set_manager.current_set
-    srs_manager.update_srs_data(set_name_for_srs, question, correct_answer, is_correct)
+    if set_name_for_srs:
+        srs_manager.update_srs_data(set_name_for_srs, question, correct_answer, is_correct)
 
     # Persist updated card to CSV for single-set or category sessions
     # For category/srs modes, we skip immediate save; a dedicated endpoint could consolidate updates if needed
-    if sess.mode in ("set_all", "difficult_set") and set_manager.current_set:
+    if sess.mode in ("set_all", "difficult_set", "difficulty_set") and set_manager.current_set:
         from csv import writer
         # Load full set then replace by index if applicable
         full = set_manager.load_flashcards_from_set(set_manager.current_set)
@@ -398,16 +522,77 @@ def submit_answer(session_id: str, payload: SubmitAnswerRequest) -> Dict[str, An
             with open(set_manager.get_csv_filename(set_manager.current_set), 'w', newline='', encoding='utf-8') as f:
                 csv.writer(f).writerows(full)
 
+    # Write per-question log line mirroring CLI
+    try:
+        with open("session_log.txt", "a", encoding="utf-8") as f:
+            if is_correct:
+                f.write(f"✓ {question} ({question_duration}s)\n")
+            else:
+                f.write(f"✗ {question} A:{payload.answer} C:{correct_answer} ({question_duration}s)\n")
+    except Exception:
+        pass
+
     sess.results.append({
         "question": question,
+        "pinyin": pinyin_converter.get_pinyin_for_text(question),
         "user_answer": payload.answer,
         "correct_answer": correct_answer,
         "correct": is_correct,
     })
 
+    # Persist updated counts for SRS/review modes by matching on (question, answer)
+    if sess.mode in ("srs_sets", "srs_categories", "review_incorrect"):
+        try:
+            target_set_name = set_name_for_srs
+            csv_path = set_manager.get_csv_filename(target_set_name)
+            # Load existing cards
+            existing_cards: List[List[str]] = []
+            with open(csv_path, 'r', newline='', encoding='utf-8') as f:
+                reader = csv.reader(f)
+                existing_cards = list(reader)
+
+            # Find and update the matching row by question and answer
+            for j, existing in enumerate(existing_cards):
+                if len(existing) >= 2 and existing[0] == question and existing[1] == correct_answer:
+                    # Ensure at least 5 columns
+                    while len(existing) < 5:
+                        existing.append("0")
+                    # Safely parse counts
+                    try:
+                        ex_correct = int(existing[2])
+                        ex_incorrect = int(existing[3])
+                        ex_reviewed = int(existing[4])
+                    except ValueError:
+                        ex_correct = ex_incorrect = ex_reviewed = 0
+                    if is_correct:
+                        existing[2] = str(ex_correct + 1)
+                    else:
+                        existing[3] = str(ex_incorrect + 1)
+                    existing[4] = str(ex_reviewed + 1)
+                    existing_cards[j] = existing
+                    break
+
+            # Save back
+            with open(csv_path, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.writer(f)
+                writer.writerows(existing_cards)
+        except Exception:
+            # Non-fatal if persistence fails
+            pass
+
     sess.position += 1
 
     if sess.position >= len(sess.indices):
+        # Write session summary footer
+        end_time = datetime.now()
+        total_duration = round((end_time - sess.session_start_time).total_seconds(), 1) if sess.session_start_time else 0.0
+        try:
+            with open("session_log.txt", "a", encoding="utf-8") as f:
+                f.write(f"< {end_time.strftime('%H:%M:%S')} {total_duration}s {sess.correct_count}/{len(sess.indices)}\n")
+                f.write("\n")
+        except Exception:
+            pass
+
         return {
             "done": True,
             "progress": {"current": len(sess.indices), "total": len(sess.indices)},
@@ -419,6 +604,8 @@ def submit_answer(session_id: str, payload: SubmitAnswerRequest) -> Dict[str, An
         }
 
     next_idx = sess.indices[sess.position]
+    # Start timer for next question
+    sess.question_start_time = time.time()
     return {
         "done": False,
         "card": _card_payload(sess.cards, next_idx),

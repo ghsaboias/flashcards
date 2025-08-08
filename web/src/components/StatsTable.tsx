@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
 import type { StatRow } from '../api'
 
-type SortKey = keyof Pick<StatRow, 'question' | 'answer' | 'correct' | 'incorrect' | 'total' | 'accuracy'>
+type SortKey =
+    | keyof Pick<StatRow, 'question' | 'answer' | 'correct' | 'incorrect' | 'total' | 'accuracy'>
+    | 'status'
 type SortDir = 'asc' | 'desc'
 
 type Props = {
@@ -43,6 +45,15 @@ export default function StatsTable({ rows }: Props) {
     const [sortKey, setSortKey] = useState<SortKey | null>(null)
     const [sortDir, setSortDir] = useState<SortDir>('asc')
 
+    function classifyStatus(row: StatRow): 'easy' | 'medium' | 'hard' {
+        const attempts = row.total || 0
+        const accuracy = row.accuracy || 0
+        if (attempts <= 10) return 'hard'
+        if (accuracy > 90) return 'easy'
+        if (accuracy > 80) return 'medium'
+        return 'hard'
+    }
+
     function onSort(nextKey: SortKey) {
         if (sortKey === nextKey) {
             // Same column clicked - cycle through asc -> desc -> null (unsorted)
@@ -62,7 +73,16 @@ export default function StatsTable({ rows }: Props) {
     const sortedRows = useMemo(() => {
         if (!sortKey) return rows
         const copy = rows.slice()
-        copy.sort((a, b) => compareValues(a[sortKey], b[sortKey], sortDir))
+        if (sortKey === 'status') {
+            const rank: Record<'easy' | 'medium' | 'hard', number> = { easy: 0, medium: 1, hard: 2 }
+            copy.sort((a, b) => {
+                const av = rank[classifyStatus(a)]
+                const bv = rank[classifyStatus(b)]
+                return sortDir === 'asc' ? av - bv : bv - av
+            })
+        } else {
+            copy.sort((a, b) => compareValues(a[sortKey], b[sortKey], sortDir))
+        }
         return copy
     }, [rows, sortKey, sortDir])
 
@@ -101,6 +121,7 @@ export default function StatsTable({ rows }: Props) {
                     {header('✗', 'incorrect')}
                     {header('Attempts', 'total')}
                     {header('Accuracy', 'accuracy')}
+                    {header('Status', 'status')}
                 </tr>
             </thead>
             <tbody>
@@ -112,6 +133,17 @@ export default function StatsTable({ rows }: Props) {
                         <td>{r.incorrect}</td>
                         <td>{r.total}</td>
                         <td>{r.accuracy}%</td>
+                        <td>
+                            {(() => {
+                                const s = classifyStatus(r)
+                                return (
+                                    <span className={`statusPill ${s}`} aria-label={`Status ${s}`}>
+                                        <span className="dot" aria-hidden="true" />
+                                        {s}
+                                    </span>
+                                )
+                            })()}
+                        </td>
                     </tr>
                 ))}
             </tbody>
