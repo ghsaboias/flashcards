@@ -1,0 +1,16 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments (common names)
+.venv/
+venv/
+
+# macOS metadata
+.DS_Store
+
+# Node (web app)
+web/node_modules/
+
+
