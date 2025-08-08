@@ -89,4 +89,9 @@ export async function getStatsForCategory(category: string): Promise<StatsPayloa
     return data;
 }
 
+export async function getPinyin(text: string): Promise<string> {
+    const { data } = await axios.get(`${API_BASE}/pinyin`, { params: { text } });
+    return (data && typeof data.pinyin === 'string') ? data.pinyin : '';
+}
+
 

@@ -127,6 +127,9 @@ class SRSManager:
         if easiness < 1.3:
             easiness = 1.3
 
+        # Cap interval to at most 7 days (168 hours)
+        if interval_hours > 168:
+            interval_hours = 168
         next_review_date = datetime.now() + timedelta(hours=interval_hours)
         next_review_date_str = next_review_date.strftime('%Y-%m-%d %H:%M:%S')
         

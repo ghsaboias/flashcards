@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
-import type { SrsRow, StatsPayload } from './api'
-import { answer, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession } from './api'
+import type { SrsRow, StatRow, StatsPayload } from './api'
+import { answer, getPinyin, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession } from './api'
 import SrsTable from './components/SrsTable'
 import StatsTable from './components/StatsTable'
 
@@ -16,6 +16,8 @@ function App() {
   const [srsRows, setSrsRows] = useState<SrsRow[]>([])
   const [showStats, setShowStats] = useState<boolean>(false)
   const [stats, setStats] = useState<StatsPayload | null>(null)
+  // Stats rows cache for difficulty counts (independent from Stats view)
+  const [difficultyRows, setDifficultyRows] = useState<StatRow[] | null>(null)
   const [question, setQuestion] = useState<string>("")
   const [pinyin, setPinyin] = useState<string>("")
   const [progress, setProgress] = useState<{ current: number, total: number }>({ current: 0, total: 0 })
@@ -24,6 +26,11 @@ function App() {
   const [results, setResults] = useState<Array<{ question: string; pinyin?: string; user_answer: string; correct_answer: string; correct: boolean }>>([])
   const [streak, setStreak] = useState<number>(0)
   const [bestStreak, setBestStreak] = useState<number>(0)
+  // Browse/Review mode (navigate all symbols)
+  const [inBrowseMode, setInBrowseMode] = useState<boolean>(false)
+  const [browseRows, setBrowseRows] = useState<Array<{ question: string; answer: string }>>([])
+  const [browseIndex, setBrowseIndex] = useState<number>(0)
+  const [browsePinyin, setBrowsePinyin] = useState<string>("")
   // Local review mode (replay incorrect from last session)
   const [inReviewMode, setInReviewMode] = useState<boolean>(false)
   const [reviewCards, setReviewCards] = useState<Array<{ question: string; pinyin?: string; correct_answer: string }>>([])
@@ -194,6 +201,10 @@ function App() {
       }
       if (e.key === 'r' || e.key === 'R') {
         if (question && hasChinese(question)) speak(question)
+        if (inBrowseMode) {
+          const q = browseRows[browseIndex]?.question
+          if (q && hasChinese(q)) speak(q)
+        }
       } else if (e.key === '1') {
         if (selectedSet) beginSetSession()
       } else if (e.key === '2') {
@@ -206,11 +217,17 @@ function App() {
         if (selectedCategory) beginDifficultCategory()
       } else if (e.key === '6') {
         if (selectedCategory) beginSrsCategories()
+      } else if (inBrowseMode && (e.key === 'ArrowRight' || e.key === 'PageDown')) {
+        e.preventDefault()
+        nextBrowse()
+      } else if (inBrowseMode && (e.key === 'ArrowLeft' || e.key === 'PageUp')) {
+        e.preventDefault()
+        prevBrowse()
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [question, selectedSet, selectedCategory])
+  }, [question, selectedSet, selectedCategory, inBrowseMode, browseIndex, browseRows])
 
   // Auto-scroll session summary when new rows are added
   useEffect(() => {
@@ -280,6 +297,44 @@ function App() {
       })()
   }, [showStats, mode, selectedSet, selectedCategory])
 
+  // Preload stats rows for the current scope so we can show difficulty counts even when Stats view is hidden
+  useEffect(() => {
+    (async () => {
+      try {
+        if (mode === 'set') {
+          if (!selectedSet) { setDifficultyRows(null); return }
+          const res = await getStatsForSet(selectedSet)
+          setDifficultyRows(res.rows || [])
+        } else {
+          if (!selectedCategory) { setDifficultyRows(null); return }
+          const res = await getStatsForCategory(selectedCategory)
+          setDifficultyRows(res.rows || [])
+        }
+      } catch {
+        setDifficultyRows([])
+      }
+    })()
+  }, [mode, selectedSet, selectedCategory])
+
+  function classifyDifficulty(row: { total: number; accuracy: number }): 'easy' | 'medium' | 'hard' {
+    const attempts = row.total || 0
+    const accuracy = row.accuracy || 0
+    if (attempts <= 10) return 'hard'
+    if (accuracy > 90) return 'easy'
+    if (accuracy > 80) return 'medium'
+    return 'hard'
+  }
+
+  const difficultyCounts = useMemo(() => {
+    const counts: Record<'easy' | 'medium' | 'hard', number> = { easy: 0, medium: 0, hard: 0 }
+    if (!difficultyRows || difficultyRows.length === 0) return counts
+    for (const r of difficultyRows) {
+      const d = classifyDifficulty({ total: r.total, accuracy: r.accuracy })
+      counts[d]++
+    }
+    return counts
+  }, [difficultyRows])
+
   useEffect(() => {
     (async () => {
       const [s, c] = await Promise.all([listSets(), listCategories()])
@@ -299,6 +354,10 @@ function App() {
     setResults([])
     setStreak(0)
     setBestStreak(0)
+    setInBrowseMode(false)
+    setBrowseRows([])
+    setBrowseIndex(0)
+    setBrowsePinyin("")
     setInReviewMode(false)
     setReviewCards([])
     setReviewPosition(0)
@@ -308,6 +367,75 @@ function App() {
     setShowStats(false)
     setStats(null)
   }
+
+  async function beginBrowse() {
+    resetSessionUI()
+    try {
+      if (mode === 'set') {
+        if (!selectedSet) return
+        const res = await getStatsForSet(selectedSet)
+        const rows = (res.rows || []).map(r => ({ question: r.question, answer: r.answer }))
+        setBrowseRows(rows)
+      } else {
+        if (!selectedCategory) return
+        const res = await getStatsForCategory(selectedCategory)
+        const rows = (res.rows || []).map(r => ({ question: r.question, answer: r.answer }))
+        setBrowseRows(rows)
+      }
+      setInBrowseMode(true)
+      setBrowseIndex(0)
+    } catch {
+      setInBrowseMode(false)
+      setBrowseRows([])
+      setBrowseIndex(0)
+    }
+  }
+
+  function exitBrowse() {
+    setInBrowseMode(false)
+    setBrowseRows([])
+    setBrowseIndex(0)
+    setBrowsePinyin("")
+  }
+
+  function nextBrowse() {
+    if (!inBrowseMode) return
+    setBrowseIndex((i) => Math.min(i + 1, Math.max(0, browseRows.length - 1)))
+  }
+
+  function prevBrowse() {
+    if (!inBrowseMode) return
+    setBrowseIndex((i) => Math.max(i - 1, 0))
+  }
+
+  // Auto TTS in browse mode for Chinese symbols
+  useEffect(() => {
+    if (!inBrowseMode) return
+    const q = browseRows[browseIndex]?.question
+    if (!q || !hasChinese(q)) return
+    const now = Date.now()
+    const last = lastSpokenRef.current
+    if (last && last.text === q && now - last.ts < 1000) return
+    speak(q)
+    lastSpokenRef.current = { text: q, ts: now }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inBrowseMode, browseIndex, browseRows])
+
+  // Fetch pinyin for browse mode question
+  useEffect(() => {
+    if (!inBrowseMode) return
+    const q = browseRows[browseIndex]?.question
+    if (!q || !hasChinese(q)) { setBrowsePinyin(""); return }
+    ; (async () => {
+      try {
+        const py = await getPinyin(q)
+        setBrowsePinyin(py || "")
+      } catch {
+        setBrowsePinyin("")
+      }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inBrowseMode, browseIndex, browseRows])
 
   async function beginSetSession() {
     resetSessionUI()
@@ -479,6 +607,32 @@ function App() {
       setProgress(res.progress)
       setResults(res.results || [])
       // Keep streak values as-is at session end
+      // Refresh tables and difficulty cache after session completes
+      try {
+        if (mode === 'set') {
+          if (selectedSet) {
+            const [statsRes, srsRes] = await Promise.all([
+              getStatsForSet(selectedSet),
+              getSrsForSet(selectedSet),
+            ])
+            setDifficultyRows(statsRes.rows || [])
+            if (showStats) setStats(statsRes)
+            if (showSrs) setSrsRows(srsRes)
+          }
+        } else {
+          if (selectedCategory) {
+            const [statsRes, srsRes] = await Promise.all([
+              getStatsForCategory(selectedCategory),
+              getSrsForCategory(selectedCategory),
+            ])
+            setDifficultyRows(statsRes.rows || [])
+            if (showStats) setStats(statsRes)
+            if (showSrs) setSrsRows(srsRes)
+          }
+        }
+      } catch {
+        // ignore
+      }
     } else {
       setQuestion(res.card?.question || "")
       setPinyin(res.card?.pinyin || "")
@@ -579,8 +733,24 @@ function App() {
       <div className="left" role="region" aria-label="Setup">
         <h1>Flashcards</h1>
         <div className="section">
+          {mode === 'set' ? (
+            <div className="group">
+              <select id="set-select" value={selectedSet} onChange={(e) => setSelectedSet(e.target.value)} aria-describedby="set-help">
+                {sets.map((s) => (
+                  <option key={s} value={s}>{humanizeSetLabel(s)}</option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <div className="group">
+              <select id="category-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} aria-describedby="category-help">
+                {categories.map((c) => (
+                  <option key={c} value={c}>{humanizeCategoryLabel(c)}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <fieldset className="group">
-            <legend>Mode</legend>
             <div className="row">
               <label className="radio">
                 <input type="radio" name="mode" value="set" checked={mode === 'set'} onChange={() => setMode('set')} />
@@ -592,28 +762,6 @@ function App() {
               </label>
             </div>
           </fieldset>
-
-          {mode === 'set' ? (
-            <div className="group">
-              <label htmlFor="set-select">Set</label>
-              <select id="set-select" value={selectedSet} onChange={(e) => setSelectedSet(e.target.value)} aria-describedby="set-help">
-                {sets.map((s) => (
-                  <option key={s} value={s}>{humanizeSetLabel(s)}</option>
-                ))}
-              </select>
-              <div id="set-help" className="muted" style={{ marginTop: 4 }}>Choose the set to practice</div>
-            </div>
-          ) : (
-            <div className="group">
-              <label htmlFor="category-select">Category</label>
-              <select id="category-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} aria-describedby="category-help">
-                {categories.map((c) => (
-                  <option key={c} value={c}>{humanizeCategoryLabel(c)}</option>
-                ))}
-              </select>
-              <div id="category-help" className="muted" style={{ marginTop: 4 }}>Choose the category to practice</div>
-            </div>
-          )}
 
           {/* Difficulty selection */}
           <fieldset className="group">
@@ -632,10 +780,20 @@ function App() {
                 <span className="statusPill easy"><span className="dot" />Easy</span>
               </label>
             </div>
-            <div className="muted" style={{ marginTop: 4 }}>Combine any to practice selected difficulties</div>
+            <div className="muted" style={{ marginTop: 4 }}>
+              {(() => {
+                const parts: string[] = []
+                if (diffHard) parts.push(`${difficultyCounts.hard} hard`)
+                if (diffMedium) parts.push(`${difficultyCounts.medium} medium`)
+                if (diffEasy) parts.push(`${difficultyCounts.easy} easy`)
+                const text = parts.length > 0 ? parts.join('; ') : 'None selected'
+                return <>Selected questions: {text}</>
+              })()}
+            </div>
           </fieldset>
 
           <div className="row">
+            <button className="btn-primary" onClick={beginBrowse} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Start Review</button>
             <button className="btn-primary" onClick={mode === 'set' ? beginSetSession : beginCategorySession} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Start Practice</button>
             <button className="btn-secondary" onClick={mode === 'set' ? beginDifficultSet : beginDifficultCategory} disabled={(mode === 'set' ? !selectedSet : !selectedCategory) || !canStartByDifficulty}>Practice by Difficulty</button>
             <button className="btn-secondary" title="Spaced Repetition System" onClick={mode === 'set' ? beginSrsSets : beginSrsCategories} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Practice SRS</button>
@@ -681,7 +839,42 @@ function App() {
       </div>
 
       <div className="right" role="region" aria-label="Session">
-        {showStats ? (
+        {inBrowseMode ? (
+          (() => {
+            const total = browseRows.length
+            const i = Math.min(Math.max(browseIndex, 0), Math.max(0, total - 1))
+            const current = total > 0 ? browseRows[i] : null
+            return (
+              <div className="statsPanel" style={{ marginTop: 8 }}>
+                <div className="metaRow">
+                  <h3>Review {mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` : `— ${humanizeCategoryLabel(selectedCategory)}`}</h3>
+                  <div className="muted">{total > 0 ? `${i + 1}/${total}` : '0/0'}</div>
+                </div>
+                {current ? (
+                  <div className="questionWrap">
+                    <div className={`question ${hasChinese(current.question) ? 'zh' : ''}`} lang={hasChinese(current.question) ? 'zh' : undefined}>
+                      {current.question}
+                    </div>
+                    {browsePinyin && (
+                      <div className="pinyin" style={{ color: '#9da7b3' }}>{browsePinyin}</div>
+                    )}
+                    <div style={{ fontSize: 18, marginTop: 16 }}>{current.answer}</div>
+                  </div>
+                ) : (
+                  <div className="muted" style={{ marginTop: 8 }}>No items</div>
+                )}
+                <div className="row" style={{ marginTop: 12 }}>
+                  <button onClick={prevBrowse} disabled={i <= 0}>Prev</button>
+                  <button onClick={nextBrowse} disabled={i >= total - 1}>Next</button>
+                  {current && hasChinese(current.question) && (
+                    <button aria-label="Play audio (R)" title="Play audio (R)" onClick={() => speak(current.question)}>🔊</button>
+                  )}
+                  <button className="btn-tertiary" onClick={exitBrowse}>Exit Review</button>
+                </div>
+              </div>
+            )
+          })()
+        ) : showStats ? (
           <div className="statsPanel" style={{ marginTop: 8 }}>
             <div className="metaRow">
               <h3>Stats {mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` : `— ${humanizeCategoryLabel(selectedCategory)}`}</h3>

@@ -212,6 +212,11 @@ button:disabled {
   width: 100%;
 }
 
+.incorrectBlock {
+  max-height: 63vh;
+  overflow: auto;
+}
+
 .summary table {
   width: 100%;
   border-collapse: collapse;

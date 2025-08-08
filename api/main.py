@@ -76,6 +76,9 @@ practice_manager = PracticeManager(set_manager, review_engine, llm_manager, srs_
 pinyin_converter = PinyinConverter()
 
 
+# (debug logger removed)
+
+
 @app.get("/health")
 def health() -> Dict[str, str]:
     return {"status": "ok"}
@@ -89,6 +92,16 @@ def list_sets() -> List[str]:
 @app.get("/categories")
 def list_categories() -> List[str]:
     return set_manager.list_categories()
+
+
+@app.get("/pinyin")
+def get_pinyin(text: str) -> Dict[str, str]:
+    """Return pinyin with tones for a given text (Chinese supported)."""
+    try:
+        return {"pinyin": pinyin_converter.get_pinyin_for_text(text) or ""}
+    except Exception:
+        # Fail gracefully to empty string
+        return {"pinyin": ""}
 
 
 @app.get("/srs/set")
@@ -179,7 +192,6 @@ def _compute_stats_rows(cards: List[List[str]]) -> List[Dict[str, Any]]:
         })
     return rows
 
-
 def _classify_status_from_counts(correct: int, incorrect: int, reviewed: int) -> str:
     """Classify a card's difficulty status based on attempts and accuracy.
 
@@ -234,12 +246,10 @@ def get_stats_for_category(category: str) -> Dict[str, Any]:
     summary = _summarize_stats(rows)
     return {"category": category, "summary": summary, "rows": rows}
 
-
 def _card_payload(cards: List[List[str]], idx: int) -> Dict[str, Any]:
     q = cards[idx][0] if 0 <= idx < len(cards) and len(cards[idx]) > 0 else ""
     pinyin = pinyin_converter.get_pinyin_for_text(q) if q else ""
     return {"index": idx, "question": q, "pinyin": pinyin}
-
 
 from uuid import uuid4
 
@@ -262,13 +272,28 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
     elif mode == "category_all":
         if not payload.category:
             raise HTTPException(status_code=400, detail="category is required for category_all")
+        # Track current category for consistency with CLI behavior and logging context
+        set_manager.current_category = payload.category
+        set_manager.save_current_category()
         data = _load_category_cards(payload.category)
         cards = data["flashcards"]
         indices = list(range(len(cards)))
+        # Map combined-card positions back to their source set for persistence
+        try:
+            source_map = data.get("source_map", [])
+            mapping = {i: (source_map[i]["set"] if i < len(source_map) else None) for i in range(len(cards))}
+            # Also track original indices for precise persistence
+            source_index_map = {i: (source_map[i]["set"], source_map[i]["original_index"]) for i in range(len(cards)) if i < len(source_map)}
+        except Exception:
+            mapping = None
+            source_index_map = None
         practice_name = set_manager.get_category_display_name(payload.category)
     elif mode == "difficult_set":
         if not payload.set_name:
             raise HTTPException(status_code=400, detail="set_name is required for difficult_set")
+        # Ensure current set is tracked for persistence
+        set_manager.current_set = payload.set_name
+        set_manager.save_current_set()
         all_cards = set_manager.load_flashcards_from_set(payload.set_name)
         difficult = []
         for i, row in enumerate(all_cards):
@@ -285,6 +310,9 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
     elif mode == "difficult_category":
         if not payload.category:
             raise HTTPException(status_code=400, detail="category is required for difficult_category")
+        # Track current category selection
+        set_manager.current_category = payload.category
+        set_manager.save_current_category()
         data = _load_category_cards(payload.category)
         cards = data["flashcards"]
         difficult = []
@@ -298,7 +326,16 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
                 except ValueError:
                     continue
         indices = difficult
+        # Map combined-card positions back to their source set for persistence
+        try:
+            source_map = data.get("source_map", [])
+            mapping = {i: (source_map[i]["set"] if i < len(source_map) else None) for i in range(len(cards))}
+            source_index_map = {i: (source_map[i]["set"], source_map[i]["original_index"]) for i in range(len(cards)) if i < len(source_map)}
+        except Exception:
+            mapping = None
+            source_index_map = None
         practice_name = f"{set_manager.get_category_display_name(payload.category)} (Difficult)"
+        
     elif mode == "srs_sets":
         if not payload.selected_sets:
             raise HTTPException(status_code=400, detail="selected_sets is required for srs_sets")
@@ -313,6 +350,13 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
     elif mode == "srs_categories":
         if not payload.selected_categories:
             raise HTTPException(status_code=400, detail="selected_categories is required for srs_categories")
+        # Persist the last used category if a single one is provided
+        try:
+            if payload.selected_categories and len(payload.selected_categories) == 1:
+                set_manager.current_category = payload.selected_categories[0]
+                set_manager.save_current_category()
+        except Exception:
+            pass
         all_sets_data = {}
         for cat in payload.selected_categories:
             for s in set_manager.get_category_sets(cat):
@@ -350,6 +394,9 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
             raise HTTPException(status_code=400, detail="category is required for difficulty_category")
         if not payload.difficulty_levels:
             raise HTTPException(status_code=400, detail="difficulty_levels is required for difficulty_category")
+        # Track current category selection
+        set_manager.current_category = payload.category
+        set_manager.save_current_category()
         requested = {d.lower() for d in payload.difficulty_levels}
         data = _load_category_cards(payload.category)
         cards = data["flashcards"]
@@ -365,6 +412,14 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
             if status in requested:
                 filtered.append(i)
         indices = filtered
+        # Map combined-card positions back to their source set for persistence
+        try:
+            source_map = data.get("source_map", [])
+            mapping = {i: (source_map[i]["set"] if i < len(source_map) else None) for i in range(len(cards))}
+            source_index_map = {i: (source_map[i]["set"], source_map[i]["original_index"]) for i in range(len(cards)) if i < len(source_map)}
+        except Exception:
+            mapping = None
+            source_index_map = None
         practice_name = f"{set_manager.get_category_display_name(payload.category)} (Filtered)"
     elif mode == "review_incorrect":
         # Build a session from client-provided incorrect items
@@ -389,9 +444,26 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
     # so it matches the shuffled presentation order
     if mapping is not None and indices:
         mapping = {position: mapping[idx] for position, idx in enumerate(indices) if idx in mapping}
+    # Remap original index mapping to shuffled positions as well
+    try:
+        if indices and (source_index_map is not None):
+            source_index_map = {position: source_index_map[idx] for position, idx in enumerate(indices) if idx in source_index_map}
+            
+    except Exception:
+        source_index_map = None
 
     session_id = str(uuid4())
     SESSIONS[session_id] = WebSession(mode=mode, cards=cards, indices=indices, card_set_mapping=mapping, practice_name=practice_name)
+
+    # Attach category key for category-based sessions so we can propagate updates across sets
+    try:
+        if mode in ("category_all", "difficult_category", "difficulty_category"):
+            if getattr(payload, "category", None):
+                setattr(SESSIONS[session_id], "category_key", payload.category)
+            if 'source_index_map' in locals() and source_index_map is not None:
+                setattr(SESSIONS[session_id], "source_index_map", source_index_map)
+    except Exception:
+        pass
 
     # Return first card
     if not indices:
@@ -422,6 +494,7 @@ def start_session(payload: StartSessionRequest) -> Dict[str, Any]:
     sess.session_start_time = datetime.now()
     sess.session_type = session_type
     sess.log_name = log_name
+    
     try:
         with open("session_log.txt", "a", encoding="utf-8") as f:
             f.write(f"> {sess.session_start_time.strftime('%Y-%m-%d %H:%M:%S')} | {log_name} | {session_type}\n")
@@ -503,24 +576,45 @@ def submit_answer(session_id: str, payload: SubmitAnswerRequest) -> Dict[str, An
                 row.append("0")
         row[3] = str(incorrect_count + 1)
     row[4] = str(reviewed_count + 1)
+    
+    # Determine precise source set/index for this presented position
+    target_set_name: Optional[str] = None
+    source_idx: Optional[int] = None
+    # Prefer exact mapping captured at session start for category sessions
+    try:
+        if hasattr(sess, 'source_index_map') and sess.source_index_map is not None:
+            pair = sess.source_index_map.get(sess.position)
+            if pair and isinstance(pair, tuple) and len(pair) == 2:
+                target_set_name, source_idx = pair[0], pair[1]
+                
+    except Exception:
+        target_set_name = None
+        source_idx = None
 
-    # SRS update: choose set name (mapping for SRS sessions). If none, skip update to avoid misattribution
-    set_name_for_srs = sess.card_set_mapping.get(sess.position, set_manager.current_set) if sess.card_set_mapping else set_manager.current_set
-    if set_name_for_srs:
-        srs_manager.update_srs_data(set_name_for_srs, question, correct_answer, is_correct)
+    # Fallback to set mapping (e.g., SRS sessions)
+    if target_set_name is None:
+        if sess.card_set_mapping:
+            target_set_name = sess.card_set_mapping.get(sess.position)
+            
+        if not target_set_name:
+            target_set_name = set_manager.current_set
+            
+
+    # SRS update only during SRS practice modes
+    if target_set_name and sess.mode in ("srs_sets", "srs_categories"):
+        srs_manager.update_srs_data(target_set_name, question, correct_answer, is_correct)
+        
 
     # Persist updated card to CSV for single-set or category sessions
     # For category/srs modes, we skip immediate save; a dedicated endpoint could consolidate updates if needed
     if sess.mode in ("set_all", "difficult_set", "difficulty_set") and set_manager.current_set:
-        from csv import writer
         # Load full set then replace by index if applicable
         full = set_manager.load_flashcards_from_set(set_manager.current_set)
         if idx < len(full):
             full[idx] = row
-            from csv import writer as _
-            import csv
             with open(set_manager.get_csv_filename(set_manager.current_set), 'w', newline='', encoding='utf-8') as f:
                 csv.writer(f).writerows(full)
+            
 
     # Write per-question log line mirroring CLI
     try:
@@ -540,43 +634,85 @@ def submit_answer(session_id: str, payload: SubmitAnswerRequest) -> Dict[str, An
         "correct": is_correct,
     })
 
-    # Persist updated counts for SRS/review modes by matching on (question, answer)
-    if sess.mode in ("srs_sets", "srs_categories", "review_incorrect"):
+    # Persist updated counts for SRS/review/category modes
+    # Prefer precise source index mapping (category variants), fallback to Q/A match otherwise
+    if sess.mode in ("srs_sets", "srs_categories", "review_incorrect", "category_all", "difficult_category", "difficulty_category"):
         try:
-            target_set_name = set_name_for_srs
-            csv_path = set_manager.get_csv_filename(target_set_name)
-            # Load existing cards
+            # If we know exact set/index, update that set directly
+            if target_set_name:
+                csv_path = set_manager.get_csv_filename(target_set_name)
+                
             existing_cards: List[List[str]] = []
             with open(csv_path, 'r', newline='', encoding='utf-8') as f:
                 reader = csv.reader(f)
                 existing_cards = list(reader)
 
-            # Find and update the matching row by question and answer
-            for j, existing in enumerate(existing_cards):
-                if len(existing) >= 2 and existing[0] == question and existing[1] == correct_answer:
-                    # Ensure at least 5 columns
-                    while len(existing) < 5:
-                        existing.append("0")
-                    # Safely parse counts
-                    try:
-                        ex_correct = int(existing[2])
-                        ex_incorrect = int(existing[3])
-                        ex_reviewed = int(existing[4])
-                    except ValueError:
-                        ex_correct = ex_incorrect = ex_reviewed = 0
-                    if is_correct:
-                        existing[2] = str(ex_correct + 1)
-                    else:
-                        existing[3] = str(ex_incorrect + 1)
-                    existing[4] = str(ex_reviewed + 1)
-                    existing_cards[j] = existing
-                    break
+            def ensure_counts(row: List[str]) -> List[str]:
+                while len(row) < 5:
+                    row.append("0")
+                return row
 
-            # Save back
-            with open(csv_path, 'w', newline='', encoding='utf-8') as f:
-                writer = csv.writer(f)
-                writer.writerows(existing_cards)
-        except Exception:
+            def apply_update(row: List[str]) -> List[str]:
+                row = ensure_counts(row)
+                try:
+                    ex_correct = int(row[2])
+                    ex_incorrect = int(row[3])
+                    ex_reviewed = int(row[4])
+                except ValueError:
+                    ex_correct = ex_incorrect = ex_reviewed = 0
+                if is_correct:
+                    row[2] = str(ex_correct + 1)
+                else:
+                    row[3] = str(ex_incorrect + 1)
+                row[4] = str(ex_reviewed + 1)
+                return row
+
+            updated = False
+            if source_idx is not None and 0 <= source_idx < len(existing_cards):
+                existing_cards[source_idx] = apply_update(existing_cards[source_idx])
+                updated = True
+                
+            else:
+                # Fallback: find by exact question/answer match in the resolved set
+                for j, existing in enumerate(existing_cards):
+                    if len(existing) >= 2 and existing[0] == question and existing[1] == correct_answer:
+                        existing_cards[j] = apply_update(existing)
+                        updated = True
+                        
+                        break
+
+            if updated:
+                with open(csv_path, 'w', newline='', encoding='utf-8') as f:
+                    writer = csv.writer(f)
+                    writer.writerows(existing_cards)
+                
+            else:
+                # As a last resort in category modes, search all sets in this category for a match and update
+                if hasattr(sess, 'category_key') and sess.category_key:
+                    
+                    for set_name in set_manager.get_category_sets(sess.category_key):
+                        csv_path2 = set_manager.get_csv_filename(set_name)
+                        try:
+                            with open(csv_path2, 'r', newline='', encoding='utf-8') as f2:
+                                reader2 = csv.reader(f2)
+                                rows2 = list(reader2)
+                            found2 = False
+                            for j, existing in enumerate(rows2):
+                                if len(existing) >= 2 and existing[0] == question and existing[1] == correct_answer:
+                                    rows2[j] = apply_update(existing)
+                                    found2 = True
+                                    
+                                    break
+                            if found2:
+                                with open(csv_path2, 'w', newline='', encoding='utf-8') as f2:
+                                    writer2 = csv.writer(f2)
+                                    writer2.writerows(rows2)
+                                
+                                break
+                        except Exception as e:
+                            continue
+
+        except Exception as e:
             # Non-fatal if persistence fails
             pass
 
