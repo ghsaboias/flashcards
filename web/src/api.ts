@@ -2,11 +2,6 @@ import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
 
-export async function getHealth() {
-    const { data } = await axios.get(`${API_BASE}/health`);
-    return data;
-}
-
 export async function listSets(): Promise<string[]> {
     const { data } = await axios.get(`${API_BASE}/sets`);
     return data;
