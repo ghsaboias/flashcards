@@ -1,3 +1,4 @@
+import { pinyin as pinyinPro } from 'pinyin-pro'
 import { useMemo, useState } from 'react'
 import type { StatRow } from '../api'
 
@@ -70,6 +71,10 @@ export default function StatsTable({ rows }: Props) {
         }
     }
 
+    function hasChinese(text: string): boolean {
+        return /[\u4e00-\u9fff]/.test(text)
+    }
+
     const sortedRows = useMemo(() => {
         if (!sortKey) return rows
         const copy = rows.slice()
@@ -116,6 +121,7 @@ export default function StatsTable({ rows }: Props) {
             <thead>
                 <tr>
                     {header('Question', 'question')}
+                    <th scope="col">Pinyin</th>
                     {header('Answer', 'answer')}
                     {header('✓', 'correct')}
                     {header('✗', 'incorrect')}
@@ -128,6 +134,7 @@ export default function StatsTable({ rows }: Props) {
                 {sortedRows.map((r, i) => (
                     <tr key={i}>
                         <td>{r.question}</td>
+                        <td className="muted">{hasChinese(r.question) ? (pinyinPro(r.question, { toneType: 'symbol' }) || '') : ''}</td>
                         <td>{r.answer}</td>
                         <td>{r.correct}</td>
                         <td>{r.incorrect}</td>

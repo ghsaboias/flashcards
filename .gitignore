@@ -14,3 +14,7 @@ venv/
 web/node_modules/
 
 
+# Cloudflare worker (ignore local deps and state)
+cloudflare/node_modules/
+cloudflare/.wrangler/
+

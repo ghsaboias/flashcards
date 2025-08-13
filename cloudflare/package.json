@@ -1,0 +1,22 @@
+{
+  "name": "flashcards-worker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate": "wrangler d1 migrations apply flashcards",
+    "schema:apply": "wrangler d1 execute flashcards --file ./schema.sql",
+    "seed:hsk1": "node ./scripts/seed-hsk1.js"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240620.0",
+    "typescript": "^5.4.0",
+    "wrangler": "^4.28.1"
+  },
+  "dependencies": {
+    "hono": "^4.4.3",
+    "zod": "^3.22.4"
+  }
+}

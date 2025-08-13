@@ -1,0 +1,32 @@
+name = "flashcards-worker"
+main = "src/worker.ts"
+compatibility_date = "2025-01-01"
+
+[assets]
+directory = "../web/dist"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "flashcards"
+# Filled after creating the DB: `wrangler d1 create flashcards`
+database_id = "98e5c374-ba8d-4cce-8490-10a3414fba0a"
+
+[durable_objects]
+bindings = [
+  { name = "SESSIONS", class_name = "SessionsDO" },
+]
+
+# Route traffic from custom domain to this Worker
+[[routes]]
+pattern = "game.fasttakeoff.org/*"
+zone_name = "fasttakeoff.org"
+
+[observability]
+enabled = true
+
+[[migrations]]
+tag = "v1"
+new_classes = [ "SessionsDO", "RateLimitDO" ]
+
+

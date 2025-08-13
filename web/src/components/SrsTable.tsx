@@ -1,3 +1,4 @@
+import { pinyin as pinyinPro } from 'pinyin-pro'
 import { useMemo, useState } from 'react'
 import type { SrsRow } from '../api'
 
@@ -77,6 +78,10 @@ export default function SrsTable({ rows }: Props) {
             default:
                 return 0
         }
+    }
+
+    function hasChinese(text: string): boolean {
+        return /[\u4e00-\u9fff]/.test(text)
     }
 
     function compareValues(a: unknown, b: unknown, dir: SortDir) {
@@ -167,6 +172,7 @@ export default function SrsTable({ rows }: Props) {
             <thead>
                 <tr>
                     {header('Question', 'question')}
+                    <th scope="col">Pinyin</th>
                     {header('Answer', 'answer')}
                     {header('EF', 'easiness_factor')}
                     {header('Interval', 'interval_hours')}
@@ -179,9 +185,11 @@ export default function SrsTable({ rows }: Props) {
                 {sortedRows.map((r) => {
                     const due = isDueNow(r)
                     const onSchedule = !due
+                    const py = hasChinese(r.question) ? (pinyinPro(r.question, { toneType: 'symbol' }) || '') : ''
                     return (
                         <tr key={`${r.set_name}|${r.question}|${r.answer}|${r.next_review_date}`}>
                             <td>{r.question}</td>
+                            <td className="muted">{py}</td>
                             <td>{r.answer}</td>
                             <td>{Number(r.easiness_factor).toFixed(2)}</td>
                             <td>{r.interval_hours}h</td>

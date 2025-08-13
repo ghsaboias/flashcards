@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 export async function listSets(): Promise<string[]> {
     const { data } = await axios.get(`${API_BASE}/sets`);
@@ -89,9 +89,6 @@ export async function getStatsForCategory(category: string): Promise<StatsPayloa
     return data;
 }
 
-export async function getPinyin(text: string): Promise<string> {
-    const { data } = await axios.get(`${API_BASE}/pinyin`, { params: { text } });
-    return (data && typeof data.pinyin === 'string') ? data.pinyin : '';
-}
+// Removed unused getPinyin; pinyin is computed client-side via pinyin-pro
 
 

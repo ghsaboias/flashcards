@@ -1,7 +1,8 @@
+import { pinyin as pinyinPro } from 'pinyin-pro'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import type { SrsRow, StatRow, StatsPayload } from './api'
-import { answer, getPinyin, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession } from './api'
+import { answer, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession } from './api'
 import SrsTable from './components/SrsTable'
 import StatsTable from './components/StatsTable'
 
@@ -176,6 +177,18 @@ function App() {
       // No audio available; ignore
     }
   }
+
+  // Compute pinyin client-side for the active question
+  useEffect(() => {
+    const q = question
+    if (!q || !hasChinese(q)) { setPinyin(''); return }
+    try {
+      const py = pinyinPro(q, { toneType: 'symbol' })
+      setPinyin(py || '')
+    } catch {
+      setPinyin('')
+    }
+  }, [question])
 
   useEffect(() => {
     if (!question || !hasChinese(question)) return
@@ -420,19 +433,17 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inBrowseMode, browseIndex, browseRows])
 
-  // Fetch pinyin for browse mode question
+  // Fetch pinyin for browse mode question (client-side)
   useEffect(() => {
     if (!inBrowseMode) return
     const q = browseRows[browseIndex]?.question
     if (!q || !hasChinese(q)) { setBrowsePinyin(""); return }
-    ; (async () => {
-      try {
-        const py = await getPinyin(q)
-        setBrowsePinyin(py || "")
-      } catch {
-        setBrowsePinyin("")
-      }
-    })()
+    try {
+      const py = pinyinPro(q, { toneType: 'symbol' })
+      setBrowsePinyin(py || "")
+    } catch {
+      setBrowsePinyin("")
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inBrowseMode, browseIndex, browseRows])
 
