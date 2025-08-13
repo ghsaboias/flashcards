@@ -741,7 +741,7 @@ function App() {
   return (
     <div className="container">
       <div className="left" role="region" aria-label="Setup">
-        <h1>Flashcards</h1>
+        <h1>🇨🇳 HSK Flashcards</h1>
         <div className="section">
           {mode === 'set' ? (
             <div className="group">
