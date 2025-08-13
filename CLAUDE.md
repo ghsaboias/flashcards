@@ -6,7 +6,8 @@ A modern web-based spaced repetition system (SRS) for learning Chinese character
 
 **Live App**: https://game.fasttakeoff.org  
 **Repository**: https://github.com/ghsaboias/flashcards  
-**Branch**: `web-app-worker`
+**CLI Version**: https://github.com/ghsaboias/flashcards-cli  
+**Branch**: `master`
 
 ## Architecture
 
@@ -65,12 +66,12 @@ npm run migrate     # Apply D1 database migrations
 npm run seed:hsk1   # Seed HSK Level 1 data
 ```
 
-## Deployment (Cloudflare Pages)
+## Deployment (Cloudflare Workers)
 
 **Build Configuration:**
 - **Build Command**: `cd frontend && npm ci && npm run build && cd ../backend && npm ci`
 - **Deploy Command**: `cd backend && npx wrangler deploy`
-- **Branch**: `web-app-worker`
+- **Branch**: `master`
 
 The build process:
 1. Installs frontend dependencies
@@ -217,6 +218,7 @@ cd backend && npm update
 
 - **Never** commit node_modules or dist directories
 - **Always** test locally before pushing to main branch
-- **Build process** is fully automated via Cloudflare Pages
+- **Build process** is fully automated via Cloudflare Workers
 - **Domain**: Custom domain configured at `game.fasttakeoff.org`
-- **Branch**: Development happens on `web-app-worker` branch
+- **Branch**: Development happens on `master` branch  
+- **CLI Version**: Separate repository at https://github.com/ghsaboias/flashcards-cli
