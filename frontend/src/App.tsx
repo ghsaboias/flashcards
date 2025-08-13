@@ -1,10 +1,10 @@
-import { pinyin as pinyinPro } from 'pinyin-pro'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import type { SrsRow, StatRow, StatsPayload } from './api'
 import { answer, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession } from './api'
 import SrsTable from './components/SrsTable'
 import StatsTable from './components/StatsTable'
+import { getPinyinForText, hasChinese } from './utils/pinyin'
 
 function App() {
   const [sets, setSets] = useState<string[]>([])
@@ -82,18 +82,18 @@ function App() {
       return null
     }
   }
-  function isRowDueNow(row: SrsRow): boolean {
+  const isRowDueNow = useCallback((row: SrsRow): boolean => {
     if (!row.next_review_date) return false
     const t = parseSrsDate(row.next_review_date)
     if (!t) return false
     return t.getTime() <= Date.now()
-  }
+  }, [])
   const dueNowCount = useMemo(() => {
     if (!srsRows || srsRows.length === 0) return 0
     let count = 0
     for (const r of srsRows) if (isRowDueNow(r)) count++
     return count
-  }, [srsRows])
+  }, [srsRows, isRowDueNow])
 
   const voicesRef = useRef<SpeechSynthesisVoice[] | null>(null)
   const summaryRef = useRef<HTMLDivElement | null>(null)
@@ -111,9 +111,6 @@ function App() {
     }
   }, [])
 
-  function hasChinese(text: string) {
-    return /[\u4e00-\u9fff]/.test(text)
-  }
 
   function speak(text: string) {
     if (!text || !('speechSynthesis' in window)) return
@@ -130,7 +127,12 @@ function App() {
   // Lightweight notification sound for correct answers
   function playCorrectChime() {
     try {
-      const AC: any = (window as any).AudioContext || (window as any).webkitAudioContext
+      const AC = (window as typeof window & {
+        AudioContext?: typeof AudioContext
+        webkitAudioContext?: typeof AudioContext
+      }).AudioContext || (window as typeof window & {
+        webkitAudioContext?: typeof AudioContext
+      }).webkitAudioContext
       if (!AC) return
       if (!audioCtxRef.current) audioCtxRef.current = new AC()
       const ctx = audioCtxRef.current!
@@ -181,13 +183,12 @@ function App() {
   // Compute pinyin client-side for the active question
   useEffect(() => {
     const q = question
-    if (!q || !hasChinese(q)) { setPinyin(''); return }
-    try {
-      const py = pinyinPro(q, { toneType: 'symbol' })
-      setPinyin(py || '')
-    } catch {
+    if (!q || !hasChinese(q)) { 
       setPinyin('')
+      return 
     }
+    
+    getPinyinForText(q).then(py => setPinyin(py)).catch(() => setPinyin(''))
   }, [question])
 
   useEffect(() => {
@@ -198,7 +199,6 @@ function App() {
     if (last && last.text === question && now - last.ts < 1000) return
     speak(question)
     lastSpokenRef.current = { text: question, ts: now }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question])
 
   // Keyboard shortcuts
@@ -239,6 +239,7 @@ function App() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question, selectedSet, selectedCategory, inBrowseMode, browseIndex, browseRows])
 
   // Auto-scroll session summary when new rows are added
@@ -430,31 +431,28 @@ function App() {
     if (last && last.text === q && now - last.ts < 1000) return
     speak(q)
     lastSpokenRef.current = { text: q, ts: now }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inBrowseMode, browseIndex, browseRows])
 
   // Fetch pinyin for browse mode question (client-side)
   useEffect(() => {
     if (!inBrowseMode) return
     const q = browseRows[browseIndex]?.question
-    if (!q || !hasChinese(q)) { setBrowsePinyin(""); return }
-    try {
-      const py = pinyinPro(q, { toneType: 'symbol' })
-      setBrowsePinyin(py || "")
-    } catch {
+    if (!q || !hasChinese(q)) { 
       setBrowsePinyin("")
+      return 
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
+    getPinyinForText(q).then(py => setBrowsePinyin(py)).catch(() => setBrowsePinyin(''))
   }, [inBrowseMode, browseIndex, browseRows])
 
-  async function beginSetSession() {
+  const beginSetSession = useCallback(async () => {
     resetSessionUI()
     const res = await startSession({ mode: 'set_all', set_name: selectedSet })
     setSessionId(res.session_id)
     setQuestion(res.card?.question || "")
     setPinyin(res.card?.pinyin || "")
     setProgress(res.progress)
-  }
+  }, [selectedSet])
 
   async function beginCategorySession() {
     resetSessionUI()
@@ -682,7 +680,7 @@ function App() {
     const reviewItems = wrong.map(r => ({
       question: r.question,
       answer: r.correct_answer,
-      ...(mode === 'set' && selectedSet ? { set_name: selectedSet } as any : {})
+      ...(mode === 'set' && selectedSet ? { set_name: selectedSet } : {})
     }))
 
     try {

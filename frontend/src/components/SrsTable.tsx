@@ -57,71 +57,43 @@ export default function SrsTable({ rows }: Props) {
         }
     }
 
-    function getSortValue(row: SrsRow, key: SortKey): number | string {
-        switch (key) {
-            case 'question':
-                return row.question || ''
-            case 'answer':
-                return row.answer || ''
-            case 'easiness_factor':
-                return row.easiness_factor != null ? Number(row.easiness_factor) : 0
-            case 'interval_hours':
-                return row.interval_hours != null ? Number(row.interval_hours) : 0
-            case 'repetitions':
-                return row.repetitions != null ? Number(row.repetitions) : 0
-            case 'next_review_date': {
-                const dt = parseSrsDate(row.next_review_date)
-                return dt ? dt.getTime() : Number.POSITIVE_INFINITY
-            }
-            case 'on_schedule':
-                return isDueNow(row) ? 1 : 0
-            default:
-                return 0
-        }
-    }
 
     function hasChinese(text: string): boolean {
         return /[\u4e00-\u9fff]/.test(text)
     }
 
-    function compareValues(a: unknown, b: unknown, dir: SortDir) {
-        const factor = dir === 'asc' ? 1 : -1
-
-        // Handle null/undefined values
-        if (a == null && b == null) return 0
-        if (a == null) return 1 * factor  // null values go to end
-        if (b == null) return -1 * factor
-
-        // If both are numbers, compare numerically
-        if (typeof a === 'number' && typeof b === 'number') {
-            return (a - b) * factor
-        }
-
-        // Convert to numbers if they look like numbers
-        const aStr = String(a)
-        const bStr = String(b)
-        const aNum = parseFloat(aStr)
-        const bNum = parseFloat(bStr)
-
-        if (!isNaN(aNum) && !isNaN(bNum)) {
-            return (aNum - bNum) * factor
-        }
-
-        // Fall back to string comparison
-        const as = aStr.toLowerCase()
-        const bs = bStr.toLowerCase()
-        if (as < bs) return -1 * factor
-        if (as > bs) return 1 * factor
-        return 0
-    }
 
     const sortedRows = useMemo(() => {
         if (!sortKey) return rows
+        
+        function getSortValueMemo(row: SrsRow, key: SortKey): string | number {
+            switch (key) {
+                case 'question': return row.question
+                case 'answer': return row.answer
+                case 'easiness_factor': return row.easiness_factor
+                case 'interval_hours': return row.interval_hours
+                case 'repetitions': return row.repetitions
+                case 'next_review_date': return row.next_review_date || ''
+                default: return ''
+            }
+        }
+
+        function compareValuesMemo(a: string | number, b: string | number, dir: SortDir): number {
+            if (typeof a === 'number' && typeof b === 'number') {
+                return dir === 'asc' ? a - b : b - a
+            }
+            const aStr = String(a || '').toLowerCase()
+            const bStr = String(b || '').toLowerCase()
+            if (aStr < bStr) return dir === 'asc' ? -1 : 1
+            if (aStr > bStr) return dir === 'asc' ? 1 : -1
+            return 0
+        }
+
         const copy = rows.slice()
         copy.sort((a, b) => {
-            const va = getSortValue(a, sortKey)
-            const vb = getSortValue(b, sortKey)
-            return compareValues(va, vb, sortDir)
+            const va = getSortValueMemo(a, sortKey)
+            const vb = getSortValueMemo(b, sortKey)
+            return compareValuesMemo(va, vb, sortDir)
         })
         return copy
     }, [rows, sortKey, sortDir])

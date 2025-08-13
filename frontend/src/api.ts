@@ -54,7 +54,7 @@ export async function getSrsForCategory(category: string): Promise<SrsRow[]> {
     return data;
 }
 
-export async function startSession(payload: any) {
+export async function startSession(payload: Record<string, unknown>) {
     const { data } = await axios.post(`${API_BASE}/sessions/start`, payload);
     return data as {
         session_id: string;
