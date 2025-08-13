@@ -29,4 +29,8 @@ enabled = true
 tag = "v1"
 new_classes = [ "SessionsDO", "RateLimitDO" ]
 
+[[migrations]]
+tag = "v2"
+deleted_classes = [ "RateLimitDO" ]
+
 
