@@ -613,7 +613,14 @@ function App() {
       }
       setQuestion("")
       setProgress(res.progress)
-      setResults(res.results || [])
+      // Compute pinyin for results that have Chinese characters
+      const resultsWithPinyin = await Promise.all(
+        (res.results || []).map(async (result) => ({
+          ...result,
+          pinyin: hasChinese(result.question) ? await getPinyinForText(result.question).catch(() => '') : ''
+        }))
+      )
+      setResults(resultsWithPinyin)
       // Keep streak values as-is at session end
       // Refresh tables and difficulty cache after session completes
       try {
@@ -646,7 +653,15 @@ function App() {
       setPinyin(res.card?.pinyin || "")
       setProgress(res.progress)
       setLastEval(res.evaluation ? { correct: res.evaluation.correct, correct_answer: res.evaluation.correct_answer } : null)
-      if (res.results) setResults(res.results)
+      if (res.results) {
+        // Compute pinyin for results that have Chinese characters
+        Promise.all(
+          res.results.map(async (result) => ({
+            ...result,
+            pinyin: hasChinese(result.question) ? await getPinyinForText(result.question).catch(() => '') : ''
+          }))
+        ).then(resultsWithPinyin => setResults(resultsWithPinyin))
+      }
       if (res.evaluation) {
         if (res.evaluation.correct) {
           playCorrectChime()
