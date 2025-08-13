@@ -1,20 +1,33 @@
-# Python bytecode and caches
-__pycache__/
-*.py[cod]
-*$py.class
+# Dependencies
+node_modules/
+*/node_modules/
 
-# Virtual environments (common names)
-.venv/
-venv/
+# Build outputs
+dist/
+build/
 
-# macOS metadata
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Development files
+.vscode/
 .DS_Store
 
-# Node (web app)
-web/node_modules/
+# Cloudflare specific
+.wrangler/
+*/wrangler/
 
+# Logs
+*.log
+npm-debug.log*
 
-# Cloudflare worker (ignore local deps and state)
-cloudflare/node_modules/
-cloudflare/.wrangler/
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
 
