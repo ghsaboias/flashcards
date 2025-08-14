@@ -66,7 +66,8 @@ function App() {
   const canStartByDifficulty = selectedDifficulties.length > 0
 
   // Helpers for SRS due count
-  function parseSrsDate(raw: string): Date | null {
+  // UTC-aware date parsing for SRS calculations (to match backend logic)
+  function parseSrsDateUTC(raw: string): Date | null {
     try {
       if (!raw || typeof raw !== 'string') return null
       if (raw.includes(' ')) {
@@ -74,20 +75,34 @@ function App() {
         const [y, m, d] = datePart.split('-').map((n) => parseInt(n, 10))
         const [hh = '0', mm = '0', ss = '0'] = timePart.split(':')
         if (isNaN(y) || isNaN(m) || isNaN(d)) return null
-        return new Date(y, (m || 1) - 1, d || 1, parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, parseInt(ss, 10) || 0)
+        // Create UTC date to match database CURRENT_TIMESTAMP
+        return new Date(Date.UTC(y, (m || 1) - 1, d || 1, parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, parseInt(ss, 10) || 0))
       }
       const [y, m, d] = raw.split('-').map((n) => parseInt(n, 10))
       if (isNaN(y) || isNaN(m) || isNaN(d)) return null
-      return new Date(y, (m || 1) - 1, d || 1, 0, 0, 0)
+      return new Date(Date.UTC(y, (m || 1) - 1, d || 1, 0, 0, 0))
     } catch {
       return null
     }
   }
+
+  // Get current UTC time (to match database CURRENT_TIMESTAMP)
+  function getCurrentUTCTime(): number {
+    return Date.UTC(
+      new Date().getUTCFullYear(),
+      new Date().getUTCMonth(),
+      new Date().getUTCDate(),
+      new Date().getUTCHours(),
+      new Date().getUTCMinutes(),
+      new Date().getUTCSeconds()
+    )
+  }
+
   const isRowDueNow = useCallback((row: SrsRow): boolean => {
     if (!row.next_review_date) return false
-    const t = parseSrsDate(row.next_review_date)
+    const t = parseSrsDateUTC(row.next_review_date) // Use UTC parsing
     if (!t) return false
-    return t.getTime() <= Date.now()
+    return t.getTime() <= getCurrentUTCTime() // Use UTC comparison
   }, [])
   const dueNowCount = useMemo(() => {
     if (!srsRows || srsRows.length === 0) return 0

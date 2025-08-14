@@ -31,32 +31,42 @@ export default function SrsTable({ rows }: Props) {
 
     function isDueNow(row: SrsRow): boolean {
         if (!row.next_review_date) return false
-        const t = parseSrsDate(row.next_review_date)
+        const t = parseSrsDateUTC(row.next_review_date) // Use UTC parsing
         if (!t) return false
-        return t.getTime() <= Date.now()
+        return t.getTime() <= getCurrentUTCTime() // Use UTC comparison
     }
 
-    function parseSrsDate(raw: string): Date | null {
+    // UTC-aware date parsing for SRS calculations (to match backend logic)
+    function parseSrsDateUTC(raw: string): Date | null {
         try {
             if (!raw || typeof raw !== 'string') return null
             if (raw.includes(' ')) {
                 const [datePart, timePart] = raw.split(' ')
                 const [y, m, d] = datePart.split('-').map((n) => parseInt(n, 10))
                 const [hh = '0', mm = '0', ss = '0'] = timePart.split(':')
-                // Validate parsed numbers
                 if (isNaN(y) || isNaN(m) || isNaN(d)) return null
-                return new Date(y, (m || 1) - 1, d || 1, parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, parseInt(ss, 10) || 0)
+                // Create UTC date to match database CURRENT_TIMESTAMP
+                return new Date(Date.UTC(y, (m || 1) - 1, d || 1, parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, parseInt(ss, 10) || 0))
             }
-            // Legacy date-only format (treat as local midnight)
             const [y, m, d] = raw.split('-').map((n) => parseInt(n, 10))
-            // Validate parsed numbers
             if (isNaN(y) || isNaN(m) || isNaN(d)) return null
-            return new Date(y, (m || 1) - 1, d || 1, 0, 0, 0)
+            return new Date(Date.UTC(y, (m || 1) - 1, d || 1, 0, 0, 0))
         } catch {
             return null
         }
     }
 
+    // Get current UTC time (to match database CURRENT_TIMESTAMP)
+    function getCurrentUTCTime(): number {
+        return Date.UTC(
+            new Date().getUTCFullYear(),
+            new Date().getUTCMonth(),
+            new Date().getUTCDate(),
+            new Date().getUTCHours(),
+            new Date().getUTCMinutes(),
+            new Date().getUTCSeconds()
+        )
+    }
 
     function hasChinese(text: string): boolean {
         return /[\u4e00-\u9fff]/.test(text)
@@ -65,7 +75,7 @@ export default function SrsTable({ rows }: Props) {
 
     const sortedRows = useMemo(() => {
         if (!sortKey) return rows
-        
+
         function getSortValueMemo(row: SrsRow, key: SortKey): string | number {
             switch (key) {
                 case 'question': return row.question
@@ -124,9 +134,9 @@ export default function SrsTable({ rows }: Props) {
     }
 
     function formatNextReview(raw: string): string {
-        const dt = parseSrsDate(raw)
+        const dt = parseSrsDateUTC(raw) // Use UTC parsing
         if (!dt) return raw || ''
-        const diffMs = dt.getTime() - Date.now()
+        const diffMs = dt.getTime() - getCurrentUTCTime() // Use UTC comparison
         if (diffMs <= 0) return 'Now'
         const totalMinutes = Math.floor(diffMs / 60000)
         const days = Math.floor(totalMinutes / (60 * 24))
