@@ -3,6 +3,17 @@ This file provides guidance for working with code in this repository.
 ## Important Instructions
 
 - Keep this documentation current with the actual implementation
+- **NEVER DEPLOY WITHOUT EXPLICIT PERMISSION** - This repository has automatic deployment via GitHub Actions
+- **Git Integration**: Changes are automatically deployed when pushed to master branch
+- **Deployment Process**: `git commit && git push` triggers automatic deployment to Cloudflare
+
+## Deployment Warnings
+
+⚠️ **CRITICAL**: This repository has automatic deployment enabled via GitHub Actions. 
+- Pushing to `master` branch automatically deploys to production
+- NEVER use `npm run deploy` or `wrangler deploy` manually
+- Always test changes locally before committing
+- Use feature branches for major changes
 
 ## Running the Application
 
