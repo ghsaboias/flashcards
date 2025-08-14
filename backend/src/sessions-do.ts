@@ -30,7 +30,7 @@ export class SessionsDO {
 
   private async start(request: Request): Promise<Response> {
     const payload = await request.json() as {
-      mode: 'set_all' | 'category_all' | 'difficulty_set' | 'difficulty_category' | 'srs_sets' | 'srs_categories' | 'review_incorrect'
+      mode: 'set_all' | 'category_all' | 'difficulty_set' | 'difficulty_category' | 'srs_sets' | 'srs_categories' | 'multi_set_all' | 'multi_set_difficulty' | 'review_incorrect'
       set_name?: string
       category?: string
       difficulty_levels?: Array<'easy' | 'medium' | 'hard'>
@@ -96,6 +96,22 @@ export class SessionsDO {
          FROM cards WHERE category_key IN (${placeholders}) AND datetime(next_review_date) <= CURRENT_TIMESTAMP`
       ).bind(...payload.selected_categories).all()
       cards = (results || []) as any
+    } else if (payload.mode === 'multi_set_all' && payload.selected_sets?.length) {
+      // All cards from multiple selected sets
+      const placeholders = payload.selected_sets.map(() => '?').join(',')
+      const { results } = await this.env.DB.prepare(
+        `SELECT id, category_key, set_key, question, answer FROM cards WHERE set_key IN (${placeholders})`
+      ).bind(...payload.selected_sets).all()
+      cards = (results || []) as any
+    } else if (payload.mode === 'multi_set_difficulty' && payload.selected_sets?.length && payload.difficulty_levels?.length) {
+      // Difficult cards from multiple selected sets
+      const placeholders = payload.selected_sets.map(() => '?').join(',')
+      const { results } = await this.env.DB.prepare(
+        `SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count FROM cards WHERE set_key IN (${placeholders})`
+      ).bind(...payload.selected_sets).all()
+      const rows = (results || []) as any[]
+      cards = rows.filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
+        .map(r => ({ id: r.id, category_key: r.category_key, set_key: r.set_key, question: r.question, answer: r.answer }))
     } else if (payload.mode === 'review_incorrect' && payload.review_items?.length) {
       const out: SessionCard[] = []
       for (const it of payload.review_items) {
@@ -130,7 +146,11 @@ export class SessionsDO {
       mode: payload.mode as any,
       started_at,
       session_type: this.computeSessionType(payload.mode),
-      practice_name: payload.set_name || payload.category || (payload.mode === 'srs_sets' ? 'Selected Sets' : (payload.mode === 'srs_categories' ? 'Selected Categories' : undefined)),
+      practice_name: payload.set_name || payload.category ||
+        (payload.mode === 'srs_sets' ? 'Selected Sets' :
+          payload.mode === 'srs_categories' ? 'Selected Categories' :
+            payload.mode === 'multi_set_all' || payload.mode === 'multi_set_difficulty' ?
+              `Multi-Set (${payload.selected_sets?.length || 0} sets)` : undefined),
       position: 0,
       order,
       cards,
@@ -277,6 +297,8 @@ export class SessionsDO {
       case 'difficulty_category': return 'Practice by Difficulty'
       case 'srs_sets': return 'SRS Review'
       case 'srs_categories': return 'SRS Review'
+      case 'multi_set_all': return 'Multi-Set Review'
+      case 'multi_set_difficulty': return 'Multi-Set Practice by Difficulty'
       case 'review_incorrect': return 'Review Incorrect'
       default: return mode
     }

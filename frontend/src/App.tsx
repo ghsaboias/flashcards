@@ -11,7 +11,8 @@ function App() {
   const [categories, setCategories] = useState<string[]>([])
   const [selectedSet, setSelectedSet] = useState<string>("")
   const [selectedCategory, setSelectedCategory] = useState<string>("")
-  const [mode, setMode] = useState<'set' | 'category'>('set')
+  const [selectedSets, setSelectedSets] = useState<string[]>([])
+  const [mode, setMode] = useState<'set' | 'category' | 'multi-set'>('set')
   const [sessionId, setSessionId] = useState<string>("")
   const [showSrs, setShowSrs] = useState<boolean>(false)
   const [srsRows, setSrsRows] = useState<SrsRow[]>([])
@@ -183,11 +184,11 @@ function App() {
   // Compute pinyin client-side for the active question
   useEffect(() => {
     const q = question
-    if (!q || !hasChinese(q)) { 
+    if (!q || !hasChinese(q)) {
       setPinyin('')
-      return 
+      return
     }
-    
+
     getPinyinForText(q).then(py => setPinyin(py)).catch(() => setPinyin(''))
   }, [question])
 
@@ -218,11 +219,17 @@ function App() {
           if (q && hasChinese(q)) speak(q)
         }
       } else if (e.key === '1') {
-        if (selectedSet) beginSetSession()
+        if (mode === 'set' && selectedSet) beginSetSession()
+        else if (mode === 'category' && selectedCategory) beginCategorySession()
+        else if (mode === 'multi-set' && selectedSets.length > 0) beginMultiSetSession()
       } else if (e.key === '2') {
-        if (selectedSet) beginDifficultSet()
+        if (mode === 'set' && selectedSet) beginDifficultSet()
+        else if (mode === 'category' && selectedCategory) beginDifficultCategory()
+        else if (mode === 'multi-set' && selectedSets.length > 0) beginMultiSetDifficult()
       } else if (e.key === '3') {
-        if (selectedSet) beginSrsSets()
+        if (mode === 'set' && selectedSet) beginSrsSets()
+        else if (mode === 'category' && selectedCategory) beginSrsCategories()
+        else if (mode === 'multi-set' && selectedSets.length > 0) beginMultiSetSrs()
       } else if (e.key === '4') {
         if (selectedCategory) beginCategorySession()
       } else if (e.key === '5') {
@@ -240,7 +247,7 @@ function App() {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [question, selectedSet, selectedCategory, inBrowseMode, browseIndex, browseRows])
+  }, [question, selectedSet, selectedCategory, selectedSets, mode, inBrowseMode, browseIndex, browseRows])
 
   // Auto-scroll session summary when new rows are added
   useEffect(() => {
@@ -268,16 +275,29 @@ function App() {
             if (!selectedSet) return
             const rows = await getSrsForSet(selectedSet)
             setSrsRows(rows)
-          } else {
+          } else if (mode === 'category') {
             if (!selectedCategory) return
             const rows = await getSrsForCategory(selectedCategory)
             setSrsRows(rows)
+          } else if (mode === 'multi-set') {
+            if (selectedSets.length === 0) return
+            // Aggregate SRS rows from all selected sets
+            const allRows: SrsRow[] = []
+            for (const setName of selectedSets) {
+              try {
+                const rows = await getSrsForSet(setName)
+                allRows.push(...rows)
+              } catch {
+                // Skip sets that fail to load
+              }
+            }
+            setSrsRows(allRows)
           }
         } catch {
           setSrsRows([])
         }
       })()
-  }, [showSrs, mode, selectedSet, selectedCategory])
+  }, [showSrs, mode, selectedSet, selectedCategory, selectedSets])
 
   // Keep Stats view in sync when mode or selection changes
   useEffect(() => {
@@ -288,9 +308,49 @@ function App() {
             if (!selectedSet) return
             const res = await getStatsForSet(selectedSet)
             setStats(res)
-          } else {
+          } else if (mode === 'category') {
             if (!selectedCategory) return
             const res = await getStatsForCategory(selectedCategory)
+            setStats(res)
+          } else if (mode === 'multi-set') {
+            if (selectedSets.length === 0) return
+            // Aggregate stats from all selected sets
+            const allRows: StatRow[] = []
+            let totalCorrect = 0
+            let totalIncorrect = 0
+            let totalCards = 0
+            let attemptedCards = 0
+            let difficultCount = 0
+
+            for (const setName of selectedSets) {
+              try {
+                const setStats = await getStatsForSet(setName)
+                allRows.push(...setStats.rows)
+                totalCorrect += setStats.summary.correct
+                totalIncorrect += setStats.summary.incorrect
+                totalCards += setStats.summary.total_cards
+                attemptedCards += setStats.summary.attempted_cards
+                difficultCount += setStats.summary.difficult_count
+              } catch {
+                // Skip sets that fail to load
+              }
+            }
+
+            const totalAttempts = totalCorrect + totalIncorrect
+            const accuracy = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 1000) / 10 : 0
+
+            const res = {
+              summary: {
+                correct: totalCorrect,
+                incorrect: totalIncorrect,
+                total: totalAttempts,
+                accuracy,
+                total_cards: totalCards,
+                attempted_cards: attemptedCards,
+                difficult_count: difficultCount,
+              },
+              rows: allRows,
+            }
             setStats(res)
           }
         } catch {
@@ -308,7 +368,7 @@ function App() {
           })
         }
       })()
-  }, [showStats, mode, selectedSet, selectedCategory])
+  }, [showStats, mode, selectedSet, selectedCategory, selectedSets])
 
   // Preload stats rows for the current scope so we can show difficulty counts even when Stats view is hidden
   useEffect(() => {
@@ -318,16 +378,29 @@ function App() {
           if (!selectedSet) { setDifficultyRows(null); return }
           const res = await getStatsForSet(selectedSet)
           setDifficultyRows(res.rows || [])
-        } else {
+        } else if (mode === 'category') {
           if (!selectedCategory) { setDifficultyRows(null); return }
           const res = await getStatsForCategory(selectedCategory)
           setDifficultyRows(res.rows || [])
+        } else if (mode === 'multi-set') {
+          if (selectedSets.length === 0) { setDifficultyRows(null); return }
+          // Aggregate difficulty rows from all selected sets
+          const allRows: StatRow[] = []
+          for (const setName of selectedSets) {
+            try {
+              const res = await getStatsForSet(setName)
+              allRows.push(...(res.rows || []))
+            } catch {
+              // Skip sets that fail to load
+            }
+          }
+          setDifficultyRows(allRows)
         }
       } catch {
         setDifficultyRows([])
       }
     })()
-  }, [mode, selectedSet, selectedCategory])
+  }, [mode, selectedSet, selectedCategory, selectedSets])
 
   function classifyDifficulty(row: { total: number; accuracy: number }): 'easy' | 'medium' | 'hard' {
     const attempts = row.total || 0
@@ -350,11 +423,17 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const [s, c] = await Promise.all([listSets(), listCategories()])
-      setSets(s)
-      setCategories(c)
-      if (s.length) setSelectedSet(s[0])
-      if (c.length) setSelectedCategory(c[0])
+      try {
+        const [s, c] = await Promise.all([listSets(), listCategories()])
+        setSets(Array.isArray(s) ? s : [])
+        setCategories(Array.isArray(c) ? c : [])
+        if (Array.isArray(s) && s.length) setSelectedSet(s[0])
+        if (Array.isArray(c) && c.length) setSelectedCategory(c[0])
+      } catch (error) {
+        console.error('Failed to load sets/categories:', error)
+        setSets([])
+        setCategories([])
+      }
     })()
   }, [])
 
@@ -389,11 +468,25 @@ function App() {
         const res = await getStatsForSet(selectedSet)
         const rows = (res.rows || []).map(r => ({ question: r.question, answer: r.answer }))
         setBrowseRows(rows)
-      } else {
+      } else if (mode === 'category') {
         if (!selectedCategory) return
         const res = await getStatsForCategory(selectedCategory)
         const rows = (res.rows || []).map(r => ({ question: r.question, answer: r.answer }))
         setBrowseRows(rows)
+      } else if (mode === 'multi-set') {
+        if (selectedSets.length === 0) return
+        // For multi-set browse, aggregate all cards from selected sets
+        const allRows: Array<{ question: string; answer: string }> = []
+        for (const setName of selectedSets) {
+          try {
+            const res = await getStatsForSet(setName)
+            const rows = (res.rows || []).map(r => ({ question: r.question, answer: r.answer }))
+            allRows.push(...rows)
+          } catch {
+            // Skip sets that fail to load
+          }
+        }
+        setBrowseRows(allRows)
       }
       setInBrowseMode(true)
       setBrowseIndex(0)
@@ -437,11 +530,11 @@ function App() {
   useEffect(() => {
     if (!inBrowseMode) return
     const q = browseRows[browseIndex]?.question
-    if (!q || !hasChinese(q)) { 
+    if (!q || !hasChinese(q)) {
       setBrowsePinyin("")
-      return 
+      return
     }
-    
+
     getPinyinForText(q).then(py => setBrowsePinyin(py)).catch(() => setBrowsePinyin(''))
   }, [inBrowseMode, browseIndex, browseRows])
 
@@ -501,6 +594,33 @@ function App() {
     setProgress(res.progress)
   }
 
+  async function beginMultiSetSession() {
+    resetSessionUI()
+    const res = await startSession({ mode: 'multi_set_all', selected_sets: selectedSets })
+    setSessionId(res.session_id)
+    setQuestion(res.card?.question || "")
+    setPinyin(res.card?.pinyin || "")
+    setProgress(res.progress)
+  }
+
+  async function beginMultiSetDifficult() {
+    resetSessionUI()
+    const res = await startSession({ mode: 'multi_set_difficulty', selected_sets: selectedSets, difficulty_levels: selectedDifficulties })
+    setSessionId(res.session_id)
+    setQuestion(res.card?.question || "")
+    setPinyin(res.card?.pinyin || "")
+    setProgress(res.progress)
+  }
+
+  async function beginMultiSetSrs() {
+    resetSessionUI()
+    const res = await startSession({ mode: 'srs_sets', selected_sets: selectedSets })
+    setSessionId(res.session_id)
+    setQuestion(res.card?.question || "")
+    setPinyin(res.card?.pinyin || "")
+    setProgress(res.progress)
+  }
+
   async function viewSrs() {
     setSessionId("")
     setQuestion("")
@@ -511,7 +631,24 @@ function App() {
     setStreak(0)
     setBestStreak(0)
     try {
-      const rows = mode === 'set' ? await getSrsForSet(selectedSet) : await getSrsForCategory(selectedCategory)
+      let rows: SrsRow[] = []
+      if (mode === 'set') {
+        rows = await getSrsForSet(selectedSet)
+      } else if (mode === 'category') {
+        rows = await getSrsForCategory(selectedCategory)
+      } else if (mode === 'multi-set') {
+        // For multi-set, we'll need to aggregate SRS data from multiple sets
+        const allRows: SrsRow[] = []
+        for (const setName of selectedSets) {
+          try {
+            const setRows = await getSrsForSet(setName)
+            allRows.push(...setRows)
+          } catch {
+            // Skip sets that fail to load
+          }
+        }
+        rows = allRows
+      }
       setSrsRows(rows)
       setShowSrs(true)
       setShowStats(false)
@@ -532,7 +669,52 @@ function App() {
     setStreak(0)
     setBestStreak(0)
     try {
-      const res = mode === 'set' ? await getStatsForSet(selectedSet) : await getStatsForCategory(selectedCategory)
+      let res: StatsPayload
+      if (mode === 'set') {
+        res = await getStatsForSet(selectedSet)
+      } else if (mode === 'category') {
+        res = await getStatsForCategory(selectedCategory)
+      } else if (mode === 'multi-set') {
+        // For multi-set, we'll need to aggregate stats from multiple sets
+        const allRows: StatRow[] = []
+        let totalCorrect = 0
+        let totalIncorrect = 0
+        let totalCards = 0
+        let attemptedCards = 0
+        let difficultCount = 0
+
+        for (const setName of selectedSets) {
+          try {
+            const setStats = await getStatsForSet(setName)
+            allRows.push(...setStats.rows)
+            totalCorrect += setStats.summary.correct
+            totalIncorrect += setStats.summary.incorrect
+            totalCards += setStats.summary.total_cards
+            attemptedCards += setStats.summary.attempted_cards
+            difficultCount += setStats.summary.difficult_count
+          } catch {
+            // Skip sets that fail to load
+          }
+        }
+
+        const totalAttempts = totalCorrect + totalIncorrect
+        const accuracy = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 1000) / 10 : 0
+
+        res = {
+          summary: {
+            correct: totalCorrect,
+            incorrect: totalIncorrect,
+            total: totalAttempts,
+            accuracy,
+            total_cards: totalCards,
+            attempted_cards: attemptedCards,
+            difficult_count: difficultCount,
+          },
+          rows: allRows,
+        }
+      } else {
+        res = await getStatsForSet(selectedSet)
+      }
       setStats(res)
       setShowStats(true)
       setShowSrs(false)
@@ -634,7 +816,7 @@ function App() {
             if (showStats) setStats(statsRes)
             if (showSrs) setSrsRows(srsRes)
           }
-        } else {
+        } else if (mode === 'category') {
           if (selectedCategory) {
             const [statsRes, srsRes] = await Promise.all([
               getStatsForCategory(selectedCategory),
@@ -643,6 +825,55 @@ function App() {
             setDifficultyRows(statsRes.rows || [])
             if (showStats) setStats(statsRes)
             if (showSrs) setSrsRows(srsRes)
+          }
+        } else if (mode === 'multi-set') {
+          if (selectedSets.length > 0) {
+            // Aggregate stats and SRS from all selected sets
+            const allStatsRows: StatRow[] = []
+            const allSrsRows: SrsRow[] = []
+            let totalCorrect = 0
+            let totalIncorrect = 0
+            let totalCards = 0
+            let attemptedCards = 0
+            let difficultCount = 0
+
+            for (const setName of selectedSets) {
+              try {
+                const [statsRes, srsRes] = await Promise.all([
+                  getStatsForSet(setName),
+                  getSrsForSet(setName),
+                ])
+                allStatsRows.push(...(statsRes.rows || []))
+                allSrsRows.push(...srsRes)
+                totalCorrect += statsRes.summary.correct
+                totalIncorrect += statsRes.summary.incorrect
+                totalCards += statsRes.summary.total_cards
+                attemptedCards += statsRes.summary.attempted_cards
+                difficultCount += statsRes.summary.difficult_count
+              } catch {
+                // Skip sets that fail to load
+              }
+            }
+
+            const totalAttempts = totalCorrect + totalIncorrect
+            const accuracy = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 1000) / 10 : 0
+
+            const aggregatedStats = {
+              summary: {
+                correct: totalCorrect,
+                incorrect: totalIncorrect,
+                total: totalAttempts,
+                accuracy,
+                total_cards: totalCards,
+                attempted_cards: attemptedCards,
+                difficult_count: difficultCount,
+              },
+              rows: allStatsRows,
+            }
+
+            setDifficultyRows(allStatsRows)
+            if (showStats) setStats(aggregatedStats)
+            if (showSrs) setSrsRows(allSrsRows)
           }
         }
       } catch {
@@ -679,12 +910,14 @@ function App() {
 
   function restartPractice() {
     if (mode === 'set') return beginSetSession()
-    return beginCategorySession()
+    if (mode === 'category') return beginCategorySession()
+    if (mode === 'multi-set') return beginMultiSetSession()
   }
 
   function practiceDifficultNow() {
     if (mode === 'set') return beginDifficultSet()
-    return beginDifficultCategory()
+    if (mode === 'category') return beginDifficultCategory()
+    if (mode === 'multi-set') return beginMultiSetDifficult()
   }
 
   async function beginReviewIncorrect() {
@@ -751,6 +984,25 @@ function App() {
       .replace(/\b\w/g, (c) => c.toUpperCase())
   }
 
+  function addSetToSelection(setName: string) {
+    if (!selectedSets.includes(setName)) {
+      setSelectedSets([...selectedSets, setName])
+    }
+  }
+
+  function removeSetFromSelection(setName: string) {
+    setSelectedSets(selectedSets.filter(s => s !== setName))
+  }
+
+  function getMultiSetLabel(): string {
+    if (selectedSets.length === 0) return 'No sets selected'
+    if (selectedSets.length === 1) return humanizeSetLabel(selectedSets[0])
+    if (selectedSets.length <= 3) {
+      return selectedSets.map(s => humanizeSetLabel(s)).join(' + ')
+    }
+    return `${selectedSets.length} sets selected`
+  }
+
   return (
     <div className="container">
       <div className="left" role="region" aria-label="Setup">
@@ -759,18 +1011,38 @@ function App() {
           {mode === 'set' ? (
             <div className="group">
               <select id="set-select" value={selectedSet} onChange={(e) => setSelectedSet(e.target.value)} aria-describedby="set-help">
-                {sets.map((s) => (
+                {Array.isArray(sets) && sets.map((s) => (
                   <option key={s} value={s}>{humanizeSetLabel(s)}</option>
+                ))}
+              </select>
+            </div>
+          ) : mode === 'category' ? (
+            <div className="group">
+              <select id="category-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} aria-describedby="category-help">
+                {Array.isArray(categories) && categories.map((c) => (
+                  <option key={c} value={c}>{humanizeCategoryLabel(c)}</option>
                 ))}
               </select>
             </div>
           ) : (
             <div className="group">
-              <select id="category-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} aria-describedby="category-help">
-                {categories.map((c) => (
-                  <option key={c} value={c}>{humanizeCategoryLabel(c)}</option>
-                ))}
-              </select>
+              <div className="multi-set-selection">
+                <div className="selected-sets">
+                  <strong>Selected Sets:</strong> {getMultiSetLabel()}
+                </div>
+                <div className="set-list">
+                  {Array.isArray(sets) && sets.map((s) => (
+                    <label key={s} className="checkbox">
+                      <input
+                        type="checkbox"
+                        checked={selectedSets.includes(s)}
+                        onChange={(e) => e.target.checked ? addSetToSelection(s) : removeSetFromSelection(s)}
+                      />
+                      <span>{humanizeSetLabel(s)}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
           <fieldset className="group">
@@ -782,6 +1054,10 @@ function App() {
               <label className="radio">
                 <input type="radio" name="mode" value="category" checked={mode === 'category'} onChange={() => setMode('category')} />
                 <span>Category</span>
+              </label>
+              <label className="radio">
+                <input type="radio" name="mode" value="multi-set" checked={mode === 'multi-set'} onChange={() => setMode('multi-set')} />
+                <span>Multi-Set</span>
               </label>
             </div>
           </fieldset>
@@ -816,12 +1092,87 @@ function App() {
           </fieldset>
 
           <div className="row">
-            <button className="btn-primary" onClick={beginBrowse} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Start Review</button>
-            <button className="btn-primary" onClick={mode === 'set' ? beginSetSession : beginCategorySession} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Start Practice</button>
-            <button className="btn-secondary" onClick={mode === 'set' ? beginDifficultSet : beginDifficultCategory} disabled={(mode === 'set' ? !selectedSet : !selectedCategory) || !canStartByDifficulty}>Practice by Difficulty</button>
-            <button className="btn-secondary" title="Spaced Repetition System" onClick={mode === 'set' ? beginSrsSets : beginSrsCategories} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>Practice SRS</button>
-            <button className="btn-tertiary" title="View SRS schedule" onClick={viewSrs} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>View SRS</button>
-            <button className="btn-tertiary" title="View performance stats" onClick={viewStats} disabled={mode === 'set' ? !selectedSet : !selectedCategory}>View Stats</button>
+            <button
+              className="btn-primary"
+              onClick={beginBrowse}
+              disabled={
+                mode === 'set' ? !selectedSet :
+                  mode === 'category' ? !selectedCategory :
+                    selectedSets.length === 0
+              }
+            >
+              Start Review
+            </button>
+            <button
+              className="btn-primary"
+              onClick={
+                mode === 'set' ? beginSetSession :
+                  mode === 'category' ? beginCategorySession :
+                    beginMultiSetSession
+              }
+              disabled={
+                mode === 'set' ? !selectedSet :
+                  mode === 'category' ? !selectedCategory :
+                    selectedSets.length === 0
+              }
+            >
+              Start Practice
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={
+                mode === 'set' ? beginDifficultSet :
+                  mode === 'category' ? beginDifficultCategory :
+                    beginMultiSetDifficult
+              }
+              disabled={
+                (mode === 'set' ? !selectedSet :
+                  mode === 'category' ? !selectedCategory :
+                    selectedSets.length === 0) || !canStartByDifficulty
+              }
+            >
+              Practice by Difficulty
+            </button>
+            <button
+              className="btn-secondary"
+              title="Spaced Repetition System"
+              onClick={
+                mode === 'set' ? beginSrsSets :
+                  mode === 'category' ? beginSrsCategories :
+                    beginMultiSetSrs
+              }
+              disabled={
+                mode === 'set' ? !selectedSet :
+                  mode === 'category' ? !selectedCategory :
+                    selectedSets.length === 0
+              }
+            >
+              Practice SRS
+            </button>
+            <button
+              className="btn-tertiary"
+              title="View SRS schedule"
+              onClick={viewSrs}
+              disabled={
+                mode === 'set' ? !selectedSet :
+                  mode === 'category' ? !selectedCategory :
+                    selectedSets.length === 0
+              }
+            >
+              View SRS
+            </button>
+            <button
+              className="btn-tertiary"
+              title="View performance stats"
+              onClick={viewStats}
+              disabled={
+                mode === 'set' ? !selectedSet :
+                  mode === 'category' ? !selectedCategory :
+                    selectedSets.length === 0
+              }
+            >
+              View Stats
+            </button>
           </div>
         </div>
 
@@ -870,7 +1221,11 @@ function App() {
             return (
               <div className="statsPanel" style={{ marginTop: 8 }}>
                 <div className="metaRow">
-                  <h3>Review {mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` : `— ${humanizeCategoryLabel(selectedCategory)}`}</h3>
+                  <h3>Review {
+                    mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
+                      mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
+                        `— ${getMultiSetLabel()}`
+                  }</h3>
                   <div className="muted">{total > 0 ? `${i + 1}/${total}` : '0/0'}</div>
                 </div>
                 {current ? (
@@ -900,7 +1255,11 @@ function App() {
         ) : showStats ? (
           <div className="statsPanel" style={{ marginTop: 8 }}>
             <div className="metaRow">
-              <h3>Stats {mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` : `— ${humanizeCategoryLabel(selectedCategory)}`}</h3>
+              <h3>Stats {
+                mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
+                  mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
+                    `— ${getMultiSetLabel()}`
+              }</h3>
               {stats && <div className="muted">{stats.summary.accuracy}% accuracy</div>}
             </div>
             {stats && (
@@ -918,7 +1277,11 @@ function App() {
         ) : showSrs ? (
           <div className="statsPanel" style={{ marginTop: 8 }}>
             <div className="metaRow">
-              <h3>SRS Schedule {mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` : `— ${humanizeCategoryLabel(selectedCategory)}`}</h3>
+              <h3>SRS Schedule {
+                mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
+                  mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
+                    `— ${getMultiSetLabel()}`
+              }</h3>
               <div className="muted">{dueNowCount} due now</div>
             </div>
             <div className="panelSubtext muted">Items: {srsRows.length}</div>
@@ -928,7 +1291,11 @@ function App() {
           <>
             {isSessionComplete ? (
               <div className="completePanel" role="region" aria-label="Session complete">
-                <h3 className="completeTitle">Session Complete {mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` : `— ${humanizeCategoryLabel(selectedCategory)}`}</h3>
+                <h3 className="completeTitle">Session Complete {
+                  mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
+                    mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
+                      `— ${getMultiSetLabel()}`
+                }</h3>
                 <div className="progress" aria-label={`Progress ${progress.current} of ${progress.total}`}>Progress: {progress.current}/{progress.total}</div>
                 <div className="progressBar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent}>
                   <div className="progressFill" style={{ width: `${progressPercent}%` }} />
@@ -973,7 +1340,11 @@ function App() {
                 <div className="row" style={{ marginTop: 12 }}>
                   <button className="btn-primary" onClick={restartPractice}>Restart</button>
                   <button className="btn-secondary" onClick={beginReviewIncorrect} disabled={!results.some(r => !r.correct)}>Review Incorrect</button>
-                  <button className="btn-secondary" onClick={practiceDifficultNow} disabled={(mode === 'set' ? !selectedSet : !selectedCategory) || !canStartByDifficulty}>Practice by Difficulty</button>
+                  <button className="btn-secondary" onClick={practiceDifficultNow} disabled={
+                    (mode === 'set' ? !selectedSet :
+                      mode === 'category' ? !selectedCategory :
+                        selectedSets.length === 0) || !canStartByDifficulty
+                  }>Practice by Difficulty</button>
                   <button className="btn-tertiary" onClick={viewStats}>View Stats</button>
                   <button className="btn-tertiary" onClick={viewSrs}>View SRS</button>
                 </div>
