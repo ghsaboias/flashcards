@@ -35,9 +35,6 @@ flashcards/
 │   │       └── validateAnswer.ts # Answer validation logic
 │   ├── wrangler.toml      # Cloudflare Worker configuration
 │   └── package.json
-└── Recognition_Practice/  # HSK flashcard data (CSV files)
-    ├── HSK_Level_1/       # 6 sets, 150 HSK1 words
-    └── HSK_Level_2/       # Extended vocabulary
 ```
 
 ## Development Commands
@@ -61,9 +58,15 @@ npm run deploy   # Deploy to Cloudflare
 
 ### Database Management
 ```bash
-cd backend
-npm run migrate     # Apply D1 database migrations
-npm run seed:hsk1   # Seed HSK Level 1 data
+# Apply D1 database migrations (local and remote)
+npx wrangler d1 migrations apply flashcards --local
+npx wrangler d1 migrations apply flashcards --remote
+
+# Query database directly
+npx wrangler d1 execute flashcards --remote --command "SELECT * FROM cards LIMIT 5;"
+npx wrangler d1 execute flashcards --local --command "SELECT * FROM cards LIMIT 5;"
+
+# Database operations use D1 for both local development and production
 ```
 
 ## Deployment (Cloudflare Workers)
@@ -83,7 +86,7 @@ The build process:
 
 - **Frontend**: React 19, TypeScript, Vite, Axios
 - **Backend**: Hono, Cloudflare Workers, D1 Database
-- **Storage**: Durable Objects for session state
+- **Storage**: D1 Database for all card data, Durable Objects for session state
 - **Deployment**: Cloudflare Pages with Workers integration
 - **Features**: SRS algorithm, Chinese pinyin support, audio TTS
 
@@ -185,9 +188,9 @@ cd backend && npm update
 3. Run `npm run migrate`
 
 ### Adding New HSK Data
-1. Add CSV files to `Recognition_Practice/`
-2. Update seed scripts in `backend/scripts/`
-3. Run seed commands
+1. Use D1 SQL commands to insert new cards directly
+2. Example: `npx wrangler d1 execute flashcards --remote --command "INSERT INTO cards (question, answer, set_name) VALUES ('没', 'not', 'HSK1_Set_01');"`
+3. Cards are stored exclusively in D1 database (both local and remote)
 
 ## Troubleshooting
 

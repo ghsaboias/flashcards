@@ -7,6 +7,7 @@ This file provides guidance for working with code in this repository.
 ## Running the Application
 
 ### Development
+
 ```bash
 # Frontend (React + Vite)
 cd frontend && npm run dev
@@ -16,6 +17,7 @@ cd backend && npm run dev
 ```
 
 ### Production
+
 ```bash
 # Build and deploy to Cloudflare
 cd frontend && npm run build
@@ -29,12 +31,14 @@ Modern web application with Cloudflare Workers backend:
 ### File Structure
 
 **Frontend (`frontend/`)**
+
 - **src/App.tsx**: Main React application component
 - **src/api.ts**: API client for backend endpoints
 - **src/components/SrsTable.tsx**: SRS schedule display component
 - **src/components/StatsTable.tsx**: Session statistics component
 
 **Backend (`backend/`)**
+
 - **src/worker.ts**: Main Hono application with API routes
 - **src/sessions-do.ts**: Durable Object for session management
 - **src/srs.ts**: Spaced Repetition System logic
@@ -44,8 +48,9 @@ Modern web application with Cloudflare Workers backend:
 
 ### Data Files
 
-- **Recognition_Practice/{level}/{set}_flashcards.csv**: HSK flashcard data in CSV format
-- **backend/schema.sql**: D1 database schema for cards, sessions, and SRS data  
+- **backend/seed-hsk1.sql**: HSK Level 1 seed data (migrated from CSV)
+- **backend/seed-hsk2.sql**: HSK Level 2 seed data (migrated from CSV)
+- **backend/schema.sql**: D1 database schema for cards, sessions, and SRS data
 - **backend/seed-hsk1.sql**: HSK Level 1 seed data
 
 ### Directory Structure
@@ -73,13 +78,15 @@ flashcards/
 ## Web App Features
 
 **Core Functionality:**
+
 - **Set/Category Selection**: Choose HSK sets or categories for practice
 - **Practice Session**: Interactive flashcard review with answer validation
-- **SRS Integration**: Spaced repetition system for optimal review scheduling  
+- **SRS Integration**: Spaced repetition system for optimal review scheduling
 - **Statistics Tracking**: View performance metrics and review history
 - **Progress Monitoring**: Track learning progress over time
 
 **Practice Modes:**
+
 - **Start Practice**: Review all cards in selected set/category
 - **Practice Difficult**: Focus on cards with low accuracy (<80%)
 - **Practice SRS**: Review cards due for spaced repetition
@@ -90,16 +97,19 @@ flashcards/
 ### API Endpoints
 
 **Cards & Sets:**
+
 - `GET /api/sets` - List available flashcard sets
 - `GET /api/sets/{id}/cards` - Get cards for a specific set
 - `GET /api/categories` - List HSK categories
 
 **Sessions:**
+
 - `POST /api/sessions` - Create new practice session
 - `GET /api/sessions/{id}` - Get session state
 - `POST /api/sessions/{id}/answer` - Submit answer and get next card
 
 **SRS & Statistics:**
+
 - `GET /api/srs/{set_id}` - Get SRS data for set
 - `GET /api/stats/{set_id}` - Get performance statistics
 
@@ -112,6 +122,7 @@ flashcards/
 ### Database Schema (D1)
 
 **Tables:**
+
 - `cards` - Flashcard data (question, answer, metadata)
 - `sessions` - Practice session tracking
 - `srs_data` - Spaced repetition scheduling data
@@ -128,12 +139,14 @@ flashcards/
 ### Key Components
 
 **Frontend (`frontend/src/`):**
+
 - `App.tsx`: Main application with set/category selection and practice modes
 - `api.ts`: HTTP client for backend API communication
 - `SrsTable.tsx`: Displays SRS scheduling data in tabular format
 - `StatsTable.tsx`: Shows session statistics and performance metrics
 
 **Backend (`backend/src/`):**
+
 - `worker.ts`: Main Hono router with API endpoints and static asset serving
 - `sessions-do.ts`: Durable Object managing practice session state
 - `srs.ts`: Spaced repetition algorithm implementation
@@ -142,14 +155,16 @@ flashcards/
 ### SRS Algorithm
 
 Uses SM-2 algorithm with modifications:
+
 - **Easiness Factor**: Adjusts based on answer quality (1.3 - 2.5)
-- **Interval**: Time between reviews (minutes to months)  
+- **Interval**: Time between reviews (minutes to months)
 - **Repetition Count**: Number of successful reviews
 - **Next Review**: Calculated timestamp for next practice
 
 ### Deployment
 
 **Cloudflare Workers Configuration:**
+
 - Domain: `game.fasttakeoff.org`
 - Assets: Serves built frontend from `../frontend/dist`
 - Database: D1 SQLite with migrations
