@@ -1,0 +1,46 @@
+name: Claude PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  pull_request_review_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  claude-review:
+    runs-on: ubuntu-latest
+    name: Claude Code Review
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude PR Review
+        uses: anthropics/claude-code-action@beta
+        with:
+          # The action will automatically use the Claude App authentication
+          # No additional configuration needed for basic PR reviews
+          
+          # Optional: Custom instructions for Claude
+          instructions: |
+            You are reviewing a Chinese flashcard learning app built with React frontend and Cloudflare Workers backend.
+            
+            Key areas to focus on:
+            - TypeScript type safety and best practices
+            - React component patterns and hooks usage
+            - Performance optimizations (bundle size, lazy loading)
+            - Code quality (ESLint compliance, descriptive variable names)
+            - Security best practices (no secrets in code)
+            - Spaced repetition algorithm correctness
+            - Chinese language handling and pinyin support
+            
+            The project maintains zero TypeScript errors and zero ESLint warnings.
+            Follow the existing code style and patterns in the codebase.
+            
+            Reference the CLAUDE.md file for project architecture and conventions.
