@@ -1012,10 +1012,70 @@ function App() {
   function getMultiSetLabel(): string {
     if (selectedSets.length === 0) return 'No sets selected'
     if (selectedSets.length === 1) return humanizeSetLabel(selectedSets[0])
-    if (selectedSets.length <= 3) {
-      return selectedSets.map(s => humanizeSetLabel(s)).join(' + ')
-    }
-    return `${selectedSets.length} sets selected`
+    
+    // Parse sets and group by HSK level
+    const setsByLevel: { [level: number]: number[] } = {}
+    
+    selectedSets.forEach(setName => {
+      // Extract HSK level and set number from raw set name
+      const trimmed = setName.replace('Recognition_Practice/', '')
+      const parts = trimmed.split('/')
+      if (parts.length === 2) {
+        const [level, name] = parts
+        const levelMatch = level.match(/HSK_Level_(\d+)/i)
+        const setMatch = name.match(/HSK\d+_Set_0?(\d+)/i)
+        
+        if (levelMatch && setMatch) {
+          const hskLevel = parseInt(levelMatch[1])
+          const setNumber = parseInt(setMatch[1])
+          
+          if (!setsByLevel[hskLevel]) {
+            setsByLevel[hskLevel] = []
+          }
+          setsByLevel[hskLevel].push(setNumber)
+        }
+      }
+    })
+    
+    // Format each level's sets
+    const levelGroups: string[] = []
+    
+    Object.keys(setsByLevel)
+      .map(k => parseInt(k))
+      .sort((a, b) => a - b)
+      .forEach(level => {
+        const sets = setsByLevel[level].sort((a, b) => a - b)
+        const ranges: string[] = []
+        
+        let start = sets[0]
+        let end = sets[0]
+        
+        for (let i = 1; i < sets.length; i++) {
+          if (sets[i] === end + 1) {
+            end = sets[i]
+          } else {
+            // Add the current range
+            if (start === end) {
+              ranges.push(`S${start}`)
+            } else {
+              ranges.push(`S${start} - S${end}`)
+            }
+            start = sets[i]
+            end = sets[i]
+          }
+        }
+        
+        // Add the final range
+        if (start === end) {
+          ranges.push(`S${start}`)
+        } else {
+          ranges.push(`S${start} - S${end}`)
+        }
+        
+        levelGroups.push(`HSK L${level} ${ranges.join(', ')}`)
+      })
+    
+    return levelGroups.join('; ')
   }
 
   return (
