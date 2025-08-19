@@ -56,17 +56,17 @@ npm run dev      # Start local worker development
 npm run deploy   # Deploy to Cloudflare
 ```
 
-### Database Management
+### Database Management (Cloudflare MCP)
 ```bash
-# Apply D1 database migrations (local and remote)
-npx wrangler d1 migrations apply flashcards --local
-npx wrangler d1 migrations apply flashcards --remote
+# Preferred: Use Cloudflare MCP tools for database operations
+# Flow: accounts_list → set_active_account → d1_databases_list → d1_database_query
+# Account ID: 0897132adb36db4188ceb0ebd9ee76f2
+# Database ID: 98e5c374-ba8d-4cce-8490-10a3414fba0a
 
-# Query database directly
-npx wrangler d1 execute flashcards --remote --command "SELECT * FROM cards LIMIT 5;"
-npx wrangler d1 execute flashcards --local --command "SELECT * FROM cards LIMIT 5;"
-
-# Database operations use D1 for both local development and production
+# Example queries via MCP:
+# Sessions: SELECT * FROM sessions ORDER BY started_at DESC LIMIT 5
+# Analytics: SELECT * FROM session_events WHERE session_id='SESSION_ID' ORDER BY position
+# Cards: SELECT * FROM cards LIMIT 5
 ```
 
 ## Deployment (Cloudflare Workers)
@@ -129,11 +129,17 @@ The build process:
 
 ## Database Schema (D1 SQLite)
 
-**Tables:**
+**Actual Tables (confirmed):**
 - `cards` - Flashcard data (question, answer, metadata)
-- `sessions` - Practice session tracking
-- `srs_data` - Spaced repetition scheduling (SM-2 algorithm)
-- `session_answers` - Individual answer records
+- `sessions` - Practice session tracking (id, practice_name, session_type, started_at, ended_at, duration_seconds, correct_count, total)
+- `session_events` - Individual question/answer records with timing data (session_id, position, card_id, question, user_answer, correct_answer, correct, duration_seconds, created_at)
+- `settings` - Application settings
+- `_cf_KV` - Cloudflare internal table
+- `sqlite_sequence` - SQLite internal table
+
+**Key Analytics Tables:**
+- `session_events` contains per-question timing data and detailed answer tracking
+- Each question answered is logged with response time, accuracy, and timestamps
 
 ## Features
 
@@ -188,9 +194,9 @@ cd backend && npm update
 3. Run `npm run migrate`
 
 ### Adding New HSK Data
-1. Use D1 SQL commands to insert new cards directly
-2. Example: `npx wrangler d1 execute flashcards --remote --command "INSERT INTO cards (question, answer, set_name) VALUES ('没', 'not', 'HSK1_Set_01');"`
-3. Cards are stored exclusively in D1 database (both local and remote)
+1. Use Cloudflare MCP tools to insert new cards directly
+2. Example: `mcp__cloudflare-bindings__d1_database_query` with SQL: `INSERT INTO cards (question, answer, set_name) VALUES ('没', 'not', 'HSK1_Set_01')`
+3. Cards are stored exclusively in D1 database
 
 ## Troubleshooting
 

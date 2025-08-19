@@ -94,37 +94,37 @@
       <div class="header">
         <h1>📊 Comprehensive Flashcard Performance Dashboard</h1>
         <p>
-          Your complete learning journey from August 4-14, 2025 (Daily View)
+          Your complete learning journey from August 4-17, 2025 (Daily View)
         </p>
       </div>
 
       <!-- Period Tabs -->
       <div class="period-tabs">
         <div class="tab active" onclick="showPeriod('all')">
-          All Data (Aug 4-14)
+          All Data (Aug 4-17)
         </div>
         <div class="tab" onclick="showPeriod('old')">Old System (Aug 4-11)</div>
         <div class="tab" onclick="showPeriod('new')">
-          New System (Aug 12-14)
+          New System (Aug 12-17)
         </div>
       </div>
 
       <!-- Key Stats -->
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-value" id="totalSessions">658</div>
+          <div class="stat-value" id="totalSessions">700</div>
           <div class="stat-label">Total Sessions</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value" id="totalCards">3,000+</div>
+          <div class="stat-value" id="totalCards">4,000+</div>
           <div class="stat-label">Cards Reviewed</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value" id="avgAccuracy">85%</div>
+          <div class="stat-value" id="avgAccuracy">87%</div>
           <div class="stat-label">Average Accuracy</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value" id="studyDays">11</div>
+          <div class="stat-value" id="studyDays">13</div>
           <div class="stat-label">Study Days</div>
         </div>
       </div>
@@ -772,6 +772,106 @@
                   Peak accuracy achieved
                 </td>
               </tr>
+              <tr style="background: #f0f9ff">
+                <td style="padding: 12px; border-bottom: 1px solid #dee2e6">
+                  <strong>Aug 15</strong>
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  6
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  120
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  90.9%
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  New
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  Consistent high performance
+                </td>
+              </tr>
+              <tr style="background: #f0f9ff">
+                <td style="padding: 12px; border-bottom: 1px solid #dee2e6">
+                  <strong>Aug 17</strong>
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  2
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  90
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  95.1%
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  New
+                </td>
+                <td
+                  style="
+                    padding: 12px;
+                    text-align: center;
+                    border-bottom: 1px solid #dee2e6;
+                  "
+                >
+                  New peak accuracy record
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -817,10 +917,10 @@
             </h4>
             <ul style="line-height: 1.6">
               <li>
-                <strong>Accuracy improvement</strong>: 75% → 91.5% over 11 days
+                <strong>Accuracy improvement</strong>: 75% → 95.1% over 13 days
               </li>
               <li>
-                <strong>Consistency</strong>: 8 out of 11 days had practice
+                <strong>Consistency</strong>: 10 out of 13 days had practice
                 sessions
               </li>
               <li>
@@ -829,7 +929,7 @@
               </li>
               <li>
                 <strong>Mastery achieved</strong>: 90%+ accuracy maintained in
-                final days
+                final days, new peak at 95.1%
               </li>
             </ul>
           </div>
@@ -853,10 +953,28 @@
             "Aug 12",
             "Aug 13",
             "Aug 14",
+            "Aug 15",
+            "Aug 17",
           ],
-          sessions: [178, 236, 92, 13, 113, 0, 0, 7, 3, 14, 2],
-          accuracy: [75, 75, 78, 80, 82, null, null, 85, 75.2, 90.2, 91.5],
-          cumulative: [178, 414, 506, 519, 632, 632, 632, 639, 642, 656, 658],
+          sessions: [178, 236, 92, 13, 113, 0, 0, 7, 3, 14, 2, 6, 2],
+          accuracy: [
+            75,
+            75,
+            78,
+            80,
+            82,
+            null,
+            null,
+            85,
+            75.2,
+            90.2,
+            91.5,
+            90.9,
+            95.1,
+          ],
+          cumulative: [
+            178, 414, 506, 519, 632, 632, 632, 639, 642, 656, 658, 664, 666,
+          ],
         },
         old: {
           dates: [
@@ -874,14 +992,15 @@
           cumulative: [178, 414, 506, 519, 632, 632, 632, 639],
         },
         new: {
-          dates: ["Aug 12", "Aug 13", "Aug 14"],
-          sessions: [3, 14, 2],
-          accuracy: [75.2, 90.2, 91.5],
-          cumulative: [3, 17, 19],
+          dates: ["Aug 12", "Aug 13", "Aug 14", "Aug 15", "Aug 17"],
+          sessions: [3, 14, 2, 6, 2],
+          accuracy: [75.2, 90.2, 91.5, 90.9, 95.1],
+          cumulative: [3, 17, 19, 25, 27],
         },
       };
 
       let currentPeriod = "all";
+      let charts = {};
 
       function showPeriod(period) {
         currentPeriod = period;
@@ -906,11 +1025,16 @@
       function createCharts() {
         const data = dailyData[currentPeriod];
 
+        // Destroy existing charts
+        Object.values(charts).forEach((chart) => {
+          if (chart) chart.destroy();
+        });
+
         // Daily Activity Chart
         const activityCtx = document
           .getElementById("dailyActivityChart")
           .getContext("2d");
-        new Chart(activityCtx, {
+        charts.activity = new Chart(activityCtx, {
           type: "bar",
           data: {
             labels: data.dates,
@@ -939,7 +1063,7 @@
         const accuracyCtx = document
           .getElementById("dailyAccuracyChart")
           .getContext("2d");
-        new Chart(accuracyCtx, {
+        charts.accuracy = new Chart(accuracyCtx, {
           type: "line",
           data: {
             labels: data.dates,
@@ -978,7 +1102,7 @@
         const cumulativeCtx = document
           .getElementById("cumulativeChart")
           .getContext("2d");
-        new Chart(cumulativeCtx, {
+        charts.cumulative = new Chart(cumulativeCtx, {
           type: "line",
           data: {
             labels: data.dates,
@@ -1008,7 +1132,7 @@
         const intensityCtx = document
           .getElementById("intensityChart")
           .getContext("2d");
-        new Chart(intensityCtx, {
+        charts.intensity = new Chart(intensityCtx, {
           type: "bar",
           data: {
             labels: data.dates,
