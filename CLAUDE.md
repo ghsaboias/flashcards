@@ -233,3 +233,4 @@ cd backend && npm update
 - **CLI Version**: Separate repository at https://github.com/ghsaboias/flashcards-cli
 - for testing: build the frontend, then serve the backend using npx wrangler dev (in the background). this will start a server in port 8787
 - there is no need to serve the frontend, as npx wrangler dev already serves the built FE + the BE
+- read client logs with puppeteer mcp

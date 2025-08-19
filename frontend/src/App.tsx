@@ -4,6 +4,7 @@ import type { SrsRow, StatRow, StatsPayload } from './api'
 import { answer, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession } from './api'
 import SrsTable from './components/SrsTable'
 import StatsTable from './components/StatsTable'
+import DrawingCanvas from './components/DrawingCanvas'
 import { getPinyinForText, hasChinese } from './utils/pinyin'
 
 function App() {
@@ -40,6 +41,11 @@ function App() {
   const [diffEasy, setDiffEasy] = useState<boolean>(false)
   const [diffMedium, setDiffMedium] = useState<boolean>(false)
   const [diffHard, setDiffHard] = useState<boolean>(true)
+  // Drawing mode state
+  const [inDrawingMode, setInDrawingMode] = useState<boolean>(false)
+  const [drawingCards, setDrawingCards] = useState<Array<{ question: string; answer: string }>>([])
+  const [drawingPosition, setDrawingPosition] = useState<number>(0)
+  const [drawingProgress, setDrawingProgress] = useState<{ current: number, total: number }>({ current: 0, total: 0 })
   // Removed per request: previous answers panel
   const canAnswer = useMemo(() => (!!sessionId || inReviewMode) && !!question, [sessionId, inReviewMode, question])
   const progressPercent = useMemo(() => (
@@ -468,6 +474,10 @@ function App() {
     setInReviewMode(false)
     setReviewCards([])
     setReviewPosition(0)
+    setInDrawingMode(false)
+    setDrawingCards([])
+    setDrawingPosition(0)
+    setDrawingProgress({ current: 0, total: 0 })
     // previous answers state removed
     setShowSrs(false)
     setSrsRows([])
@@ -634,6 +644,73 @@ function App() {
     setQuestion(res.card?.question || "")
     setPinyin(res.card?.pinyin || "")
     setProgress(res.progress)
+  }
+
+  async function beginDrawingMode() {
+    resetSessionUI()
+    try {
+      if (mode === 'set') {
+        if (!selectedSet) return
+        const res = await getStatsForSet(selectedSet)
+        const chineseCards = (res.rows || [])
+          .filter(r => hasChinese(r.question))
+          .map(r => ({ question: r.question, answer: r.answer }))
+        setDrawingCards(chineseCards)
+      } else if (mode === 'category') {
+        if (!selectedCategory) return
+        const res = await getStatsForCategory(selectedCategory)
+        const chineseCards = (res.rows || [])
+          .filter(r => hasChinese(r.question))
+          .map(r => ({ question: r.question, answer: r.answer }))
+        setDrawingCards(chineseCards)
+      } else if (mode === 'multi-set') {
+        if (selectedSets.length === 0) return
+        const allCards: Array<{ question: string; answer: string }> = []
+        for (const setName of selectedSets) {
+          try {
+            const res = await getStatsForSet(setName)
+            const chineseCards = (res.rows || [])
+              .filter(r => hasChinese(r.question))
+              .map(r => ({ question: r.question, answer: r.answer }))
+            allCards.push(...chineseCards)
+          } catch {
+            // Skip sets that fail to load
+          }
+        }
+        setDrawingCards(allCards)
+      }
+      
+      // Set drawing progress after determining cards
+      let totalCards = 0
+      if (mode === 'set') {
+        if (selectedSet) {
+          const res = await getStatsForSet(selectedSet)
+          totalCards = (res.rows || []).filter(r => hasChinese(r.question)).length
+        }
+      } else if (mode === 'category') {
+        if (selectedCategory) {
+          const res = await getStatsForCategory(selectedCategory)
+          totalCards = (res.rows || []).filter(r => hasChinese(r.question)).length
+        }
+      } else if (mode === 'multi-set') {
+        for (const setName of selectedSets) {
+          try {
+            const res = await getStatsForSet(setName)
+            totalCards += (res.rows || []).filter(r => hasChinese(r.question)).length
+          } catch {
+            // Skip sets that fail to load
+          }
+        }
+      }
+      
+      setInDrawingMode(true)
+      setDrawingPosition(0)
+      setDrawingProgress({ current: 0, total: totalCards })
+    } catch {
+      setInDrawingMode(false)
+      setDrawingCards([])
+      setDrawingPosition(0)
+    }
   }
 
   async function viewSrs() {
@@ -1225,6 +1302,18 @@ function App() {
               Practice SRS
             </button>
             <button
+              className="btn-secondary"
+              title="Draw characters within their outlines"
+              onClick={beginDrawingMode}
+              disabled={
+                mode === 'set' ? !selectedSet :
+                  mode === 'category' ? !selectedCategory :
+                    selectedSets.length === 0
+              }
+            >
+              Practice Drawing
+            </button>
+            <button
               className="btn-tertiary"
               title="View SRS schedule"
               onClick={viewSrs}
@@ -1288,7 +1377,87 @@ function App() {
       </div>
 
       <div className="right" role="region" aria-label="Session">
-        {inBrowseMode ? (
+        {inDrawingMode ? (
+          (() => {
+            const total = drawingCards.length
+            const current = total > 0 ? drawingCards[drawingPosition] : null
+            const handleProgressUpdate = (_percentage: number) => {
+              // This is just for the canvas drawing percentage, not session progress
+              // The canvas component handles its own progress display
+            }
+            const handleComplete = () => {
+              const nextPos = drawingPosition + 1
+              setDrawingProgress(prev => ({ ...prev, current: nextPos }))
+              
+              if (nextPos >= total) {
+                // Drawing session complete
+                setInDrawingMode(false)
+                setQuestion("")
+                // Show completion stats
+                setResults([
+                  {
+                    question: 'Drawing Session Complete',
+                    user_answer: `${total} characters drawn`,
+                    correct_answer: 'All completed',
+                    correct: true
+                  }
+                ])
+              } else {
+                setDrawingPosition(nextPos)
+              }
+            }
+            return (
+              <div className="statsPanel" style={{ marginTop: 8 }}>
+                <div className="metaRow">
+                  <h3>Practice Drawing {
+                    mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
+                      mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
+                        `— ${getMultiSetLabel()}`
+                  }</h3>
+                  <div className="muted">{total > 0 ? `${drawingPosition + 1}/${total}` : '0/0'}</div>
+                </div>
+                
+                {/* Session progress */}
+                <div style={{ marginBottom: 16 }}>
+                  <div className="progress" aria-label={`Session Progress ${drawingProgress.current} of ${drawingProgress.total}`}>
+                    Session Progress: {drawingProgress.current}/{drawingProgress.total}
+                  </div>
+                  <div className="progressBar" role="progressbar" aria-valuemin={0} aria-valuemax={100} 
+                       aria-valuenow={drawingProgress.total > 0 ? Math.round((drawingProgress.current / drawingProgress.total) * 100) : 0}>
+                    <div className="progressFill" style={{ 
+                      width: `${drawingProgress.total > 0 ? Math.round((drawingProgress.current / drawingProgress.total) * 100) : 0}%` 
+                    }} />
+                  </div>
+                </div>
+                {current ? (
+                  <div>
+                    <div style={{ fontSize: 24, marginBottom: 16, textAlign: 'center' }}>
+                      Draw: <strong>{current.question}</strong>
+                    </div>
+                    <div style={{ fontSize: 16, marginBottom: 16, textAlign: 'center', color: '#666' }}>
+                      Meaning: {current.answer}
+                    </div>
+                    <DrawingCanvas 
+                      character={current.question}
+                      onProgressUpdate={handleProgressUpdate}
+                      onComplete={handleComplete}
+                    />
+                  </div>
+                ) : (
+                  <div className="muted" style={{ marginTop: 8 }}>No Chinese characters found</div>
+                )}
+                <div className="row" style={{ marginTop: 12 }}>
+                  <button 
+                    className="btn-tertiary" 
+                    onClick={() => setInDrawingMode(false)}
+                  >
+                    Exit Drawing
+                  </button>
+                </div>
+              </div>
+            )
+          })()
+        ) : inBrowseMode ? (
           (() => {
             const total = browseRows.length
             const i = Math.min(Math.max(browseIndex, 0), Math.max(0, total - 1))
