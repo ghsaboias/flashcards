@@ -31,3 +31,5 @@ npm-debug.log*
 # OS
 Thumbs.db
 
+# Model Context Protocol configs
+.mcp.json
