@@ -9,6 +9,21 @@ A modern web-based spaced repetition system (SRS) for learning Chinese character
 **CLI Version**: https://github.com/ghsaboias/flashcards-cli  
 **Branch**: `master`
 
+## Core Rules
+- Never commit, push, or deploy unless explicitly requested
+- Never create new files unless absolutely necessary
+- For UI changes: make changes → ask user → optionally run local dev → wait for deploy request
+
+## Task Management
+- Use TodoWrite for multi-step tasks (3+ steps)
+- Complete tasks immediately when finished
+- Don't automatically add deployment or commit tasks
+
+## Deployment Workflow
+- UI changes: run local dev for user verification first
+- Only proceed with commit/deploy when explicitly asked
+- Order: commit → push → deploy (when requested)
+
 ## Architecture
 
 ```
@@ -36,6 +51,13 @@ flashcards/
 │   ├── wrangler.toml      # Cloudflare Worker configuration
 │   └── package.json
 ```
+
+## Module Documentation
+- Backend: `backend/CLAUDE.md` — Worker/API, D1, Durable Objects, routes
+- Frontend: `frontend/CLAUDE.md` — Vite/React app, build/lint, performance notes
+- Historical Changes: `CHANGELOG.md` — Dated improvements and fixes
+
+Note: Module docs live alongside code for faster, focused reference.
 
 ## Development Commands
 
@@ -111,7 +133,9 @@ The build process:
 - Pinyin processing only loads when Chinese characters are encountered
 - Improves initial page load performance
 
-## API Endpoints
+## API Endpoints (summary)
+
+For detailed API docs and examples, see `backend/CLAUDE.md` (to be added next).
 
 **Cards & Sets:**
 - `GET /api/sets` - List available flashcard sets
@@ -126,106 +150,16 @@ The build process:
 **SRS & Statistics:**
 - `GET /api/srs/set?set_name=...` - Get SRS data for set
 - `GET /api/stats/set?set_name=...` - Get performance stats
+- `GET /api/performance` - Daily performance summary for in-app analytics
 
 ## Database Schema (D1 SQLite)
 
-### Table Structures
-
-#### `cards` - Master flashcard data with SRS tracking
-```sql
-CREATE TABLE cards (
-  id INTEGER PRIMARY KEY,
-  category_key TEXT NOT NULL,         -- e.g., "hsk_level_1"
-  set_key TEXT NOT NULL,              -- e.g., "Recognition_Practice/HSK_Level_1/HSK1_Set_01"
-  question TEXT NOT NULL,             -- Chinese character/phrase
-  answer TEXT NOT NULL,               -- English translation
-  correct_count INTEGER DEFAULT 0,    -- Total correct answers
-  incorrect_count INTEGER DEFAULT 0,  -- Total incorrect answers  
-  reviewed_count INTEGER DEFAULT 0,   -- Total times reviewed
-  easiness_factor REAL DEFAULT 2.5,   -- SRS difficulty (1.3-2.5+)
-  interval_hours INTEGER DEFAULT 0,   -- Hours until next review
-  repetitions INTEGER DEFAULT 0,      -- Number of successful reviews
-  next_review_date TEXT DEFAULT '1970-01-01 00:00:00',
-  created_at TEXT DEFAULT strftime('%Y-%m-%d %H:%M:%S','now'),
-  updated_at TEXT DEFAULT strftime('%Y-%m-%d %H:%M:%S','now')
-);
-```
-
-#### `sessions` - Practice session summaries
-```sql
-CREATE TABLE sessions (
-  id TEXT PRIMARY KEY,                -- Unique session identifier
-  practice_name TEXT,                 -- e.g., "Recognition_Practice/HSK_Level_1/HSK1_Set_07"
-  session_type TEXT,                  -- e.g., "Review All", "SRS Review", "Practice Difficult"
-  started_at TEXT NOT NULL,           -- Session start timestamp
-  ended_at TEXT,                      -- Session end timestamp (NULL if incomplete)
-  duration_seconds REAL,              -- Total session duration
-  correct_count INTEGER,              -- Questions answered correctly
-  total INTEGER                       -- Total questions attempted
-);
-```
-
-#### `session_events` - Individual question/answer records
-```sql
-CREATE TABLE session_events (
-  session_id TEXT NOT NULL,           -- References sessions.id
-  position INTEGER NOT NULL,          -- Question order within session (0-based)
-  card_id INTEGER,                    -- References cards.id
-  category_key TEXT,                  -- Card category
-  set_key TEXT,                       -- Card set
-  question TEXT NOT NULL,             -- Chinese character/phrase
-  user_answer TEXT,                   -- User's input answer
-  correct_answer TEXT,                -- Expected correct answer
-  correct INTEGER NOT NULL,           -- 1 = correct, 0 = incorrect
-  duration_seconds REAL NOT NULL,     -- Time to answer this question
-  created_at TEXT NOT NULL,           -- Answer timestamp
-  PRIMARY KEY (session_id, position)
-);
-```
-
-### Key Data Relationships
-- **cards.id** ↔ **session_events.card_id**
-- **sessions.id** ↔ **session_events.session_id** 
-- **cards.question** ↔ **session_events.question** (for analytics)
-
-### Common Query Patterns
-
-**Find struggling characters (< 80% accuracy):**
-```sql
-SELECT question, correct_answer,
-       COUNT(*) as attempts,
-       ROUND(AVG(CAST(correct AS REAL)) * 100, 1) as accuracy
-FROM session_events 
-GROUP BY question, correct_answer
-HAVING attempts >= 3 AND accuracy < 80
-ORDER BY accuracy ASC;
-```
-
-**Get SRS data for cards:**
-```sql
-SELECT question, answer, easiness_factor, interval_hours, 
-       next_review_date, repetitions
-FROM cards 
-WHERE next_review_date <= datetime('now')
-ORDER BY next_review_date ASC;
-```
-
-**Session performance over time:**
-```sql
-SELECT DATE(started_at) as date,
-       COUNT(*) as sessions,
-       SUM(total) as questions,
-       ROUND(AVG(CAST(correct_count AS REAL)/total * 100), 1) as accuracy
-FROM sessions
-WHERE ended_at IS NOT NULL
-GROUP BY DATE(started_at)
-ORDER BY date DESC;
-```
+See `backend/CLAUDE.md` for the authoritative schema, indexes, and common queries.
 
 ### Data Categories & Sets
-- **Categories**: Currently only `"hsk_level_1"`
-- **Sets**: `"Recognition_Practice/HSK_Level_1/HSK1_Set_01"` through `HSK1_Set_10`
-- **Session Types**: `"Review All"`, `"SRS Review"`, `"Practice Difficult"`, `"Review Incorrect"`, `"Multi-Set Practice by Difficulty"`, etc.
+- Categories: currently `hsk_level_1`
+- Sets: `Recognition_Practice/HSK_Level_1/HSK1_Set_01` … `HSK1_Set_10`
+- Session Types: Review All, SRS Review, Practice by Difficulty, Review Incorrect, Multi-Set modes
 
 ## Features
 
