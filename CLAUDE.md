@@ -129,17 +129,103 @@ The build process:
 
 ## Database Schema (D1 SQLite)
 
-**Actual Tables (confirmed):**
-- `cards` - Flashcard data (question, answer, metadata)
-- `sessions` - Practice session tracking (id, practice_name, session_type, started_at, ended_at, duration_seconds, correct_count, total)
-- `session_events` - Individual question/answer records with timing data (session_id, position, card_id, question, user_answer, correct_answer, correct, duration_seconds, created_at)
-- `settings` - Application settings
-- `_cf_KV` - Cloudflare internal table
-- `sqlite_sequence` - SQLite internal table
+### Table Structures
 
-**Key Analytics Tables:**
-- `session_events` contains per-question timing data and detailed answer tracking
-- Each question answered is logged with response time, accuracy, and timestamps
+#### `cards` - Master flashcard data with SRS tracking
+```sql
+CREATE TABLE cards (
+  id INTEGER PRIMARY KEY,
+  category_key TEXT NOT NULL,         -- e.g., "hsk_level_1"
+  set_key TEXT NOT NULL,              -- e.g., "Recognition_Practice/HSK_Level_1/HSK1_Set_01"
+  question TEXT NOT NULL,             -- Chinese character/phrase
+  answer TEXT NOT NULL,               -- English translation
+  correct_count INTEGER DEFAULT 0,    -- Total correct answers
+  incorrect_count INTEGER DEFAULT 0,  -- Total incorrect answers  
+  reviewed_count INTEGER DEFAULT 0,   -- Total times reviewed
+  easiness_factor REAL DEFAULT 2.5,   -- SRS difficulty (1.3-2.5+)
+  interval_hours INTEGER DEFAULT 0,   -- Hours until next review
+  repetitions INTEGER DEFAULT 0,      -- Number of successful reviews
+  next_review_date TEXT DEFAULT '1970-01-01 00:00:00',
+  created_at TEXT DEFAULT strftime('%Y-%m-%d %H:%M:%S','now'),
+  updated_at TEXT DEFAULT strftime('%Y-%m-%d %H:%M:%S','now')
+);
+```
+
+#### `sessions` - Practice session summaries
+```sql
+CREATE TABLE sessions (
+  id TEXT PRIMARY KEY,                -- Unique session identifier
+  practice_name TEXT,                 -- e.g., "Recognition_Practice/HSK_Level_1/HSK1_Set_07"
+  session_type TEXT,                  -- e.g., "Review All", "SRS Review", "Practice Difficult"
+  started_at TEXT NOT NULL,           -- Session start timestamp
+  ended_at TEXT,                      -- Session end timestamp (NULL if incomplete)
+  duration_seconds REAL,              -- Total session duration
+  correct_count INTEGER,              -- Questions answered correctly
+  total INTEGER                       -- Total questions attempted
+);
+```
+
+#### `session_events` - Individual question/answer records
+```sql
+CREATE TABLE session_events (
+  session_id TEXT NOT NULL,           -- References sessions.id
+  position INTEGER NOT NULL,          -- Question order within session (0-based)
+  card_id INTEGER,                    -- References cards.id
+  category_key TEXT,                  -- Card category
+  set_key TEXT,                       -- Card set
+  question TEXT NOT NULL,             -- Chinese character/phrase
+  user_answer TEXT,                   -- User's input answer
+  correct_answer TEXT,                -- Expected correct answer
+  correct INTEGER NOT NULL,           -- 1 = correct, 0 = incorrect
+  duration_seconds REAL NOT NULL,     -- Time to answer this question
+  created_at TEXT NOT NULL,           -- Answer timestamp
+  PRIMARY KEY (session_id, position)
+);
+```
+
+### Key Data Relationships
+- **cards.id** ↔ **session_events.card_id**
+- **sessions.id** ↔ **session_events.session_id** 
+- **cards.question** ↔ **session_events.question** (for analytics)
+
+### Common Query Patterns
+
+**Find struggling characters (< 80% accuracy):**
+```sql
+SELECT question, correct_answer,
+       COUNT(*) as attempts,
+       ROUND(AVG(CAST(correct AS REAL)) * 100, 1) as accuracy
+FROM session_events 
+GROUP BY question, correct_answer
+HAVING attempts >= 3 AND accuracy < 80
+ORDER BY accuracy ASC;
+```
+
+**Get SRS data for cards:**
+```sql
+SELECT question, answer, easiness_factor, interval_hours, 
+       next_review_date, repetitions
+FROM cards 
+WHERE next_review_date <= datetime('now')
+ORDER BY next_review_date ASC;
+```
+
+**Session performance over time:**
+```sql
+SELECT DATE(started_at) as date,
+       COUNT(*) as sessions,
+       SUM(total) as questions,
+       ROUND(AVG(CAST(correct_count AS REAL)/total * 100), 1) as accuracy
+FROM sessions
+WHERE ended_at IS NOT NULL
+GROUP BY DATE(started_at)
+ORDER BY date DESC;
+```
+
+### Data Categories & Sets
+- **Categories**: Currently only `"hsk_level_1"`
+- **Sets**: `"Recognition_Practice/HSK_Level_1/HSK1_Set_01"` through `HSK1_Set_10`
+- **Session Types**: `"Review All"`, `"SRS Review"`, `"Practice Difficult"`, `"Review Incorrect"`, `"Multi-Set Practice by Difficulty"`, etc.
 
 ## Features
 
@@ -154,6 +240,21 @@ The build process:
 - **Audio Support** - Text-to-speech for Chinese characters
 - **Statistics Tracking** - Performance metrics and progress monitoring
 - **Keyboard Shortcuts** - Efficient navigation (R for repeat audio, 1-6 for quick actions)
+- **Socratic Tutoring** - AI-powered character reinforcement using visual mnemonics and guided questions
+
+### Socratic Tutoring Methodology
+**Flow for character reinforcement:**
+1. **Identify struggling characters** - Query database for low-accuracy characters (<80%)
+2. **Ask 1-2 guiding questions** - "What do you see?" "What associations come to mind?"  
+3. **User provides visual mnemonics** - Personal visual/memory associations
+4. **AI reinforces connections** - Links user's mnemonics to character meaning/usage
+5. **Create memorable bridges** - Connect visual imagery to semantic meaning
+
+**Example:**
+- Character: 比 (compare; than) - 25% accuracy
+- User mnemonic: "Two T's, like antlers" 
+- AI reinforcement: "Antlers show who's stronger - perfect for **comparing** who's bigger **than** others!"
+- Result: Visual-semantic bridge strengthens recall
 
 ## Development Guidelines
 
