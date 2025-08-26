@@ -172,6 +172,7 @@ button:disabled {
 
 .row {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   margin-top: 8px;
@@ -425,6 +426,16 @@ button:disabled {
     order: -1;
   }
 
+  /* Make buttons more responsive */
+  .row {
+    justify-content: flex-start;
+  }
+  
+  button {
+    min-width: 120px;
+    flex: 0 1 auto;
+  }
+
   /* Reduce padding on smaller screens to prevent wrapping */
   .statsTable thead th,
   .srsTable thead th {
@@ -439,6 +450,23 @@ button:disabled {
 }
 
 @media (max-width: 600px) {
+  /* Smaller buttons on mobile */
+  button {
+    padding: 6px 8px;
+    font-size: 14px;
+    min-width: 100px;
+  }
+  
+  /* Stack buttons in pairs on very small screens */
+  .row {
+    justify-content: space-between;
+  }
+  
+  .row button {
+    flex: 1 1 calc(48% - 4px);
+    max-width: calc(48% - 4px);
+  }
+
   /* Even tighter spacing on very small screens */
   .statsTable thead th,
   .srsTable thead th {
