@@ -44,6 +44,25 @@ export type StatsPayload = {
     rows: StatRow[];
 }
 
+export type DailyPerformance = {
+    date: string;
+    sessions: number;
+    questions: number;
+    accuracy: number;
+    duration_minutes?: number;
+}
+
+export type PerformancePayload = {
+    summary: {
+        total_sessions: number;
+        total_questions: number;
+        overall_accuracy: number;
+        study_days: number;
+        avg_questions_per_session: number;
+    };
+    daily: DailyPerformance[];
+}
+
 export async function getSrsForSet(setName: string): Promise<SrsRow[]> {
     const { data } = await axios.get(`${API_BASE}/srs/set`, { params: { set_name: setName } });
     return data;
@@ -86,6 +105,11 @@ export async function getStatsForSet(setName: string): Promise<StatsPayload> {
 
 export async function getStatsForCategory(category: string): Promise<StatsPayload> {
     const { data } = await axios.get(`${API_BASE}/stats/category`, { params: { category } });
+    return data;
+}
+
+export async function getPerformanceData(): Promise<PerformancePayload> {
+    const { data } = await axios.get(`${API_BASE}/performance`);
     return data;
 }
 

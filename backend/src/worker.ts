@@ -146,6 +146,50 @@ app.get('/api/stats/category', async (c) => {
   return c.json({ category, summary: { correct: total_correct, incorrect: total_incorrect, total: total_attempts, accuracy, total_cards: rows.length, attempted_cards, difficult_count }, rows })
 })
 
+// Performance analytics
+app.get('/api/performance', async (c) => {
+  const { results: sessionResults } = await c.env.DB.prepare(
+    `SELECT DATE(started_at) AS date,
+            COUNT(*) AS sessions,
+            SUM(CASE WHEN total IS NOT NULL THEN total ELSE 0 END) AS questions,
+            AVG(CASE WHEN total > 0 THEN CAST(correct_count AS REAL) / total * 100 ELSE 0 END) AS accuracy,
+            AVG(duration_seconds) / 60 AS duration_minutes
+     FROM sessions
+     GROUP BY DATE(started_at)
+     ORDER BY date DESC`
+  ).all()
+
+  const dailyData = (sessionResults || []).map((r: any) => ({
+    date: r.date,
+    sessions: r.sessions || 0,
+    questions: r.questions || 0,
+    accuracy: Math.round((r.accuracy || 0) * 10) / 10,
+    duration_minutes: r.duration_minutes ? Math.round(r.duration_minutes * 10) / 10 : undefined,
+  }))
+
+  // Summary statistics
+  const totalSessions = dailyData.reduce((a, b) => a + b.sessions, 0)
+  const totalQuestions = dailyData.reduce((a, b) => a + b.questions, 0)
+  const studyDays = dailyData.filter(d => d.sessions > 0).length
+  const avgQuestionsPerSession = totalSessions > 0 ? Math.round((totalQuestions / totalSessions) * 10) / 10 : 0
+  
+  // Calculate overall accuracy weighted by questions answered, not sessions
+  const totalQuestionsWithAccuracy = dailyData.reduce((sum, d) => sum + (d.questions > 0 ? d.questions : 0), 0)
+  const overallAccuracy = totalQuestionsWithAccuracy > 0 ? 
+    Math.round((dailyData.reduce((sum, d) => sum + d.accuracy * d.questions, 0) / totalQuestionsWithAccuracy) * 10) / 10 : 0
+
+  return c.json({
+    summary: {
+      total_sessions: totalSessions,
+      total_questions: totalQuestions,
+      overall_accuracy: overallAccuracy,
+      study_days: studyDays,
+      avg_questions_per_session: avgQuestionsPerSession,
+    },
+    daily: dailyData.reverse(), // Show chronological order (oldest first)
+  })
+})
+
 // Sessions: route to DO instance
 app.post('/api/sessions/start', async (c) => {
   const id = c.env.SESSIONS.idFromName(crypto.randomUUID())

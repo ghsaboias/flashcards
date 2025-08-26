@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
-import type { SrsRow, StatRow, StatsPayload } from './api'
-import { answer, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession } from './api'
+import type { SrsRow, StatRow, StatsPayload, PerformancePayload } from './api'
+import { answer, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession, getPerformanceData } from './api'
 import SrsTable from './components/SrsTable'
 import StatsTable from './components/StatsTable'
 import DrawingCanvas from './components/DrawingCanvas'
@@ -19,6 +19,8 @@ function App() {
   const [srsRows, setSrsRows] = useState<SrsRow[]>([])
   const [showStats, setShowStats] = useState<boolean>(true)
   const [stats, setStats] = useState<StatsPayload | null>(null)
+  const [showPerformance, setShowPerformance] = useState<boolean>(false)
+  const [performance, setPerformance] = useState<PerformancePayload | null>(null)
   const [difficultyRows, setDifficultyRows] = useState<StatRow[] | null>(null)
   const [question, setQuestion] = useState<string>("")
   const [pinyin, setPinyin] = useState<string>("")
@@ -483,6 +485,8 @@ function App() {
     setSrsRows([])
     setShowStats(false)
     setStats(null)
+    setShowPerformance(false)
+    setPerformance(null)
   }
 
   async function beginBrowse() {
@@ -813,6 +817,38 @@ function App() {
     } catch {
       setStats({ summary: { correct: 0, incorrect: 0, total: 0, accuracy: 0, total_cards: 0, attempted_cards: 0, difficult_count: 0 }, rows: [] })
       setShowStats(true)
+      setShowSrs(false)
+    }
+  }
+
+  async function viewPerformance() {
+    setSessionId("")
+    setQuestion("")
+    setProgress({ current: 0, total: 0 })
+    setInput("")
+    setLastEval(null)
+    setResults([])
+    setStreak(0)
+    setBestStreak(0)
+    try {
+      const res = await getPerformanceData()
+      setPerformance(res)
+      setShowPerformance(true)
+      setShowStats(false)
+      setShowSrs(false)
+    } catch {
+      setPerformance({
+        summary: {
+          total_sessions: 0,
+          total_questions: 0, 
+          overall_accuracy: 0,
+          study_days: 0,
+          avg_questions_per_session: 0,
+        },
+        daily: [],
+      })
+      setShowPerformance(true)
+      setShowStats(false)
       setShowSrs(false)
     }
   }
@@ -1337,6 +1373,13 @@ function App() {
             >
               View Stats
             </button>
+            <button
+              className="btn-tertiary"
+              title="View performance analytics"
+              onClick={viewPerformance}
+            >
+              View Performance
+            </button>
           </div>
         </div>
 
@@ -1381,7 +1424,7 @@ function App() {
           (() => {
             const total = drawingCards.length
             const current = total > 0 ? drawingCards[drawingPosition] : null
-            const handleProgressUpdate = (_percentage: number) => {
+            const handleProgressUpdate = () => {
               // This is just for the canvas drawing percentage, not session progress
               // The canvas component handles its own progress display
             }
@@ -1496,6 +1539,52 @@ function App() {
               </div>
             )
           })()
+        ) : showPerformance ? (
+          <div className="statsPanel" style={{ marginTop: 8 }}>
+            <div className="metaRow">
+              <h3>📊 Performance Analytics</h3>
+              {performance && <div className="muted">{performance.summary.overall_accuracy}% overall accuracy</div>}
+            </div>
+            {performance && (
+              <div className="panelSubtext muted">
+                <div>
+                  Sessions: <strong>{performance.summary.total_sessions}</strong> · Questions: <strong>{performance.summary.total_questions}</strong> · Study Days: <strong>{performance.summary.study_days}</strong>
+                </div>
+                <div>
+                  Avg Questions/Session: <strong>{performance.summary.avg_questions_per_session}</strong> · Overall Accuracy: <strong>{performance.summary.overall_accuracy}%</strong>
+                </div>
+              </div>
+            )}
+            {performance && performance.daily.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <h4 style={{ fontSize: 14, marginBottom: 8 }}>Daily Performance</h4>
+                <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                  <table className="statsTable">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Sessions</th>
+                        <th>Questions</th>
+                        <th>Accuracy</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {performance.daily.slice(-20).map((day, i) => (
+                        <tr key={i}>
+                          <td>{day.date}</td>
+                          <td>{day.sessions}</td>
+                          <td>{day.questions}</td>
+                          <td className={day.accuracy >= 90 ? 'ok' : day.accuracy >= 80 ? '' : 'bad'}>
+                            {day.accuracy.toFixed(1)}%
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
         ) : showStats ? (
           <div className="statsPanel" style={{ marginTop: 8 }}>
             <div className="metaRow">
@@ -1591,6 +1680,7 @@ function App() {
                   }>Practice by Difficulty</button>
                   <button className="btn-tertiary" onClick={viewStats}>View Stats</button>
                   <button className="btn-tertiary" onClick={viewSrs}>View SRS</button>
+                  <button className="btn-tertiary" onClick={viewPerformance}>View Performance</button>
                 </div>
               </div>
             ) : (
