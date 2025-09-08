@@ -86,6 +86,11 @@ These **efficient learning principles** have been fully implemented in the HSK F
 - Only proceed with commit/deploy when explicitly asked
 - Order: commit → push → deploy (when requested)
 
+## Commit Messages
+- Keep commit messages clean and professional
+- Never add Claude Code attribution or "Generated with Claude Code" messages
+- Follow conventional commit format (feat:, fix:, perf:, etc.)
+
 ## Architecture
 
 ```
