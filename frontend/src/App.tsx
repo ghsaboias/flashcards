@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
-import type { SrsRow, StatRow, StatsPayload, PerformancePayload } from './api'
-import { answer, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession, getPerformanceData } from './api'
+import type { SrsRow, StatRow, StatsPayload, PerformancePayload, AutoStartPayload } from './api'
+import { answerWithTiming, getSrsForCategory, getSrsForSet, getStatsForCategory, getStatsForSet, listCategories, listSets, startSession, startAutoSession, getPerformanceData } from './api'
 import SrsTable from './components/SrsTable'
 import StatsTable from './components/StatsTable'
 import DrawingCanvas from './components/DrawingCanvas'
@@ -30,6 +30,15 @@ function App() {
   const [results, setResults] = useState<Array<{ question: string; pinyin?: string; user_answer: string; correct_answer: string; correct: boolean }>>([])
   const [streak, setStreak] = useState<number>(0)
   const [bestStreak, setBestStreak] = useState<number>(0)
+  const [oldFocusMode, setOldFocusMode] = useState<boolean>(false)
+  const [sprintMode, setSprintMode] = useState<boolean>(false)
+  const [sprintStartTime, setSprintStartTime] = useState<number>(0)
+  const [sprintTimeLeft, setSprintTimeLeft] = useState<number>(300) // 5 minutes = 300 seconds
+  const [questionStartTime, setQuestionStartTime] = useState<number>(0)
+  const [adaptiveFeedbackDuration, setAdaptiveFeedbackDuration] = useState<number>(2000)
+  const [isHighIntensityMode, setIsHighIntensityMode] = useState<boolean>(true)
+  const [userLevel, setUserLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
+  const [focusMode, setFocusMode] = useState<'review' | 'challenge'>('challenge')
   // Browse/Review mode (navigate all symbols)
   const [inBrowseMode, setInBrowseMode] = useState<boolean>(false)
   const [browseRows, setBrowseRows] = useState<Array<{ question: string; answer: string }>>([])
@@ -39,6 +48,9 @@ function App() {
   const [inReviewMode, setInReviewMode] = useState<boolean>(false)
   const [reviewCards, setReviewCards] = useState<Array<{ question: string; pinyin?: string; correct_answer: string }>>([])
   const [reviewPosition, setReviewPosition] = useState<number>(0)
+  // Retry queue for immediate re-testing of incorrect answers (unused for now)
+  // const [retryQueue, setRetryQueue] = useState<Array<{ question: string; correct_answer: string; originalIndex: number }>>([])
+  // const [isRetryMode, setIsRetryMode] = useState<boolean>(false)
   // Difficulty filters for practice-by-difficulty
   const [diffEasy, setDiffEasy] = useState<boolean>(false)
   const [diffMedium, setDiffMedium] = useState<boolean>(false)
@@ -124,6 +136,39 @@ function App() {
   const previousResultsLengthRef = useRef<number>(0)
   const lastSpokenRef = useRef<{ text: string; ts: number } | null>(null)
   const audioCtxRef = useRef<AudioContext | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  // Auto-focus input field when a new question loads and track start time
+  useEffect(() => {
+    if (question && canAnswer && inputRef.current) {
+      inputRef.current.focus()
+      setQuestionStartTime(Date.now())
+    }
+  }, [question, canAnswer])
+
+  // Sprint mode timer
+  useEffect(() => {
+    let interval: number
+    if (sprintMode && sprintTimeLeft > 0) {
+      interval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - sprintStartTime) / 1000)
+        const remaining = 300 - elapsed // 5 minutes = 300 seconds
+        setSprintTimeLeft(Math.max(0, remaining))
+        
+        if (remaining <= 0) {
+          // Sprint time is up
+          setSprintMode(false)
+          setOldFocusMode(false)
+          clearInterval(interval)
+        }
+      }, 1000)
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [sprintMode, sprintStartTime, sprintTimeLeft])
+
   useEffect(() => {
     function loadVoices() {
       const v = window.speechSynthesis.getVoices()
@@ -282,12 +327,12 @@ function App() {
     previousResultsLengthRef.current = results.length
   }, [results])
 
-  // Auto-hide feedback after 1 second
+  // Auto-hide feedback with adaptive duration
   useEffect(() => {
     if (!lastEval) return
-    const id = window.setTimeout(() => setLastEval(null), 1000)
+    const id = window.setTimeout(() => setLastEval(null), adaptiveFeedbackDuration)
     return () => window.clearTimeout(id)
-  }, [lastEval])
+  }, [lastEval, adaptiveFeedbackDuration])
 
   // Keep SRS view in sync when mode or selection changes
   useEffect(() => {
@@ -480,6 +525,10 @@ function App() {
     setDrawingCards([])
     setDrawingPosition(0)
     setDrawingProgress({ current: 0, total: 0 })
+    setSprintMode(false)
+    setSprintTimeLeft(300)
+    // setRetryQueue([])
+    // setIsRetryMode(false)
     // previous answers state removed
     setShowSrs(false)
     setSrsRows([])
@@ -566,6 +615,20 @@ function App() {
 
     getPinyinForText(q).then(py => setBrowsePinyin(py)).catch(() => setBrowsePinyin(''))
   }, [inBrowseMode, browseIndex, browseRows])
+
+  const beginAutoSession = useCallback(async () => {
+    resetSessionUI()
+    setIsHighIntensityMode(true)
+    const payload: AutoStartPayload = {
+      user_level: userLevel,
+      focus_mode: focusMode
+    }
+    const res = await startAutoSession(payload)
+    setSessionId(res.session_id)
+    setQuestion(res.card?.question || "")
+    setPinyin(res.card?.pinyin || "")
+    setProgress(res.progress)
+  }, [userLevel, focusMode])
 
   const beginSetSession = useCallback(async () => {
     resetSessionUI()
@@ -714,6 +777,41 @@ function App() {
       setInDrawingMode(false)
       setDrawingCards([])
       setDrawingPosition(0)
+    }
+  }
+
+  async function beginSprintMode() {
+    resetSessionUI()
+    setSprintMode(true)
+    setSprintStartTime(Date.now())
+    setSprintTimeLeft(300) // 5 minutes
+    setOldFocusMode(true) // Auto-enable focus mode for sprints
+    
+    // Start a practice session based on current mode
+    try {
+      if (mode === 'set' && selectedSet) {
+        const res = await startSession({ mode: 'difficulty_set', set_name: selectedSet, difficulty_levels: ['hard', 'medium'] })
+        setSessionId(res.session_id)
+        setQuestion(res.card?.question || "")
+        setPinyin(res.card?.pinyin || "")
+        setProgress(res.progress)
+      } else if (mode === 'category' && selectedCategory) {
+        const res = await startSession({ mode: 'difficulty_category', category: selectedCategory, difficulty_levels: ['hard', 'medium'] })
+        setSessionId(res.session_id)
+        setQuestion(res.card?.question || "")
+        setPinyin(res.card?.pinyin || "")
+        setProgress(res.progress)
+      } else if (mode === 'multi-set' && selectedSets.length > 0) {
+        const res = await startSession({ mode: 'multi_set_difficulty', selected_sets: selectedSets, difficulty_levels: ['hard', 'medium'] })
+        setSessionId(res.session_id)
+        setQuestion(res.card?.question || "")
+        setPinyin(res.card?.pinyin || "")
+        setProgress(res.progress)
+      }
+    } catch (error) {
+      console.error('Sprint mode failed to start:', error)
+      setSprintMode(false)
+      setOldFocusMode(false)
     }
   }
 
@@ -911,8 +1009,9 @@ function App() {
       return
     }
 
-    // Normal server-backed session
-    const res = await answer(sessionId, input)
+    // Normal server-backed session with timing
+    const responseTime = Date.now() - questionStartTime
+    const res = await answerWithTiming(sessionId, input, responseTime)
     setInput("")
     if (res.done) {
       if (res.results && res.results.length > 0) {
@@ -1012,6 +1111,18 @@ function App() {
       setPinyin(res.card?.pinyin || "")
       setProgress(res.progress)
       setLastEval(res.evaluation ? { correct: res.evaluation.correct, correct_answer: res.evaluation.correct_answer } : null)
+      // Update adaptive feedback duration from backend
+      if (res.feedback_duration_ms) {
+        setAdaptiveFeedbackDuration(res.feedback_duration_ms)
+      }
+      // Handle retry queue for incorrect answers (placeholder for future implementation)
+      // if (res.evaluation && !res.evaluation.correct) {
+      //   setRetryQueue(prev => [...prev, { 
+      //     question: res.evaluation!.question, 
+      //     correct_answer: res.evaluation!.correct_answer,
+      //     originalIndex: progress.current 
+      //   }])
+      // }
       if (res.results) {
         // Compute pinyin for results that have Chinese characters
         Promise.all(
@@ -1192,9 +1303,10 @@ function App() {
   }
 
   return (
-    <div className="container">
-      <div className="left" role="region" aria-label="Setup">
-        <h1>🇨🇳 HSK Flashcards</h1>
+    <div className={`container ${isHighIntensityMode ? 'high-intensity' : ''}`}>
+      {!isHighIntensityMode && (
+        <div className="main-panel" role="main" style={{ display: oldFocusMode && (sessionId || inReviewMode) ? 'none' : 'block' }}>
+          <h1>🇨🇳 HSK Flashcards</h1>
         <div className="section">
           {mode === 'set' ? (
             <div className="group">
@@ -1350,6 +1462,19 @@ function App() {
               Practice Drawing
             </button>
             <button
+              className="btn-primary"
+              style={{ background: '#ff6b35' }}
+              title="5-minute high-intensity practice session"
+              onClick={beginSprintMode}
+              disabled={
+                mode === 'set' ? !selectedSet :
+                  mode === 'category' ? !selectedCategory :
+                    selectedSets.length === 0
+              }
+            >
+              🏃‍♂️ Sprint Mode
+            </button>
+            <button
               className="btn-tertiary"
               title="View SRS schedule"
               onClick={viewSrs}
@@ -1417,7 +1542,31 @@ function App() {
           {/* SRS view moved to right panel */}
 
         </div>
-      </div>
+        </div>
+      )}
+
+      {isHighIntensityMode && !sessionId && !inReviewMode && (
+        <div className="streamlined-start">
+          <h1>🇨🇳 HSK Practice</h1>
+          <div className="quick-settings">
+            <select value={userLevel} onChange={(e) => setUserLevel(e.target.value as 'beginner' | 'intermediate' | 'advanced')}>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+            <select value={focusMode} onChange={(e) => setFocusMode(e.target.value as 'review' | 'challenge')}>
+              <option value="challenge">Challenge Mode</option>
+              <option value="review">Review Mode</option>
+            </select>
+          </div>
+          <button className="btn-primary start-practice" onClick={beginAutoSession}>
+            🚀 Start Practice
+          </button>
+          <button className="btn-tertiary" onClick={() => setIsHighIntensityMode(false)}>
+            Advanced Options
+          </button>
+        </div>
+      )}
 
       <div className="right" role="region" aria-label="Session">
         {inDrawingMode ? (
@@ -1624,101 +1773,177 @@ function App() {
           <>
             {isSessionComplete ? (
               <div className="completePanel" role="region" aria-label="Session complete">
-                <h3 className="completeTitle">Session Complete {
-                  mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
-                    mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
-                      `— ${getMultiSetLabel()}`
-                }</h3>
-                <div className="progress" aria-label={`Progress ${progress.current} of ${progress.total}`}>Progress: {progress.current}/{progress.total}</div>
-                <div className="progressBar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent}>
-                  <div className="progressFill" style={{ width: `${progressPercent}%` }} />
-                </div>
-                <div className="kpis">
-                  <div className="kpi"><div className="value">{summaryStats.accuracy}%</div><div className="label">Accuracy</div></div>
-                  <div className="kpi"><div className="value ok">{summaryStats.correct}</div><div className="label">Correct</div></div>
-                  <div className="kpi"><div className="value bad">{summaryStats.incorrect}</div><div className="label">Incorrect</div></div>
-                  <div className="kpi"><div className="value">{summaryStats.total}</div><div className="label">Total</div></div>
-                </div>
-
-                {results.some(r => !r.correct) ? (
-                  <div className="incorrectBlock">
-                    <h4>Review Incorrect</h4>
-                    <table className="statsTable">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Question</th>
-                          <th>Pinyin</th>
-                          <th>Meaning (Correct)</th>
-                          <th>Your Answer</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {results.map((r, i) => !r.correct ? (
-                          <tr key={`inc-${i}`}>
-                            <td>{i + 1}</td>
-                            <td>{r.question}</td>
-                            <td className="muted">{r.pinyin || ''}</td>
-                            <td title="Correct answer">{r.correct_answer}</td>
-                            <td className="bad" title="Your answer">{r.user_answer || '—'}</td>
-                          </tr>
-                        ) : null)}
-                      </tbody>
-                    </table>
+                {isHighIntensityMode ? (
+                  <div className="high-intensity-complete">
+                    <h2>🎯 Session Complete</h2>
+                    <div className="quick-stats">
+                      <span className={summaryStats.accuracy >= 80 ? 'good' : summaryStats.accuracy >= 60 ? 'ok' : 'needs-work'}>
+                        {summaryStats.accuracy}% accuracy
+                      </span>
+                      <span>{summaryStats.correct}/{summaryStats.total} correct</span>
+                    </div>
+                    
+                    {results.some(r => !r.correct) ? (
+                      <div className="knowledge-gaps">
+                        <h3>🔍 Concepts to Master</h3>
+                        <div className="gap-list">
+                          {results.filter(r => !r.correct).map((r, i) => (
+                            <div key={i} className="gap-item">
+                              <span className="question">{r.question}</span>
+                              <span className="answer">→ {r.correct_answer}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <button className="btn-primary reinforcement-btn" onClick={beginReviewIncorrect}>
+                          🚀 Quick Reinforcement
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="perfect-session">
+                        <h3>🎉 Perfect Session!</h3>
+                        <p>All concepts mastered. Ready for new challenges?</p>
+                      </div>
+                    )}
+                    
+                    <div className="next-actions">
+                      <button className="btn-primary" onClick={beginAutoSession}>Continue Practice</button>
+                      <button className="btn-secondary" onClick={() => setIsHighIntensityMode(false)}>View Details</button>
+                    </div>
                   </div>
                 ) : (
-                  <div className="muted" style={{ marginTop: 12 }}>Perfect run — no incorrect answers 🎉</div>
-                )}
+                  <div>
+                    <h3 className="completeTitle">Session Complete {
+                      mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
+                        mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
+                          `— ${getMultiSetLabel()}`
+                    }</h3>
+                    <div className="progress" aria-label={`Progress ${progress.current} of ${progress.total}`}>Progress: {progress.current}/{progress.total}</div>
+                    <div className="progressBar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent}>
+                      <div className="progressFill" style={{ width: `${progressPercent}%` }} />
+                    </div>
+                    <div className="kpis">
+                      <div className="kpi"><div className="value">{summaryStats.accuracy}%</div><div className="label">Accuracy</div></div>
+                      <div className="kpi"><div className="value ok">{summaryStats.correct}</div><div className="label">Correct</div></div>
+                      <div className="kpi"><div className="value bad">{summaryStats.incorrect}</div><div className="label">Incorrect</div></div>
+                      <div className="kpi"><div className="value">{summaryStats.total}</div><div className="label">Total</div></div>
+                    </div>
 
-                <div className="row" style={{ marginTop: 12 }}>
-                  <button className="btn-primary" onClick={restartPractice}>Restart</button>
-                  <button className="btn-secondary" onClick={beginReviewIncorrect} disabled={!results.some(r => !r.correct)}>Review Incorrect</button>
-                  <button className="btn-secondary" onClick={practiceDifficultNow} disabled={
-                    (mode === 'set' ? !selectedSet :
-                      mode === 'category' ? !selectedCategory :
-                        selectedSets.length === 0) || !canStartByDifficulty
-                  }>Practice by Difficulty</button>
-                  <button className="btn-tertiary" onClick={viewStats}>View Stats</button>
-                  <button className="btn-tertiary" onClick={viewSrs}>View SRS</button>
-                  <button className="btn-tertiary" onClick={viewPerformance}>View Performance</button>
-                </div>
+                    {results.some(r => !r.correct) ? (
+                      <div className="incorrectBlock">
+                        <h4>Review Incorrect</h4>
+                        <table className="statsTable">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Question</th>
+                              <th>Pinyin</th>
+                              <th>Meaning (Correct)</th>
+                              <th>Your Answer</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {results.map((r, i) => !r.correct ? (
+                              <tr key={`inc-${i}`}>
+                                <td>{i + 1}</td>
+                                <td>{r.question}</td>
+                                <td className="muted">{r.pinyin || ''}</td>
+                                <td title="Correct answer">{r.correct_answer}</td>
+                                <td className="bad" title="Your answer">{r.user_answer || '—'}</td>
+                              </tr>
+                            ) : null)}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <div className="muted" style={{ marginTop: 12 }}>Perfect run — no incorrect answers 🎉</div>
+                    )}
+
+                    <div className="row" style={{ marginTop: 12 }}>
+                      <button className="btn-primary" onClick={restartPractice}>Restart</button>
+                      <button className="btn-secondary" onClick={beginReviewIncorrect} disabled={!results.some(r => !r.correct)}>Review Incorrect</button>
+                      <button className="btn-secondary" onClick={practiceDifficultNow} disabled={
+                        (mode === 'set' ? !selectedSet :
+                          mode === 'category' ? !selectedCategory :
+                            selectedSets.length === 0) || !canStartByDifficulty
+                      }>Practice by Difficulty</button>
+                      <button className="btn-tertiary" onClick={viewStats}>View Stats</button>
+                      <button className="btn-tertiary" onClick={viewSrs}>View SRS</button>
+                      <button className="btn-tertiary" onClick={viewPerformance}>View Performance</button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <>
-                <div className="progress" aria-label={`Progress ${progress.current} of ${progress.total}`}>Progress: {progress.current}/{progress.total}</div>
-                <div className="progressBar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent}>
-                  <div className="progressFill" style={{ width: `${progressPercent}%` }} />
-                </div>
-                <div className="metaRow">
-                  <div className="streak">🔥 Streak: {streak} <span className="muted">(Best {bestStreak})</span></div>
-                </div>
-                <div className="questionWrap">
-                  <div className={`question ${hasChinese(question) ? 'zh' : ''}`} lang={hasChinese(question) ? 'zh' : undefined}>
-                    {question || 'No active question'}
-                  </div>
-                  {pinyin && (<div className="pinyin" style={{ color: '#9da7b3', marginTop: 8 }}>{pinyin}</div>)}
-                </div>
-                {canAnswer && (
-                  <div className="row">
-                    <input
-                      placeholder="Your answer"
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') submitAnswer() }}
-                      type="text"
-                      aria-label="Your answer"
-                    />
-                    <button onClick={submitAnswer} disabled={!input.trim()}>Submit</button>
-                    {hasChinese(question) && (
-                      <button aria-label="Play audio (R)" title="Play audio (R)" onClick={() => speak(question)}>🔊</button>
-                    )}
-                    {lastEval && (
-                      <div className={`feedback ${lastEval.correct ? 'ok' : 'bad'}`} aria-live="polite">
-                        {lastEval.correct ? 'Correct!' : `Incorrect. Correct: ${lastEval.correct_answer}`}
-                      </div>
-                    )}
+                {isHighIntensityMode && (
+                  <div className="minimal-progress">
+                    {progress.current}/{progress.total}
                   </div>
                 )}
+                <div className={isHighIntensityMode ? "high-intensity-question" : ""}>
+                  {!isHighIntensityMode && !oldFocusMode && (
+                    <>
+                      <div className="progress" aria-label={`Progress ${progress.current} of ${progress.total}`}>Progress: {progress.current}/{progress.total}</div>
+                      <div className="progressBar" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent}>
+                        <div className="progressFill" style={{ width: `${progressPercent}%` }} />
+                      </div>
+                    </>
+                  )}
+                  {!isHighIntensityMode && (
+                    <div className="metaRow">
+                      {!oldFocusMode && <div className="streak">🔥 Streak: {streak} <span className="muted">(Best {bestStreak})</span></div>}
+                      {sprintMode && (
+                        <div className="sprint-timer" style={{ 
+                          fontSize: '16px', 
+                          fontWeight: 'bold', 
+                          color: sprintTimeLeft <= 60 ? '#ff4444' : sprintTimeLeft <= 120 ? '#ff8800' : '#00aa44' 
+                        }}>
+                          🏃‍♂️ {Math.floor(sprintTimeLeft / 60)}:{(sprintTimeLeft % 60).toString().padStart(2, '0')}
+                        </div>
+                      )}
+                      <button 
+                        onClick={() => setOldFocusMode(!oldFocusMode)}
+                        className="btn-tertiary"
+                        style={{ fontSize: '12px', padding: '4px 8px' }}
+                        title={oldFocusMode ? "Exit focus mode" : "Enter focus mode"}
+                      >
+                        {oldFocusMode ? '👁️ Exit Focus' : '🎯 Focus'}
+                      </button>
+                    </div>
+                  )}
+                  <div className="questionWrap">
+                    <div className={`question ${hasChinese(question) ? 'zh' : ''}`} lang={hasChinese(question) ? 'zh' : undefined}>
+                      {question || 'No active question'}
+                    </div>
+                    {pinyin && !oldFocusMode && !isHighIntensityMode && (<div className="pinyin" style={{ color: '#9da7b3', marginTop: 8 }}>{pinyin}</div>)}
+                  </div>
+                  {canAnswer && (
+                    <div className="row">
+                      <input
+                        ref={inputRef}
+                        placeholder="Your answer"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') submitAnswer() }}
+                        type="text"
+                        aria-label="Your answer"
+                        autoFocus
+                      />
+                      <button onClick={submitAnswer} disabled={!input.trim()}>Submit</button>
+                      {hasChinese(question) && (
+                        <button aria-label="Play audio (R)" title="Play audio (R)" onClick={() => speak(question)}>🔊</button>
+                      )}
+                      {isHighIntensityMode && (
+                        <button className="btn-tertiary" onClick={() => setIsHighIntensityMode(false)}>Exit</button>
+                      )}
+                      {lastEval && (
+                        <div className={`feedback ${lastEval.correct ? 'ok' : 'bad'}`} aria-live="polite">
+                          {lastEval.correct ? 'Correct!' : `Incorrect. Correct: ${lastEval.correct_answer}`}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </>
             )}
           </>

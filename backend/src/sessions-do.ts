@@ -176,7 +176,7 @@ export class SessionsDO {
   }
 
   private async answer(request: Request): Promise<Response> {
-    const body = await request.json() as { answer: string }
+    const body = await request.json() as { answer: string; response_time_ms?: number }
     const state = (await this.state.storage.get<SessionState>('state'))!
     const order = state.order
     const pos = state.position
@@ -187,7 +187,14 @@ export class SessionsDO {
     const card = state.cards[idx]
     const isCorrect = validateAnswer(body.answer, card.answer)
     const startTs = (await this.state.storage.get<number>('question_start')) || Date.now()
-    const duration = Math.round((Date.now() - startTs) / 100) / 10
+    const responseTimeMs = body.response_time_ms || (Date.now() - startTs)
+    const duration = Math.round(responseTimeMs / 100) / 10
+
+    // Real-time difficulty assessment based on response time and accuracy
+    const responseDifficulty = this.assessResponseDifficulty(responseTimeMs, isCorrect)
+    
+    // Calculate adaptive feedback duration
+    const feedbackDuration = this.calculateFeedbackDuration(responseTimeMs, responseDifficulty, isCorrect)
 
     // Update counts (category: update all duplicates with same Q+A; set: only this card)
     const doAll = state.mode === 'category_all' || state.mode === 'difficulty_category'
@@ -256,7 +263,14 @@ export class SessionsDO {
     }
     const nextIdx = order[state.position]
     await this.state.storage.put('question_start', Date.now())
-    return Response.json({ done: false, card: { index: nextIdx, question: state.cards[nextIdx]?.question || '' }, progress: { current: state.position, total: order.length }, evaluation: { question: card.question, correct: isCorrect, correct_answer: card.answer }, results: state.results })
+    return Response.json({ 
+      done: false, 
+      card: { index: nextIdx, question: state.cards[nextIdx]?.question || '' }, 
+      progress: { current: state.position, total: order.length }, 
+      evaluation: { question: card.question, correct: isCorrect, correct_answer: card.answer, difficulty: responseDifficulty }, 
+      results: state.results,
+      feedback_duration_ms: feedbackDuration
+    })
   }
 
   private async get(): Promise<Response> {
@@ -302,6 +316,42 @@ export class SessionsDO {
       case 'review_incorrect': return 'Review Incorrect'
       default: return mode
     }
+  }
+
+  private assessResponseDifficulty(responseTimeMs: number, isCorrect: boolean): 'easy' | 'medium' | 'hard' {
+    // Base difficulty on response time: 2s = easy, 4s = medium, 6s+ = hard
+    const durationSec = responseTimeMs / 1000
+    let timeDifficulty: 'easy' | 'medium' | 'hard'
+    if (durationSec <= 2) timeDifficulty = 'easy'
+    else if (durationSec <= 4) timeDifficulty = 'medium'  
+    else timeDifficulty = 'hard'
+
+    // If incorrect, bump up difficulty by one level
+    if (!isCorrect) {
+      if (timeDifficulty === 'easy') timeDifficulty = 'medium'
+      else if (timeDifficulty === 'medium') timeDifficulty = 'hard'
+      // hard stays hard
+    }
+
+    return timeDifficulty
+  }
+
+  private calculateFeedbackDuration(responseTimeMs: number, difficulty: 'easy' | 'medium' | 'hard', isCorrect: boolean): number {
+    const baseTime = 2000 // 2 seconds base
+    const responseContribution = responseTimeMs * 0.3 // 30% of response time
+    
+    const difficultyMultiplier = difficulty === 'easy' ? 1 : difficulty === 'medium' ? 2 : 3
+    const difficultyTime = difficultyMultiplier * 1000 // 1s, 2s, or 3s
+    
+    // Incorrect answers get extra time for consolidation
+    const correctnessBonus = isCorrect ? 0 : 1500 // +1.5s for incorrect
+    
+    const totalTime = Math.max(
+      baseTime + responseContribution + correctnessBonus,
+      difficultyTime
+    )
+    
+    return Math.min(totalTime, 6000) // Cap at 6 seconds
   }
 }
 

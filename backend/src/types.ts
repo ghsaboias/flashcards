@@ -45,6 +45,9 @@ export type SessionState = {
   question_start_ts?: number
   correct_count: number
   results: Array<{ question: string; correct: boolean; correct_answer: string; user_answer: string }>
+  // Real-time difficulty tracking
+  recentResponses?: Array<{ difficulty: 'easy' | 'medium' | 'hard'; correct: boolean; duration: number }>
+  adaptiveDifficulty?: 'easy' | 'medium' | 'hard'
 }
 
 

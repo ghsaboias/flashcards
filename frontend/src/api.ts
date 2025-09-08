@@ -113,6 +113,40 @@ export async function getPerformanceData(): Promise<PerformancePayload> {
     return data;
 }
 
+export type AutoStartPayload = {
+    user_level?: 'beginner' | 'intermediate' | 'advanced';
+    focus_mode?: 'review' | 'challenge';
+}
+
+export async function startAutoSession(payload: AutoStartPayload = {}) {
+    const { data } = await axios.post(`${API_BASE}/sessions/auto-start`, payload);
+    return data as {
+        session_id: string;
+        done: boolean;
+        card?: { index: number; question: string; pinyin?: string };
+        progress: { current: number; total: number };
+        batch?: Array<{ question: string; pinyin?: string }>;
+    };
+}
+
+export async function answerWithTiming(sessionId: string, answerText: string, responseTimeMs: number) {
+    const { data } = await axios.post(`${API_BASE}/sessions/${sessionId}/answer`, {
+        session_id: sessionId,
+        answer: answerText,
+        response_time_ms: responseTimeMs,
+    });
+    return data as {
+        done: boolean;
+        card?: { index: number; question: string; pinyin?: string };
+        progress: { current: number; total: number };
+        evaluation?: { question: string; correct: boolean; correct_answer: string; difficulty?: 'easy' | 'medium' | 'hard' };
+        result?: { correct: number; total: number };
+        results?: Array<{ question: string; pinyin?: string; user_answer: string; correct_answer: string; correct: boolean }>
+        feedback_duration_ms?: number;
+        retry_queue?: Array<{ question: string; correct_answer: string }>;
+    };
+}
+
 // Removed unused getPinyin; pinyin is computed client-side via pinyin-pro
 
 
