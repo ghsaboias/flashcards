@@ -8,6 +8,7 @@ A high-intensity spaced repetition system (SRS) optimized for efficient Chinese 
 - **Single-click start**: Auto-detects optimal practice content
 - **Streamlined interface**: Minimal distractions for maximum focus
 - **20+ questions per 30 minutes**: Target exercise density for efficient learning
+- **Unified analytics**: Combined SRS scheduling + performance statistics in one table
 
 ### **Adaptive Learning System**
 - **Progressive unlocks**: Master fundamentals before advancing (70-85% accuracy gates)
@@ -17,7 +18,7 @@ A high-intensity spaced repetition system (SRS) optimized for efficient Chinese 
 ### **Systematic Progression**
 - **Breadth-first learning**: Complete foundational layers before complexity
 - **Memory anchoring**: Immediate re-testing of incorrect answers
-- **SRS integration**: Automatic scheduling based on performance data
+- **Unified SRS table**: View review schedules, accuracy stats, and difficulty in one interface
 
 ## Architecture
 

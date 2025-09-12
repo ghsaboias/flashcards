@@ -95,28 +95,56 @@ These **efficient learning principles** have been fully implemented in the HSK F
 
 ```
 flashcards/
-├── frontend/               # Vite + React TypeScript app
-│   ├── src/
-│   │   ├── App.tsx        # Main application component
-│   │   ├── api.ts         # Backend API client
-│   │   ├── components/    # React components
-│   │   │   ├── SrsTable.tsx    # SRS schedule display
-│   │   │   └── StatsTable.tsx  # Statistics display
-│   │   └── utils/
-│   │       └── pinyin.ts  # Lazy-loaded pinyin processing
-│   ├── public/
-│   │   └── china-flag.svg # Custom Chinese flag favicon
-│   └── package.json
-├── backend/               # Cloudflare Worker (Hono framework)
-│   ├── src/
-│   │   ├── worker.ts      # Main Hono app with API routes
-│   │   ├── sessions-do.ts # Durable Object for session management
-│   │   ├── srs.ts         # Spaced repetition algorithm (SM-2)
-│   │   ├── types.ts       # TypeScript definitions
-│   │   └── utils/
-│   │       └── validateAnswer.ts # Answer validation logic
-│   ├── wrangler.toml      # Cloudflare Worker configuration
-│   └── package.json
+├── 📄 CHANGELOG.md                  # Historical changes and fixes
+├── 📄 CLAUDE.md                     # Main project documentation 
+├── 📄 README.md                     # Project README
+├── 📄 hsk30-expanded.csv           # HSK vocabulary data
+├── 📄 session_log.txt              # Session logs
+├── 📁 backend/                     # Cloudflare Worker + API
+│   ├── 📄 CLAUDE.md                # Backend-specific docs
+│   ├── 📄 package.json             # Node.js dependencies
+│   ├── 📄 bun.lock                 # Lockfile
+│   ├── 📄 schema.sql               # D1 database schema
+│   ├── 📄 seed-hsk1.sql            # HSK Level 1 data
+│   ├── 📄 wrangler.toml            # Cloudflare Worker config
+│   ├── 📄 tsconfig.json            # TypeScript config
+│   └── 📁 src/
+│       ├── 📄 worker.ts            # Main Hono API routes (359 lines)
+│       ├── 📄 sessions-do.ts       # Durable Objects for sessions (467 lines)
+│       ├── 📄 srs.ts               # Spaced repetition algorithm (38 lines)
+│       ├── 📄 types.ts             # TypeScript definitions (58 lines)
+│       └── 📁 utils/
+│           └── 📄 validateAnswer.ts # Answer validation (13 lines)
+└── 📁 frontend/                    # React + Vite app
+    ├── 📄 CLAUDE.md                # Frontend-specific docs
+    ├── 📄 package.json             # Node.js dependencies
+    ├── 📄 bun.lock                 # Lockfile
+    ├── 📄 index.html               # Entry HTML
+    ├── 📄 vite.config.ts           # Vite configuration (20 lines)
+    ├── 📄 eslint.config.js         # ESLint rules (23 lines)
+    ├── 📄 tsconfig.*.json          # TypeScript configs
+    ├── 📁 public/
+    │   ├── 🇨🇳 china-flag.svg       # Custom favicon
+    │   └── 📄 vite.svg              # Default Vite logo
+    └── 📁 src/
+        ├── 📄 App.tsx              # Main React component (2005 lines)
+        ├── 📄 App.css              # Application styles
+        ├── 📄 api.ts               # Backend API client (152 lines)
+        ├── 📄 main.tsx             # React entry point (10 lines)
+        ├── 📁 components/          # React components
+        │   ├── 📄 SrsTable.tsx     # SRS schedule table (191 lines)
+        │   ├── 📄 StatsTable.tsx   # Statistics table (161 lines)
+        │   └── 📄 DrawingCanvas.tsx # Character drawing (289 lines)
+        ├── 📁 utils/               # Utilities
+        │   └── 📄 pinyin.ts        # Lazy pinyin processing (21 lines)
+        └── 📁 assets/              # Static assets
+
+## 📊 Codebase Statistics
+- **Total Lines of Code:** ~3,800 lines (TypeScript/React)
+- **Largest File:** `frontend/src/App.tsx` (2005 lines) - main UI logic
+- **Backend Total:** ~935 lines across 5 files
+- **Frontend Total:** ~2,863 lines across 10 files
+- **Architecture:** Modular backend, monolithic frontend component
 ```
 
 ## Module Documentation
