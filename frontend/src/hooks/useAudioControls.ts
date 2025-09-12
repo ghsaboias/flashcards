@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 export interface AudioControlsHook {
   speak: (text: string) => void
@@ -21,7 +21,7 @@ export function useAudioControls(): AudioControlsHook {
     }
   }, [])
 
-  const speak = (text: string) => {
+  const speak = useCallback((text: string) => {
     if (!text || !('speechSynthesis' in window)) return
     const utter = new SpeechSynthesisUtterance(text)
     const voices = voicesRef.current || window.speechSynthesis.getVoices()
@@ -31,9 +31,9 @@ export function useAudioControls(): AudioControlsHook {
     utter.pitch = 1
     window.speechSynthesis.cancel()
     window.speechSynthesis.speak(utter)
-  }
+  }, [])
 
-  const playCorrectChime = () => {
+  const playCorrectChime = useCallback(() => {
     try {
       const AC = (window as typeof window & {
         AudioContext?: typeof AudioContext
@@ -86,7 +86,7 @@ export function useAudioControls(): AudioControlsHook {
     } catch {
       // No audio available; ignore
     }
-  }
+  }, [])
 
   return {
     speak,

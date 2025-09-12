@@ -137,7 +137,7 @@ export function useSessionManager(): [SessionState, SessionActions] {
   const [userLevel, setUserLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner')
   const [focusMode, setFocusMode] = useState<'review' | 'challenge'>('challenge')
   const [adaptiveFeedbackDuration] = useState<number>(2000)
-  const [questionStartTime] = useState<number>(0)
+  const [questionStartTime, setQuestionStartTime] = useState<number>(0)
   
   // Special modes
   const [inBrowseMode, setInBrowseMode] = useState<boolean>(false)
@@ -374,11 +374,130 @@ export function useSessionManager(): [SessionState, SessionActions] {
 
   // Additional session start methods would go here...
   
+  // Helper function for answer validation
+  const validateUserAnswer = useCallback((userAnswer: string, answer: string): boolean => {
+    const ua = userAnswer.toLowerCase().trim()
+    const ans = answer.toLowerCase().trim()
+    if (ans.includes(';') || ans.includes(' or ')) {
+      const correctParts = ans.split(/;|\s+or\s+/).map(p => p.trim()).filter(Boolean)
+      const userParts = ua.split(/\s+or\s+/).map(p => p.trim()).filter(Boolean)
+      return userParts.some(p => correctParts.includes(p))
+    }
+    return ua === ans
+  }, [])
+  
   const submitAnswer = useCallback(async () => {
-    // Implementation would be extracted from the original App.tsx
-    // This is a placeholder for now
-    console.log('Submit answer:', input)
-  }, [input])
+    if (!input.trim()) return
+    
+    // Local review mode branch
+    if (inReviewMode) {
+      const current = reviewCards[reviewPosition]
+      const isCorrect = validateUserAnswer(input, current?.correct_answer || '')
+      setInput("")
+      setLastEval({ correct: isCorrect, correct_answer: current?.correct_answer || '' })
+      
+      if (isCorrect) {
+        // playCorrectChime() - would need to be passed in
+        setStreak(s => {
+          const next = s + 1
+          setBestStreak(b => Math.max(b, next))
+          return next
+        })
+      } else {
+        setStreak(0)
+      }
+      
+      // Append to session results
+      setResults(prev => ([
+        ...prev,
+        {
+          question: current?.question || '',
+          pinyin: current?.pinyin || '',
+          user_answer: input,
+          correct_answer: current?.correct_answer || '',
+          correct: isCorrect,
+        }
+      ]))
+
+      const nextPos = reviewPosition + 1
+      if (nextPos >= reviewCards.length) {
+        // complete
+        setQuestion("")
+        setPinyin("")
+        setProgress({ current: reviewCards.length, total: reviewCards.length })
+        setInReviewMode(false) // end review mode but keep results visible
+      } else {
+        setReviewPosition(nextPos)
+        const next = reviewCards[nextPos]
+        setQuestion(next.question)
+        setPinyin(next.pinyin || '')
+        setProgress({ current: nextPos, total: reviewCards.length })
+      }
+      return
+    }
+
+    // Normal server-backed session with timing
+    if (!sessionId) return
+    const responseTime = Date.now() - questionStartTime
+    
+    try {
+      const { answerWithTiming } = await import('../api')
+      const res = await answerWithTiming(sessionId, input, responseTime)
+      setInput("")
+      
+      if (res.done) {
+        if (res.results && res.results.length > 0) {
+          const last = res.results[res.results.length - 1]
+          if (last && last.correct) {
+            // playCorrectChime() - would need to be passed in
+          }
+        }
+        setQuestion("")
+        setProgress(res.progress)
+        
+        // Compute pinyin for results that have Chinese characters
+        const { getPinyinForText, hasChinese } = await import('../utils/pinyin')
+        const resultsWithPinyin = await Promise.all(
+          (res.results || []).map(async (result) => ({
+            ...result,
+            pinyin: hasChinese(result.question) ? await getPinyinForText(result.question).catch(() => '') : ''
+          }))
+        )
+        setResults(resultsWithPinyin)
+        
+        // TODO: Refresh tables and difficulty cache after session completes
+        // This would need to be implemented based on the selected mode/sets
+      } else {
+        // Continue with next question
+        if (res.card) {
+          setQuestion(res.card.question)
+          setPinyin(res.card.pinyin || '')
+        }
+        if (res.evaluation) {
+          setLastEval({ 
+            correct: res.evaluation.correct, 
+            correct_answer: res.evaluation.correct_answer 
+          })
+          
+          if (res.evaluation.correct) {
+            // playCorrectChime() - would need to be passed in
+            setStreak(s => {
+              const next = s + 1
+              setBestStreak(b => Math.max(b, next))
+              return next
+            })
+          } else {
+            setStreak(0)
+          }
+        }
+        setProgress(res.progress)
+        setQuestionStartTime(Date.now())
+      }
+    } catch (error) {
+      console.error('Failed to submit answer:', error)
+      // Could set an error state here
+    }
+  }, [input, inReviewMode, reviewCards, reviewPosition, sessionId, questionStartTime])
 
   // Multi-set helpers
   const addSetToSelection = useCallback((setName: string) => {

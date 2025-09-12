@@ -40,8 +40,13 @@ export default function KeyboardHandler({ sessionState, actions, speak }: Keyboa
       const target = e.target as HTMLElement | null
       if (target) {
         const tag = (target.tagName || '').toLowerCase()
-        const isTyping = tag === 'input' || tag === 'textarea' || (target as HTMLElement).isContentEditable
-        if (isTyping) return
+        const isTyping = tag === 'input' || tag === 'textarea' || 
+                         (target as HTMLElement).isContentEditable ||
+                         (target as HTMLInputElement).type === 'text'
+        if (isTyping) {
+          e.stopPropagation() // Prevent event bubbling
+          return
+        }
       }
 
       if (e.key === 'r' || e.key === 'R') {
