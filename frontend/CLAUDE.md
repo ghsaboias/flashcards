@@ -5,25 +5,25 @@ React 19 + TypeScript app built with Vite. Built assets are served by the Cloudf
 ## Quick Commands
 ```bash
 cd frontend
-npm install
-npm run dev       # Start Vite dev server (default :5173)
-npm run build     # Type-check + production build
-npm run lint      # ESLint (keep 0 warnings)
-npm run preview   # Preview built app locally
+bun install
+bun run dev       # Start Vite dev server (default :5173)
+bun run build     # Type-check + production build
+bun run lint      # ESLint (keep 0 warnings)
+bun run preview   # Preview built app locally
 ```
 
 ## Recommended Dev Flow
 - Worker-driven: build frontend, then run the backend Worker which serves the dist assets.
   ```bash
-  cd frontend && npm run build
-  cd ../backend && npm run dev  # http://localhost:8787
+  cd frontend && bun run build
+  cd ../backend && bun run dev  # http://localhost:8787
   ```
 - Vite dev (optional): if you prefer Vite HMR, set API base so calls hit the Worker.
   ```bash
   # frontend/.env.local
   VITE_API_BASE=http://localhost:8787/api
   ```
-  Then run `npm run dev` in `frontend` and `npm run dev` in `backend`.
+  Then run `bun run dev` in `frontend` and `bun run dev` in `backend`.
 
 ## File Map (essentials)
 - `src/App.tsx`: Main UI and feature flows
@@ -43,11 +43,11 @@ npm run preview   # Preview built app locally
 
 ## Quality Standards
 - Zero TypeScript errors on build.
-- Zero ESLint warnings (`npm run lint`).
+- Zero ESLint warnings (`bun run lint`).
 - Avoid large dependencies in the main path; prefer lazy imports when feasible.
 
 ## Troubleshooting
-- Blank page/404 assets: run a fresh `frontend npm run build` before `backend npm run dev`.
+- Blank page/404 assets: run a fresh `frontend bun run build` before `backend bun run dev`.
 - API 401 during dev: backend may enforce Bearer token. Remove `Authorization` header or match `API_TOKEN` if set.
 - CORS errors on Vite dev: set `VITE_API_BASE=http://localhost:8787/api` in `frontend/.env.local`.
 - Slow pinyin: ensure lazy import path remains in `utils/pinyin.ts`; avoid eager imports in components.

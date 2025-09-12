@@ -4,11 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "migrate": "wrangler d1 migrations apply flashcards",
-    "schema:apply": "wrangler d1 execute flashcards --file ./schema.sql",
-    "seed:hsk1": "node ./scripts/seed-hsk1.js"
+    "dev": "bunx wrangler dev",
+    "deploy": "bunx wrangler deploy",
+    "migrate": "bunx wrangler d1 migrations apply flashcards",
+    "schema:apply": "bunx wrangler d1 execute flashcards --file ./schema.sql",
+    "seed:hsk1": "bun ./scripts/seed-hsk1.js"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240620.0",

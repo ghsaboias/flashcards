@@ -159,18 +159,18 @@ Note: Module docs live alongside code for faster, focused reference.
 ### Frontend Development
 ```bash
 cd frontend
-npm install
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run lint     # Run ESLint (0 warnings/errors)
+bun install
+bun run dev      # Start development server
+bun run build    # Build for production
+bun run lint     # Run ESLint (0 warnings/errors)
 ```
 
 ### Backend Development
 ```bash
 cd backend  
-npm install
-npm run dev      # Start local worker development
-npm run deploy   # Deploy to Cloudflare
+bun install
+bun run dev      # Start local worker development
+bun run deploy   # Deploy to Cloudflare
 ```
 
 ### Database Management (Cloudflare MCP)
@@ -189,8 +189,8 @@ npm run deploy   # Deploy to Cloudflare
 ## Deployment (Cloudflare Workers)
 
 **Build Configuration:**
-- **Build Command**: `cd frontend && npm ci && npm run build && cd ../backend && npm ci`
-- **Deploy Command**: `cd backend && npx wrangler deploy`
+- **Build Command**: `cd frontend && bun install && bun run build && cd ../backend && bun install`
+- **Deploy Command**: `cd backend && bunx wrangler deploy`
 - **Branch**: `master`
 
 The build process:
@@ -335,24 +335,24 @@ See `backend/CLAUDE.md` for the authoritative schema, indexes, and common querie
 ### Testing Changes
 ```bash
 # Frontend
-cd frontend && npm run build && npm run lint
+cd frontend && bun run build && bun run lint
 
 # Backend  
-cd backend && npm run dev  # Test locally first
+cd backend && bun run dev  # Test locally first
 ```
 
 ## Common Tasks
 
 ### Updating Dependencies
 ```bash
-cd frontend && npm update
-cd backend && npm update
+cd frontend && bun update
+cd backend && bun update
 ```
 
 ### Database Migrations
 1. Modify `backend/schema.sql`
 2. Add migration to `wrangler.toml`
-3. Run `npm run migrate`
+3. Run `bun run migrate`
 
 ### Adding New HSK Data
 1. Use Cloudflare MCP tools to insert new cards directly
@@ -362,9 +362,9 @@ cd backend && npm update
 ## Troubleshooting
 
 ### Build Issues
-- Ensure all dependencies are installed: `npm ci` in both directories
-- Check for TypeScript errors: `npm run build`
-- Verify linting: `npm run lint`
+- Ensure all dependencies are installed: `bun install` in both directories
+- Check for TypeScript errors: `bun run build`
+- Verify linting: `bun run lint`
 
 ### Deployment Issues  
 - Check Cloudflare Pages build logs

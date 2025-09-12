@@ -13,11 +13,11 @@ Backend service built with Hono and Cloudflare Workers. Serves the REST API and 
 ## Quick Commands
 ```bash
 cd backend
-npm install
-npm run dev         # Local worker on http://localhost:8787
-npm run deploy      # Deploy to Cloudflare
-npm run migrate     # Apply wrangler-managed D1 migrations
-npm run schema:apply  # Execute ./schema.sql against bound DB
+bun install
+bun run dev         # Local worker on http://localhost:8787
+bun run deploy      # Deploy to Cloudflare
+bun run migrate     # Apply wrangler-managed D1 migrations
+bun run schema:apply  # Execute ./schema.sql against bound DB
 ```
 
 ## Authentication
@@ -117,10 +117,10 @@ CREATE TABLE IF NOT EXISTS session_events (
 
 ## Troubleshooting
 - 401 Unauthorized: set `API_TOKEN` or remove header; ensure `Authorization: Bearer <token>` matches env.
-- 404 assets: build frontend first (`cd ../frontend && npm run build`).
+- 404 assets: build frontend first (`cd ../frontend && bun run build`).
 - D1 errors: verify DB binding name (`DB`) and `database_id` in `wrangler.toml`.
 - DO migration problems: ensure class name `SessionsDO` is listed under `[[migrations]]` and active.
-- Logs: `npx wrangler tail` for live traces.
+- Logs: `bunx wrangler tail` for live traces.
 
 ## Directory Structure
 ```
