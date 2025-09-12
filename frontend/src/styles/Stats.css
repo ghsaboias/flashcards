@@ -1,0 +1,169 @@
+/* Stats table and analytics styles */
+.statsPanel {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-width: 0; /* Allow flexbox to shrink */
+}
+
+.statsPanel h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.panelSubtext {
+  margin: 6px 0 8px;
+}
+
+.statsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto; /* Let columns size based on content */
+}
+
+.srsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto; /* Let columns size based on content */
+}
+
+.statsTable thead th,
+.srsTable thead th {
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 1px solid #262b36;
+  padding: 8px 6px;
+  white-space: nowrap;
+  /* Reserve enough space for header text + arrow symbols (▲ ▼) */
+  min-width: 80px;
+}
+
+.statsTable thead th button,
+.srsTable thead th button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: inherit;
+  white-space: nowrap;
+  display: inline-block;
+  min-width: 100%;
+  text-align: center;
+}
+
+.statsTable tbody td,
+.srsTable tbody td {
+  border-bottom: 1px solid #262b36;
+  padding: 8px 6px;
+  text-align: center;
+}
+
+/* Status pill */
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+  border: 1px solid transparent;
+}
+
+.statusPill .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.statusPill.easy {
+  color: var(--ok);
+  background: rgba(63, 185, 80, 0.15);
+  border-color: rgba(63, 185, 80, 0.35);
+}
+
+.statusPill.easy .dot {
+  background: var(--ok);
+}
+
+.statusPill.medium {
+  color: var(--warn);
+  background: rgba(240, 183, 47, 0.18);
+  border-color: rgba(240, 183, 47, 0.38);
+}
+
+.statusPill.medium .dot {
+  background: var(--warn);
+}
+
+.statusPill.hard {
+  color: var(--bad);
+  background: rgba(248, 81, 73, 0.14);
+  border-color: rgba(248, 81, 73, 0.34);
+}
+
+.statusPill.hard .dot {
+  background: var(--bad);
+}
+
+/* Specific column widths for longer headers */
+.statsTable thead th:nth-child(6), /* Accuracy column */
+.srsTable thead th:nth-child(6),   /* Review column */
+.srsTable thead th:nth-child(7) {  /* On Schedule column */
+  min-width: 100px;
+}
+
+/* Remove blue focus border on sortable header buttons */
+.statsTable thead th button,
+.srsTable thead th button {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.statsTable thead th button:focus,
+.srsTable thead th button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.statsTable thead th button:focus-visible,
+.srsTable thead th button:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Responsive adjustments for tables */
+@media (max-width: 900px) {
+  /* Reduce padding on smaller screens to prevent wrapping */
+  .statsTable thead th,
+  .srsTable thead th {
+    padding: 6px 4px;
+    font-size: 13px;
+  }
+  .statsTable tbody td,
+  .srsTable tbody td {
+    padding: 6px 4px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Even tighter spacing on very small screens */
+  .statsTable thead th,
+  .srsTable thead th {
+    padding: 4px 2px;
+    font-size: 12px;
+  }
+  .statsTable tbody td,
+  .srsTable tbody td {
+    padding: 4px 2px;
+    font-size: 12px;
+  }
+}
