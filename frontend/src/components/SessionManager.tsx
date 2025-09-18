@@ -371,7 +371,47 @@ export function useSessionManager(): [SessionState, SessionActions] {
     setQuestion(res.card?.question || "")
     setPinyin(res.card?.pinyin || "")
     setProgress(res.progress)
+    setQuestionStartTime(Date.now())
   }, [selectedSets, resetSessionUI])
+
+  const beginReviewIncorrect = useCallback(async () => {
+    const wrong = results.filter(r => !r.correct)
+    if (wrong.length === 0) return
+
+    const reviewItems = wrong.map(r => ({
+      question: r.question,
+      answer: r.correct_answer,
+      ...(mode === 'set' && selectedSet ? { set_name: selectedSet } : {})
+    }))
+
+    try {
+      const res = await startSession({ mode: 'review_incorrect', review_items: reviewItems })
+      if (!res.done) {
+        resetSessionUI()
+        setSessionId(res.session_id)
+        setQuestion(res.card?.question || "")
+        setPinyin(res.card?.pinyin || "")
+        setProgress(res.progress)
+        setQuestionStartTime(Date.now())
+        return
+      }
+    } catch (error) {
+      console.warn('Falling back to local review mode:', error)
+    }
+
+    resetSessionUI()
+    setInReviewMode(true)
+    setReviewCards(wrong.map(r => ({ question: r.question, pinyin: r.pinyin, correct_answer: r.correct_answer })))
+    setReviewPosition(0)
+    setResults([])
+    setStreak(0)
+    setBestStreak(0)
+    const first = wrong[0]
+    setQuestion(first.question)
+    setPinyin(first.pinyin || '')
+    setProgress({ current: 0, total: wrong.length })
+    setQuestionStartTime(Date.now())
+  }, [results, mode, selectedSet, resetSessionUI])
 
   // Additional session start methods would go here...
   
@@ -588,7 +628,7 @@ export function useSessionManager(): [SessionState, SessionActions] {
     exitBrowse: () => setInBrowseMode(false),
     nextBrowse: () => setBrowseIndex(i => Math.min(i + 1, Math.max(0, browseRows.length - 1))),
     prevBrowse: () => setBrowseIndex(i => Math.max(i - 1, 0)),
-    beginReviewIncorrect: beginSetSession, // Placeholder
+    beginReviewIncorrect,
     viewSrs,
     viewStats,
     viewPerformance: beginSetSession, // Placeholder
