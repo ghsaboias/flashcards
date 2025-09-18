@@ -301,78 +301,116 @@ export function useSessionManager(): [SessionState, SessionActions] {
     })()
   }, [showStats, showSrs, mode, selectedSet, selectedCategory, selectedSets])
 
-  // Actions
-  const resetSessionUI = useCallback(() => {
-    setSessionId("")
-    setQuestion("")
-    setProgress({ current: 0, total: 0 })
-    setInput("")
-    setLastEval(null)
-    setResults([])
-    setStreak(0)
-    setBestStreak(0)
-    setInBrowseMode(false)
-    setBrowseRows([])
-    setBrowseIndex(0)
-    setBrowsePinyin("")
-    setInReviewMode(false)
-    setReviewCards([])
-    setReviewPosition(0)
-    setInDrawingMode(false)
-    setDrawingCards([])
-    setDrawingPosition(0)
-    setDrawingProgress({ current: 0, total: 0 })
-    setSprintMode(false)
-    setSprintTimeLeft(300)
-    setShowSrs(false)
-    setSrsRows([])
-    setShowStats(false)
-    setStats(null)
-    setShowPerformance(false)
-    setPerformance(null)
+  // Session state reset utility
+  const createSessionReset = useCallback(() => {
+    const resetters = {
+      core: () => {
+        setSessionId("")
+        setQuestion("")
+        setProgress({ current: 0, total: 0 })
+        setInput("")
+        setLastEval(null)
+        setResults([])
+        setStreak(0)
+        setBestStreak(0)
+        setQuestionStartTime(0)
+      },
+      modes: () => {
+        setInBrowseMode(false)
+        setBrowseRows([])
+        setBrowseIndex(0)
+        setBrowsePinyin("")
+        setInReviewMode(false)
+        setReviewCards([])
+        setReviewPosition(0)
+        setInDrawingMode(false)
+        setDrawingCards([])
+        setDrawingPosition(0)
+        setDrawingProgress({ current: 0, total: 0 })
+        setSprintMode(false)
+        setSprintTimeLeft(300)
+      },
+      views: () => {
+        setShowSrs(false)
+        setSrsRows([])
+        setShowStats(false)
+        setStats(null)
+        setShowPerformance(false)
+        setPerformance(null)
+      }
+    }
+
+    return {
+      all: () => { resetters.core(); resetters.modes(); resetters.views() },
+      core: resetters.core,
+      modes: resetters.modes,
+      views: resetters.views
+    }
   }, [])
 
+  const resetSessionUI = useCallback(() => {
+    createSessionReset().all()
+  }, [createSessionReset])
+
+  // Generic session initialization
+  const initializeSession = useCallback(async (
+    sessionStarter: () => Promise<{ session_id: string; card?: { question: string; pinyin?: string }; progress: { current: number; total: number } }>,
+    options: {
+      setHighIntensity?: boolean,
+      trackStartTime?: boolean,
+      resetType?: 'all' | 'core' | 'modes' | 'views'
+    } = {}
+  ) => {
+    const { setHighIntensity = false, trackStartTime = false, resetType = 'all' } = options
+
+    // Reset appropriate state
+    createSessionReset()[resetType]()
+
+    // Set mode-specific flags
+    if (setHighIntensity) setIsHighIntensityMode(true)
+
+    // Start session and populate state
+    const res = await sessionStarter()
+    setSessionId(res.session_id)
+    setQuestion(res.card?.question || "")
+    setPinyin(res.card?.pinyin || "")
+    setProgress(res.progress)
+
+    // Track timing if needed
+    if (trackStartTime) setQuestionStartTime(Date.now())
+
+    return res
+  }, [createSessionReset])
+
   const beginAutoSession = useCallback(async () => {
-    resetSessionUI()
-    setIsHighIntensityMode(true)
     const payload: AutoStartPayload = {
       user_level: userLevel,
       focus_mode: focusMode
     }
-    const res = await startAutoSession(payload)
-    setSessionId(res.session_id)
-    setQuestion(res.card?.question || "")
-    setPinyin(res.card?.pinyin || "")
-    setProgress(res.progress)
-  }, [userLevel, focusMode, resetSessionUI])
+    await initializeSession(
+      () => startAutoSession(payload),
+      { setHighIntensity: true }
+    )
+  }, [userLevel, focusMode, initializeSession])
 
   const beginSetSession = useCallback(async () => {
-    resetSessionUI()
-    const res = await startSession({ mode: 'set_all', set_name: selectedSet })
-    setSessionId(res.session_id)
-    setQuestion(res.card?.question || "")
-    setPinyin(res.card?.pinyin || "")
-    setProgress(res.progress)
-  }, [selectedSet, resetSessionUI])
+    await initializeSession(
+      () => startSession({ mode: 'set_all', set_name: selectedSet })
+    )
+  }, [selectedSet, initializeSession])
 
   const beginCategorySession = useCallback(async () => {
-    resetSessionUI()
-    const res = await startSession({ mode: 'category_all', category: selectedCategory })
-    setSessionId(res.session_id)
-    setQuestion(res.card?.question || "")
-    setPinyin(res.card?.pinyin || "")
-    setProgress(res.progress)
-  }, [selectedCategory, resetSessionUI])
+    await initializeSession(
+      () => startSession({ mode: 'category_all', category: selectedCategory })
+    )
+  }, [selectedCategory, initializeSession])
 
   const beginMultiSetSession = useCallback(async () => {
-    resetSessionUI()
-    const res = await startSession({ mode: 'multi_set_all', selected_sets: selectedSets })
-    setSessionId(res.session_id)
-    setQuestion(res.card?.question || "")
-    setPinyin(res.card?.pinyin || "")
-    setProgress(res.progress)
-    setQuestionStartTime(Date.now())
-  }, [selectedSets, resetSessionUI])
+    await initializeSession(
+      () => startSession({ mode: 'multi_set_all', selected_sets: selectedSets }),
+      { trackStartTime: true }
+    )
+  }, [selectedSets, initializeSession])
 
   const beginReviewIncorrect = useCallback(async () => {
     const wrong = results.filter(r => !r.correct)
@@ -387,31 +425,27 @@ export function useSessionManager(): [SessionState, SessionActions] {
     try {
       const res = await startSession({ mode: 'review_incorrect', review_items: reviewItems })
       if (!res.done) {
-        resetSessionUI()
-        setSessionId(res.session_id)
-        setQuestion(res.card?.question || "")
-        setPinyin(res.card?.pinyin || "")
-        setProgress(res.progress)
-        setQuestionStartTime(Date.now())
+        await initializeSession(
+          () => Promise.resolve(res),
+          { trackStartTime: true }
+        )
         return
       }
     } catch (error) {
       console.warn('Falling back to local review mode:', error)
     }
 
-    resetSessionUI()
+    // Fallback to local review mode
+    createSessionReset().core()
     setInReviewMode(true)
     setReviewCards(wrong.map(r => ({ question: r.question, pinyin: r.pinyin, correct_answer: r.correct_answer })))
     setReviewPosition(0)
-    setResults([])
-    setStreak(0)
-    setBestStreak(0)
     const first = wrong[0]
     setQuestion(first.question)
     setPinyin(first.pinyin || '')
     setProgress({ current: 0, total: wrong.length })
     setQuestionStartTime(Date.now())
-  }, [results, mode, selectedSet, resetSessionUI])
+  }, [results, mode, selectedSet, initializeSession, createSessionReset])
 
   // Additional session start methods would go here...
   
