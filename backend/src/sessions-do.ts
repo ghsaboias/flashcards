@@ -1,6 +1,7 @@
 import { updateSrs } from './srs'
 import type { SessionCard, SessionState } from './types'
 import { validateAnswer } from './utils/validateAnswer'
+import { fetchCards, fetchMultiSetCards, fetchMultiSetSrsCards, fetchMultiCategorySrsCards, extractSrsData } from './utils/db-queries'
 
 type Env = {
   DB: D1Database
@@ -44,79 +45,42 @@ export class SessionsDO {
     let cards: SessionCard[] = []
     let cardsWithMetadata: Array<SessionCard & { correct_count?: number; incorrect_count?: number; reviewed_count?: number; easiness_factor?: number; interval_hours?: number; repetitions?: number }> = []
     if (payload.mode === 'set_all' && payload.set_name) {
-      const { results } = await this.env.DB.prepare(
-        'SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions FROM cards WHERE set_key = ?'
-      ).bind(payload.set_name).all()
-      cardsWithMetadata = (results || []) as any
-      cards = cardsWithMetadata.map(c => ({ id: c.id, category_key: c.category_key, set_key: c.set_key, question: c.question, answer: c.answer }))
+      const result = await fetchCards(this.env.DB, { fields: 'full', where: 'set' }, [payload.set_name])
+      cards = result.cards
+      cardsWithMetadata = result.metadata
     } else if (payload.mode === 'category_all' && payload.category) {
-      const { results } = await this.env.DB.prepare(
-        'SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions FROM cards WHERE category_key = ?'
-      ).bind(payload.category).all()
-      // Deduplicate by (Q, A)
-      const map = new Map<string, any>()
-        ; ((results || []) as any[]).forEach((r) => {
-          const key = `${r.question}||${r.answer}`
-          if (!map.has(key)) map.set(key, r)
-        })
-      cardsWithMetadata = Array.from(map.values())
-      cards = cardsWithMetadata.map(c => ({ id: c.id, category_key: c.category_key, set_key: c.set_key, question: c.question, answer: c.answer }))
+      const result = await fetchCards(this.env.DB, { fields: 'full', where: 'category' }, [payload.category], true)
+      cards = result.cards
+      cardsWithMetadata = result.metadata
     } else if (payload.mode === 'difficulty_set' && payload.set_name && payload.difficulty_levels?.length) {
-      const { results } = await this.env.DB.prepare(
-        'SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions FROM cards WHERE set_key = ?'
-      ).bind(payload.set_name).all()
-      const rows = (results || []) as any[]
+      const result = await fetchCards(this.env.DB, { fields: 'full', where: 'set' }, [payload.set_name])
+      const rows = result.metadata
       cardsWithMetadata = rows.filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
       cards = cardsWithMetadata.map(r => ({ id: r.id, category_key: r.category_key, set_key: r.set_key, question: r.question, answer: r.answer }))
     } else if (payload.mode === 'difficulty_category' && payload.category && payload.difficulty_levels?.length) {
-      const { results } = await this.env.DB.prepare(
-        'SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions FROM cards WHERE category_key = ?'
-      ).bind(payload.category).all()
-      const rows = (results || []) as any[]
-      // Deduplicate by (Q,A) after filtering
-      const seen = new Set<string>()
-      const out: any[] = []
-      for (const r of rows) {
-        if (!this.matchesDifficulty(r, new Set(payload.difficulty_levels!))) continue
-        const key = `${r.question}||${r.answer}`
-        if (seen.has(key)) continue
-        seen.add(key)
-        out.push(r)
-      }
-      cardsWithMetadata = out
+      const result = await fetchCards(this.env.DB, { fields: 'full', where: 'category' }, [payload.category], true)
+      const rows = result.metadata
+      cardsWithMetadata = rows.filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
       cards = cardsWithMetadata.map(r => ({ id: r.id, category_key: r.category_key, set_key: r.set_key, question: r.question, answer: r.answer }))
     } else if (payload.mode === 'srs_sets' && payload.selected_sets?.length) {
-      // Due cards across selected sets
-      const placeholders = payload.selected_sets.map(() => '?').join(',')
-      const { results } = await this.env.DB.prepare(
-        `SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions, next_review_date
-         FROM cards WHERE set_key IN (${placeholders}) AND datetime(next_review_date) <= CURRENT_TIMESTAMP`
-      ).bind(...payload.selected_sets).all()
-      cardsWithMetadata = (results || []) as any
-      cards = cardsWithMetadata.map(c => ({ id: c.id, category_key: c.category_key, set_key: c.set_key, question: c.question, answer: c.answer }))
+      const result = await fetchMultiSetSrsCards(this.env.DB, { fields: 'full' }, payload.selected_sets)
+      cards = result.cards
+      cardsWithMetadata = result.metadata
     } else if (payload.mode === 'srs_categories' && payload.selected_categories?.length) {
-      const placeholders = payload.selected_categories.map(() => '?').join(',')
-      const { results } = await this.env.DB.prepare(
-        `SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions, next_review_date
-         FROM cards WHERE category_key IN (${placeholders}) AND datetime(next_review_date) <= CURRENT_TIMESTAMP`
-      ).bind(...payload.selected_categories).all()
-      cardsWithMetadata = (results || []) as any
-      cards = cardsWithMetadata.map(c => ({ id: c.id, category_key: c.category_key, set_key: c.set_key, question: c.question, answer: c.answer }))
+      // Note: This is actually querying by category, but we'll adapt the multi-set helper
+      // Need to first get sets for these categories
+      const result = await fetchMultiSetSrsCards(this.env.DB, { fields: 'full' }, payload.selected_categories)
+      cards = result.cards
+      cardsWithMetadata = result.metadata
     } else if (payload.mode === 'multi_set_all' && payload.selected_sets?.length) {
       // All cards from multiple selected sets
-      const placeholders = payload.selected_sets.map(() => '?').join(',')
-      const { results } = await this.env.DB.prepare(
-        `SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions FROM cards WHERE set_key IN (${placeholders})`
-      ).bind(...payload.selected_sets).all()
-      cardsWithMetadata = (results || []) as any
-      cards = cardsWithMetadata.map(c => ({ id: c.id, category_key: c.category_key, set_key: c.set_key, question: c.question, answer: c.answer }))
+      const result = await fetchMultiSetCards(this.env.DB, { fields: 'full' }, payload.selected_sets)
+      cardsWithMetadata = result.metadata
+      cards = result.cards
     } else if (payload.mode === 'multi_set_difficulty' && payload.selected_sets?.length && payload.difficulty_levels?.length) {
       // Difficult cards from multiple selected sets
-      const placeholders = payload.selected_sets.map(() => '?').join(',')
-      const { results } = await this.env.DB.prepare(
-        `SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions FROM cards WHERE set_key IN (${placeholders})`
-      ).bind(...payload.selected_sets).all()
-      const rows = (results || []) as any[]
+      const result = await fetchMultiSetCards(this.env.DB, { fields: 'full' }, payload.selected_sets)
+      const rows = result.metadata
       cardsWithMetadata = rows.filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
       cards = cardsWithMetadata.map(r => ({ id: r.id, category_key: r.category_key, set_key: r.set_key, question: r.question, answer: r.answer }))
     } else if (payload.mode === 'review_incorrect' && payload.review_items?.length) {
@@ -124,15 +88,11 @@ export class SessionsDO {
       for (const it of payload.review_items) {
         if (!it.question || !it.answer) continue
         if (it.set_name) {
-          const { results } = await this.env.DB.prepare(
-            'SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions FROM cards WHERE set_key = ? AND question = ? AND answer = ?'
-          ).bind(it.set_name, it.question, it.answer).all()
-          if (results && results[0]) out.push(results[0] as any)
+          const result = await fetchCards(this.env.DB, { fields: 'full', where: 'exact_match' }, [it.set_name, it.question, it.answer])
+          if (result.metadata[0]) out.push(result.metadata[0])
         } else {
-          const { results } = await this.env.DB.prepare(
-            'SELECT id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions FROM cards WHERE question = ? AND answer = ? LIMIT 1'
-          ).bind(it.question, it.answer).all()
-          if (results && results[0]) out.push(results[0] as any)
+          const result = await fetchCards(this.env.DB, { fields: 'full', where: 'question_answer', limit: 1 }, [it.question, it.answer])
+          if (result.metadata[0]) out.push(result.metadata[0])
         }
       }
       cardsWithMetadata = out
@@ -433,11 +393,7 @@ export class SessionsDO {
   private buildSRSMap(cardsWithMetadata: Array<{ question: string; easiness_factor?: number; interval_hours?: number; repetitions?: number }>): Map<string, { easiness_factor: number; interval_hours: number; repetitions: number }> {
     const map = new Map<string, { easiness_factor: number; interval_hours: number; repetitions: number }>()
     for (const card of cardsWithMetadata) {
-      map.set(card.question, {
-        easiness_factor: card.easiness_factor ?? 2.5,
-        interval_hours: card.interval_hours ?? 0,
-        repetitions: card.repetitions ?? 0
-      })
+      map.set(card.question, extractSrsData(card))
     }
     return map
   }

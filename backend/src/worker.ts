@@ -1,6 +1,8 @@
 import { Hono } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { SessionsDO as SessionsDOClass } from './sessions-do'
+import { fetchCards, mapToSrsRow, buildCardQuery } from './utils/db-queries'
+import { computeAccuracyRow, computeStatsSummary, createEmptyStatsSummary } from './utils/stats-utils'
 
 // Bindings
 type Env = {
@@ -30,17 +32,15 @@ app.get('/api/health', (c) => c.json({ status: 'ok' }))
 
 // Sets
 app.get('/api/sets', async (c) => {
-  const { results } = await c.env.DB.prepare(
-    'SELECT DISTINCT set_key FROM cards ORDER BY set_key'
-  ).all()
+  const { sql } = buildCardQuery({ fields: 'distinct_sets', orderBy: 'set_key' })
+  const { results } = await c.env.DB.prepare(sql).all()
   return c.json((results || []).map((r: any) => r.set_key))
 })
 
 // Categories
 app.get('/api/categories', async (c) => {
-  const { results } = await c.env.DB.prepare(
-    'SELECT DISTINCT category_key FROM cards ORDER BY category_key'
-  ).all()
+  const { sql } = buildCardQuery({ fields: 'distinct_categories', orderBy: 'category_key' })
+  const { results } = await c.env.DB.prepare(sql).all()
   return c.json((results || []).map((r: any) => r.category_key))
 })
 
@@ -48,19 +48,9 @@ app.get('/api/categories', async (c) => {
 app.get('/api/srs/set', async (c) => {
   const setName = c.req.query('set_name') || ''
   if (!setName) return c.json([], 200)
-  const { results } = await c.env.DB.prepare(
-    `SELECT question, answer, easiness_factor, interval_hours, repetitions, next_review_date
-     FROM cards WHERE set_key = ?`
-  ).bind(setName).all()
-  const rows = (results || []).map((r: any) => ({
-    set_name: setName,
-    question: r.question,
-    answer: r.answer,
-    easiness_factor: r.easiness_factor ?? 2.5,
-    interval_hours: r.interval_hours ?? 0,
-    repetitions: r.repetitions ?? 0,
-    next_review_date: r.next_review_date ?? '1970-01-01 00:00:00',
-  }))
+  const { sql } = buildCardQuery({ fields: 'srs', where: 'set' })
+  const { results } = await c.env.DB.prepare(sql).bind(setName).all()
+  const rows = (results || []).map((r: any) => mapToSrsRow(r, setName))
   return c.json(rows)
 })
 
@@ -68,36 +58,17 @@ app.get('/api/srs/set', async (c) => {
 app.get('/api/srs/category', async (c) => {
   const category = c.req.query('category') || ''
   if (!category) return c.json([], 200)
-  const { results } = await c.env.DB.prepare(
-    `SELECT set_key, question, answer, easiness_factor, interval_hours, repetitions, next_review_date
-     FROM cards WHERE category_key = ?`
-  ).bind(category).all()
-  const rows = (results || []).map((r: any) => ({
-    set_name: r.set_key,
-    question: r.question,
-    answer: r.answer,
-    easiness_factor: r.easiness_factor ?? 2.5,
-    interval_hours: r.interval_hours ?? 0,
-    repetitions: r.repetitions ?? 0,
-    next_review_date: r.next_review_date ?? '1970-01-01 00:00:00',
-  }))
+  const { sql } = buildCardQuery({ fields: 'srs_with_set', where: 'category' })
+  const { results } = await c.env.DB.prepare(sql).bind(category).all()
+  const rows = (results || []).map((r: any) => mapToSrsRow(r))
   return c.json(rows)
 })
 
-// Stats helpers
-function computeAccuracyRow(r: any) {
-  const correct = Number(r.correct) || 0
-  const incorrect = Number(r.incorrect) || 0
-  const reviewed = Number(r.reviewed) || 0
-  const attempts = reviewed > 0 ? reviewed : correct + incorrect
-  const accuracy = attempts > 0 ? Math.round((correct / attempts) * 1000) / 10 : 0
-  return { correct, incorrect, total: attempts, accuracy }
-}
 
 // Stats: by set
 app.get('/api/stats/set', async (c) => {
   const setName = c.req.query('set_name') || ''
-  if (!setName) return c.json({ set_name: '', summary: { correct: 0, incorrect: 0, total: 0, accuracy: 0, total_cards: 0, attempted_cards: 0, difficult_count: 0 }, rows: [] })
+  if (!setName) return c.json({ set_name: '', summary: createEmptyStatsSummary(), rows: [] })
   const { results } = await c.env.DB.prepare(
     `SELECT question, answer, correct_count AS correct, incorrect_count AS incorrect, reviewed_count AS reviewed
      FROM cards WHERE set_key = ?`
@@ -107,15 +78,10 @@ app.get('/api/stats/set', async (c) => {
     answer: r.answer,
     ...computeAccuracyRow(r),
   }))
-  const total_correct = rows.reduce((a, b) => a + b.correct, 0)
-  const total_incorrect = rows.reduce((a, b) => a + b.incorrect, 0)
-  const total_attempts = total_correct + total_incorrect
-  const accuracy = total_attempts > 0 ? Math.round((total_correct / total_attempts) * 1000) / 10 : 0
-  const attempted_cards = rows.filter(r => (r.correct + r.incorrect) > 0).length
-  const difficult_count = rows.filter(r => (r.correct + r.incorrect) > 0 && r.accuracy < 80).length
+  const summary = computeStatsSummary(rows)
   return c.json({
     set_name: setName,
-    summary: { correct: total_correct, incorrect: total_incorrect, total: total_attempts, accuracy, total_cards: rows.length, attempted_cards, difficult_count },
+    summary,
     rows,
   })
 })
@@ -123,7 +89,7 @@ app.get('/api/stats/set', async (c) => {
 // Stats: by category (merge by question+answer)
 app.get('/api/stats/category', async (c) => {
   const category = c.req.query('category') || ''
-  if (!category) return c.json({ category: '', summary: { correct: 0, incorrect: 0, total: 0, accuracy: 0, total_cards: 0, attempted_cards: 0, difficult_count: 0 }, rows: [] })
+  if (!category) return c.json({ category: '', summary: createEmptyStatsSummary(), rows: [] })
   const { results } = await c.env.DB.prepare(
     `SELECT question, answer,
             SUM(correct_count)   AS correct,
@@ -137,13 +103,8 @@ app.get('/api/stats/category', async (c) => {
     answer: r.answer,
     ...computeAccuracyRow(r),
   }))
-  const total_correct = rows.reduce((a, b) => a + b.correct, 0)
-  const total_incorrect = rows.reduce((a, b) => a + b.incorrect, 0)
-  const total_attempts = total_correct + total_incorrect
-  const accuracy = total_attempts > 0 ? Math.round((total_correct / total_attempts) * 1000) / 10 : 0
-  const attempted_cards = rows.filter(r => (r.correct + r.incorrect) > 0).length
-  const difficult_count = rows.filter(r => (r.correct + r.incorrect) > 0 && r.accuracy < 80).length
-  return c.json({ category, summary: { correct: total_correct, incorrect: total_incorrect, total: total_attempts, accuracy, total_cards: rows.length, attempted_cards, difficult_count }, rows })
+  const summary = computeStatsSummary(rows)
+  return c.json({ category, summary, rows })
 })
 
 // Performance analytics
