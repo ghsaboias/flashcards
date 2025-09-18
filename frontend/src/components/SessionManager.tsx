@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { SrsRow, StatRow, StatsPayload, PerformancePayload, AutoStartPayload } from '../api'
-import { listCategories, listSets, startSession, startAutoSession, getStatsForSet, getStatsForCategory, getSrsForSet, getSrsForCategory } from '../api'
+import { listCategories, listSets, startSession, startAutoSession, getStatsForSet, getStatsForCategory, getSrsForSet, getSrsForCategory, answerWithTiming } from '../api'
+import { getPinyinForText, hasChinese } from '../utils/pinyin'
 
 export interface SessionState {
   // Core session data
@@ -441,7 +442,6 @@ export function useSessionManager(): [SessionState, SessionActions] {
     const responseTime = Date.now() - questionStartTime
     
     try {
-      const { answerWithTiming } = await import('../api')
       const res = await answerWithTiming(sessionId, input, responseTime)
       setInput("")
       
@@ -456,7 +456,6 @@ export function useSessionManager(): [SessionState, SessionActions] {
         setProgress(res.progress)
         
         // Compute pinyin for results that have Chinese characters
-        const { getPinyinForText, hasChinese } = await import('../utils/pinyin')
         const resultsWithPinyin = await Promise.all(
           (res.results || []).map(async (result) => ({
             ...result,

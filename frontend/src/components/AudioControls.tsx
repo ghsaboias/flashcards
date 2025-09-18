@@ -17,7 +17,7 @@ export function AutoTTS({ text, enabled, speak }: AutoTTSProps) {
     if (last && last.text === text && now - last.ts < 1000) return
     speak(text)
     lastSpokenRef.current = { text, ts: now }
-  }, [text, enabled, speak])
+  }, [text, enabled])
 
   return null // This component only provides side effects
 }
