@@ -22,8 +22,13 @@ A high-intensity spaced repetition system (SRS) optimized for efficient Chinese 
 
 ## Architecture
 
-- **Frontend**: Vite + React TypeScript app with lazy-loaded components (`frontend/`)
+- **Frontend**: Vite + React TypeScript app with hooks/contexts pattern (`frontend/`)
+  - Modular structure: `hooks/`, `contexts/`, `types/`, `utils/`, `components/`
+  - Centralized session management with `useSessionManager` hook
+  - Type-safe API client with comprehensive TypeScript definitions
 - **Backend**: Cloudflare Worker with Hono framework + Durable Objects (`backend/`)
+  - Extracted utilities: database queries, statistics, difficulty assessment
+  - Updated dependencies: Hono 4.9.8, TypeScript 5.9.2, Wrangler 4.38.0
 - **Database**: Cloudflare D1 (SQLite) with progressive unlock logic
 - **Data**: HSK Level 1 vocabulary (150+ characters across 10 sets)
 
@@ -87,7 +92,13 @@ cd ../backend && npm run deploy
 
 ## Performance Metrics
 
-### **Session Memory Optimization (Latest)**
+### **Architecture Refactor (Latest)**
+- **Code Reduction**: Eliminated 3,200+ lines of duplicated/obsolete code
+- **Modularization**: 30+ organized TypeScript modules with clear separation of concerns
+- **Type Safety**: Comprehensive TypeScript definitions across hooks, components, and utilities
+- **Session Management**: Centralized state management with React Context pattern
+
+### **Session Memory Optimization**
 - **Answer Lookup**: 0.1ms Map lookup (vs 500ms D1 query) — **5000x faster**
 - **Exercise Density**: 25+ questions per 30 minutes achieved
 - **Database Load**: 75% reduction through cached lookups
