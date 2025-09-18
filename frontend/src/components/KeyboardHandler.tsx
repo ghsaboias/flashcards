@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import type { SessionState, SessionActions } from './SessionManager'
+import type { SessionState, SessionActions } from '../types/session-types'
 import { hasChinese } from '../utils/pinyin'
 
 interface KeyboardHandlerProps {

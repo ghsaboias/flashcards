@@ -1,4 +1,4 @@
-import type { SessionState } from './SessionManager'
+import type { SessionState } from '../types/session-types'
 import UnifiedTable from './UnifiedTable'
 import DrawingCanvas from './DrawingCanvas'
 import { hasChinese } from '../utils/pinyin'

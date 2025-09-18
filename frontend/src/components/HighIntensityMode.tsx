@@ -1,11 +1,4 @@
-import type { SessionState, SessionActions } from './SessionManager'
-
-interface HighIntensityModeProps {
-  sessionState: SessionState
-  actions: SessionActions
-  humanizeSetLabel: (raw: string) => string
-  getMultiSetLabel: () => string
-}
+import type { HighIntensityModeProps } from '../types/component-props'
 
 export default function HighIntensityMode({ 
   sessionState, 

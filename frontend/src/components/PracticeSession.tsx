@@ -1,13 +1,6 @@
 import { useRef, useEffect } from 'react'
-import type { SessionState, SessionActions } from './SessionManager'
+import type { PracticeSessionProps } from '../types/component-props'
 import { hasChinese } from '../utils/pinyin'
-
-interface PracticeSessionProps {
-  sessionState: SessionState
-  actions: SessionActions
-  canAnswer: boolean
-  speak: (text: string) => void
-}
 
 export default function PracticeSession({ sessionState, actions, canAnswer, speak }: PracticeSessionProps) {
   const {

@@ -1,6 +1,7 @@
 import { pinyin as pinyinPro } from 'pinyin-pro'
 import { useMemo, useState } from 'react'
-import type { SrsRow, StatRow } from '../api'
+import type { SrsRow, StatRow } from '../types/api-types'
+import { isSrsDue, parseSrsDateUTC, getCurrentUTCTime } from '../utils/srs-date-utils'
 
 // Unified row type combining both SRS and Stats data
 type UnifiedRow = {
@@ -39,40 +40,7 @@ function classifyStatus(total: number = 0, accuracy: number = 0): 'easy' | 'medi
 }
 
 function isDueNow(nextReviewDate?: string): boolean {
-    if (!nextReviewDate) return false
-    const t = parseSrsDateUTC(nextReviewDate)
-    if (!t) return false
-    return t.getTime() <= getCurrentUTCTime()
-}
-
-// UTC-aware date parsing for SRS calculations
-function parseSrsDateUTC(raw: string): Date | null {
-    try {
-        if (!raw || typeof raw !== 'string') return null
-        if (raw.includes(' ')) {
-            const [datePart, timePart] = raw.split(' ')
-            const [y, m, d] = datePart.split('-').map((n) => parseInt(n, 10))
-            const [hh = '0', mm = '0', ss = '0'] = timePart.split(':')
-            if (isNaN(y) || isNaN(m) || isNaN(d)) return null
-            return new Date(Date.UTC(y, (m || 1) - 1, d || 1, parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, parseInt(ss, 10) || 0))
-        }
-        const [y, m, d] = raw.split('-').map((n) => parseInt(n, 10))
-        if (isNaN(y) || isNaN(m) || isNaN(d)) return null
-        return new Date(Date.UTC(y, (m || 1) - 1, d || 1, 0, 0, 0))
-    } catch {
-        return null
-    }
-}
-
-function getCurrentUTCTime(): number {
-    return Date.UTC(
-        new Date().getUTCFullYear(),
-        new Date().getUTCMonth(),
-        new Date().getUTCDate(),
-        new Date().getUTCHours(),
-        new Date().getUTCMinutes(),
-        new Date().getUTCSeconds()
-    )
+    return isSrsDue(nextReviewDate)
 }
 
 function formatNextReview(raw?: string): string {

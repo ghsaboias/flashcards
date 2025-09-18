@@ -1,6 +1,7 @@
 import { useMemo, useRef, useEffect } from 'react'
 import './styles/index.css'
-import { useSessionManager } from './components/SessionManager'
+import { useSessionManager } from './hooks/useSessionManager'
+import { SessionProvider } from './contexts/SessionContext'
 import PracticeSession from './components/PracticeSession'
 import SessionComplete from './components/SessionComplete'
 import HighIntensityMode from './components/HighIntensityMode'
@@ -10,6 +11,8 @@ import KeyboardHandler from './components/KeyboardHandler'
 import { useAudioControls } from './hooks/useAudioControls'
 import { AutoTTS } from './components/AudioControls'
 import { getPinyinForText, hasChinese } from './utils/pinyin'
+import { humanizeSetLabel, humanizeCategoryLabel, formatMultiSetLabel } from './utils/hsk-label-utils'
+import { countByDifficulty, isSessionComplete } from './utils/session-utils'
 
 function App() {
   const [sessionState, actions] = useSessionManager()
@@ -22,12 +25,9 @@ function App() {
     (!!sessionState.sessionId || sessionState.inReviewMode) && !!sessionState.question
   ), [sessionState.sessionId, sessionState.inReviewMode, sessionState.question])
 
-
-  const isSessionComplete = useMemo(() => (
-    sessionState.progress.total > 0 && 
-    sessionState.progress.current >= sessionState.progress.total && 
-    sessionState.results.length > 0
-  ), [sessionState.progress, sessionState.results])
+  const sessionComplete = useMemo(() =>
+    isSessionComplete(sessionState.progress, sessionState.results)
+  , [sessionState.progress, sessionState.results])
 
   const selectedDifficulties = useMemo(() => {
     const vals: Array<'easy' | 'medium' | 'hard'> = []
@@ -39,24 +39,11 @@ function App() {
 
   const canStartByDifficulty = selectedDifficulties.length > 0
 
-  // Difficulty classification and counts  
-  function classifyDifficulty(row: { total: number; accuracy: number }): 'easy' | 'medium' | 'hard' {
-    const attempts = row.total || 0
-    const accuracy = row.accuracy || 0
-    if (attempts <= 10) return 'hard'
-    if (accuracy > 90) return 'easy'
-    if (accuracy > 80) return 'medium'
-    return 'hard'
-  }
-
   const difficultyCounts = useMemo(() => {
-    const counts: Record<'easy' | 'medium' | 'hard', number> = { easy: 0, medium: 0, hard: 0 }
-    if (!sessionState.difficultyRows || sessionState.difficultyRows.length === 0) return counts
-    for (const r of sessionState.difficultyRows) {
-      const d = classifyDifficulty({ total: r.total, accuracy: r.accuracy })
-      counts[d]++
+    if (!sessionState.difficultyRows || sessionState.difficultyRows.length === 0) {
+      return { easy: 0, medium: 0, hard: 0 }
     }
-    return counts
+    return countByDifficulty(sessionState.difficultyRows)
   }, [sessionState.difficultyRows])
 
   // Auto-scroll session summary when new rows are added
@@ -84,98 +71,9 @@ function App() {
     })
   }, [sessionState.inBrowseMode, sessionState.browseIndex, sessionState.browseRows])
 
-  // Helper functions for display labels
-  function humanizeSetLabel(raw: string): string {
-    const trimmed = raw.replace('Recognition_Practice/', '')
-    const parts = trimmed.split('/')
-    if (parts.length === 2) {
-      const [level, name] = parts
-      const levelPretty = level
-        .replace(/_/g, ' ')
-        .replace(/HSK_Level_(\d+)/i, (_m, d) => `HSK ${d}`)
-      const namePretty = name
-        .replace(/HSK(\d+)_Set_0?(\d+)/i, (_m, _h, n) => `Set ${Number(n)}`)
-        .replace(/_/g, ' ')
-      return `${levelPretty} — ${namePretty}`
-    }
-    return trimmed.replace(/_/g, ' ')
-  }
-
-  function humanizeCategoryLabel(raw: string): string {
-    return raw
-      .replace(/_/g, ' ')
-      .replace(/\b(hsk)\s*level\s*(\d+)/i, (_m, _h, d) => `HSK Level ${d}`)
-      .replace(/\b(hsk)\s*(\d+)/i, (_m, _h, d) => `HSK ${d}`)
-      .replace(/\b\w/g, (c) => c.toUpperCase())
-  }
-
+  // Use consolidated utility for multi-set label formatting
   function getMultiSetLabel(): string {
-    if (sessionState.selectedSets.length === 0) return 'No sets selected'
-    if (sessionState.selectedSets.length === 1) return humanizeSetLabel(sessionState.selectedSets[0])
-    
-    // Parse sets and group by HSK level
-    const setsByLevel: { [level: number]: number[] } = {}
-    
-    sessionState.selectedSets.forEach(setName => {
-      // Extract HSK level and set number from raw set name
-      const trimmed = setName.replace('Recognition_Practice/', '')
-      const parts = trimmed.split('/')
-      if (parts.length === 2) {
-        const [level, name] = parts
-        const levelMatch = level.match(/HSK_Level_(\d+)/i)
-        const setMatch = name.match(/HSK\d+_Set_0?(\d+)/i)
-        
-        if (levelMatch && setMatch) {
-          const hskLevel = parseInt(levelMatch[1])
-          const setNumber = parseInt(setMatch[1])
-          
-          if (!setsByLevel[hskLevel]) {
-            setsByLevel[hskLevel] = []
-          }
-          setsByLevel[hskLevel].push(setNumber)
-        }
-      }
-    })
-    
-    // Format each level's sets
-    const levelGroups: string[] = []
-    
-    Object.keys(setsByLevel)
-      .map(k => parseInt(k))
-      .sort((a, b) => a - b)
-      .forEach(level => {
-        const sets = setsByLevel[level].sort((a, b) => a - b)
-        const ranges: string[] = []
-        
-        let start = sets[0]
-        let end = sets[0]
-        
-        for (let i = 1; i < sets.length; i++) {
-          if (sets[i] === end + 1) {
-            end = sets[i]
-          } else {
-            // Add the current range
-            if (start === end) {
-              ranges.push(`S${start}`)
-            } else {
-              ranges.push(`S${start} - S${end}`)
-            }
-            start = sets[i]
-            end = sets[i]
-          }
-        }
-        
-        // Add the final range
-        if (start === end) {
-          ranges.push(`S${start}`)
-        } else {
-          ranges.push(`S${start} - S${end}`)
-        }
-        
-        levelGroups.push(`HSK L${level} ${ranges.join(', ')}`)
-      })
-    
-    return levelGroups.join('; ')
+    return formatMultiSetLabel(sessionState.selectedSets)
   }
 
   // Additional handlers for StatsOverview
@@ -196,16 +94,17 @@ function App() {
   }
 
   return (
-    <div className={`container ${sessionState.isHighIntensityMode ? 'high-intensity' : ''}`}>
-      {/* Auto TTS for Chinese characters */}
-      <AutoTTS 
-        text={sessionState.question} 
-        enabled={hasChinese(sessionState.question)} 
-        speak={speak} 
-      />
+    <SessionProvider sessionState={sessionState} actions={actions} speak={speak}>
+      <div className={`container ${sessionState.isHighIntensityMode ? 'high-intensity' : ''}`}>
+        {/* Auto TTS for Chinese characters */}
+        <AutoTTS
+          text={sessionState.question}
+          enabled={hasChinese(sessionState.question)}
+          speak={speak}
+        />
 
-      {/* Keyboard shortcuts handler */}
-      <KeyboardHandler sessionState={sessionState} actions={actions} speak={speak} />
+        {/* Keyboard shortcuts handler */}
+        <KeyboardHandler sessionState={sessionState} actions={actions} speak={speak} />
 
       {!sessionState.isHighIntensityMode && (
         <div className="main-panel" role="main" style={{ display: sessionState.oldFocusMode && (sessionState.sessionId || sessionState.inReviewMode) ? 'none' : 'block' }}>
@@ -260,6 +159,7 @@ function App() {
           sessionState={sessionState}
           actions={actions}
           humanizeSetLabel={humanizeSetLabel}
+          humanizeCategoryLabel={humanizeCategoryLabel}
           getMultiSetLabel={getMultiSetLabel}
         />
       )}
@@ -279,7 +179,7 @@ function App() {
           onDrawingComplete={onDrawingComplete}
         />
 
-        {isSessionComplete ? (
+        {sessionComplete ? (
           <SessionComplete
             sessionState={sessionState}
             actions={actions}
@@ -296,8 +196,9 @@ function App() {
             speak={speak}
           />
         )}
+        </div>
       </div>
-    </div>
+    </SessionProvider>
   )
 }
 

@@ -1,6 +1,7 @@
 import { pinyin as pinyinPro } from 'pinyin-pro'
 import { useMemo, useState } from 'react'
-import type { SrsRow } from '../api'
+import type { SrsRow } from '../types/api-types'
+import { parseSrsDateUTC, getCurrentUTCTime, isSrsDue } from '../utils/srs-date-utils'
 
 type Props = {
     rows: SrsRow[]
@@ -30,42 +31,7 @@ export default function SrsTable({ rows }: Props) {
     }
 
     function isDueNow(row: SrsRow): boolean {
-        if (!row.next_review_date) return false
-        const t = parseSrsDateUTC(row.next_review_date) // Use UTC parsing
-        if (!t) return false
-        return t.getTime() <= getCurrentUTCTime() // Use UTC comparison
-    }
-
-    // UTC-aware date parsing for SRS calculations (to match backend logic)
-    function parseSrsDateUTC(raw: string): Date | null {
-        try {
-            if (!raw || typeof raw !== 'string') return null
-            if (raw.includes(' ')) {
-                const [datePart, timePart] = raw.split(' ')
-                const [y, m, d] = datePart.split('-').map((n) => parseInt(n, 10))
-                const [hh = '0', mm = '0', ss = '0'] = timePart.split(':')
-                if (isNaN(y) || isNaN(m) || isNaN(d)) return null
-                // Create UTC date to match database CURRENT_TIMESTAMP
-                return new Date(Date.UTC(y, (m || 1) - 1, d || 1, parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, parseInt(ss, 10) || 0))
-            }
-            const [y, m, d] = raw.split('-').map((n) => parseInt(n, 10))
-            if (isNaN(y) || isNaN(m) || isNaN(d)) return null
-            return new Date(Date.UTC(y, (m || 1) - 1, d || 1, 0, 0, 0))
-        } catch {
-            return null
-        }
-    }
-
-    // Get current UTC time (to match database CURRENT_TIMESTAMP)
-    function getCurrentUTCTime(): number {
-        return Date.UTC(
-            new Date().getUTCFullYear(),
-            new Date().getUTCMonth(),
-            new Date().getUTCDate(),
-            new Date().getUTCHours(),
-            new Date().getUTCMinutes(),
-            new Date().getUTCSeconds()
-        )
+        return isSrsDue(row.next_review_date)
     }
 
     function hasChinese(text: string): boolean {

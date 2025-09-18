@@ -1,6 +1,6 @@
 import { pinyin as pinyinPro } from 'pinyin-pro'
 import { useMemo, useState } from 'react'
-import type { StatRow } from '../api'
+import type { StatRow } from '../types/api-types'
 
 type SortKey =
     | keyof Pick<StatRow, 'question' | 'answer' | 'correct' | 'incorrect' | 'total' | 'accuracy'>

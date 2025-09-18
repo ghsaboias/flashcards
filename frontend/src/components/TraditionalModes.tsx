@@ -1,14 +1,4 @@
-import type { SessionState, SessionActions } from './SessionManager'
-
-interface TraditionalModesProps {
-  sessionState: SessionState
-  actions: SessionActions
-  canStartByDifficulty: boolean
-  difficultyCounts: Record<'easy' | 'medium' | 'hard', number>
-  humanizeSetLabel: (raw: string) => string
-  humanizeCategoryLabel: (raw: string) => string
-  getMultiSetLabel: () => string
-}
+import type { TraditionalModesProps } from '../types/component-props'
 
 export default function TraditionalModes({ 
   sessionState, 

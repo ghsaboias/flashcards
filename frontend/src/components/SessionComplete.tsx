@@ -1,14 +1,5 @@
 import { useMemo } from 'react'
-import type { SessionState, SessionActions } from './SessionManager'
-
-interface SessionCompleteProps {
-  sessionState: SessionState
-  actions: SessionActions
-  canStartByDifficulty: boolean
-  humanizeSetLabel: (raw: string) => string
-  humanizeCategoryLabel: (raw: string) => string
-  getMultiSetLabel: () => string
-}
+import type { SessionCompleteProps } from '../types/component-props'
 
 export default function SessionComplete({ 
   sessionState, 
