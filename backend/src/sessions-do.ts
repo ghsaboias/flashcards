@@ -23,6 +23,9 @@ export class SessionsDO {
     if (request.method === 'POST' && url.pathname.endsWith('/answer')) {
       return this.answer(request)
     }
+    if (request.method === 'POST' && url.pathname.endsWith('/cancel')) {
+      return this.cancel()
+    }
     if (request.method === 'GET') {
       return this.get()
     }
@@ -250,6 +253,39 @@ export class SessionsDO {
     return Response.json({ done, progress: { current: Math.min(state.position, state.order.length), total: state.order.length }, current_question, results: state.results })
   }
 
+  private async cancel(): Promise<Response> {
+    const state = await this.state.storage.get<SessionState>('state')
+
+    if (!state) {
+      await this.state.storage.delete('question_start')
+      return Response.json({ cancelled: false })
+    }
+
+    const durationSeconds = Math.round((Date.now() - new Date(state.started_at).getTime()) / 100) / 10
+    try {
+      await this.env.DB.prepare(
+        `UPDATE sessions SET ended_at = ?, duration_seconds = ?, correct_count = ?, total = ? WHERE id = ?`
+      ).bind(
+        this.nowUtc(),
+        durationSeconds,
+        state.correct_count,
+        state.order.length,
+        state.session_id
+      ).run()
+    } catch (error) {
+      console.error('Failed to persist cancelled session state:', error)
+    }
+
+    await this.state.storage.delete('state')
+    await this.state.storage.delete('question_start')
+
+    return Response.json({
+      cancelled: true,
+      progress: { current: Math.min(state.position, state.order.length), total: state.order.length },
+      results: state.results
+    })
+  }
+
   private matchesDifficulty(r: any, requested: Set<'easy' | 'medium' | 'hard'>): boolean {
     const c = Number(r.correct_count || 0)
     const ic = Number(r.incorrect_count || 0)
@@ -406,5 +442,4 @@ export class SessionsDO {
     return state.srsMap?.get(question) || { easiness_factor: 2.5, interval_hours: 0, repetitions: 0 }
   }
 }
-
 

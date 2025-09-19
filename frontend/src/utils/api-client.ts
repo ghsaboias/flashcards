@@ -151,6 +151,10 @@ export class ApiClient {
     return this.get<SessionResponse>(`/sessions/${sessionId}`)
   }
 
+  async cancelSession(sessionId: string): Promise<void> {
+    await this.post(`/sessions/${sessionId}/cancel`)
+  }
+
   // === BROWSE AND DRAWING METHODS ===
 
   async getBrowseCards(setName: string, domainId?: string): Promise<BrowseCard[]> {

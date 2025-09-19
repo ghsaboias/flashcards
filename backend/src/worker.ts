@@ -410,6 +410,13 @@ app.post('/api/sessions/:id/answer', async (c) => {
   const res = await stub.fetch(new Request(new URL(`https://do/sessions/${idParam}/answer`), { method: 'POST', body: await c.req.raw.clone().text(), headers: { 'content-type': 'application/json' } }))
   return c.newResponse(res.body, res)
 })
+app.post('/api/sessions/:id/cancel', async (c) => {
+  const idParam = c.req.param('id')
+  const id = c.env.SESSIONS.idFromString(idParam)
+  const stub = c.env.SESSIONS.get(id)
+  const res = await stub.fetch(new Request(new URL(`https://do/sessions/${idParam}/cancel`), { method: 'POST' }))
+  return c.newResponse(res.body, res)
+})
 app.get('/api/sessions/:id', async (c) => {
   const idParam = c.req.param('id')
   const id = c.env.SESSIONS.idFromString(idParam)
@@ -457,5 +464,4 @@ export class SessionsDO {
 }
 
 // Removed unused RateLimitDO
-
 

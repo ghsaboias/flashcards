@@ -7,6 +7,7 @@ import PracticeSession from '../components/PracticeSession'
 import SessionLayout from '../layouts/SessionLayout'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { useAudioControls } from '../hooks/useAudioControls'
+import { useNavigationGuardContext } from '../hooks/useNavigationGuardContext'
 
 const SessionPage = memo(function SessionPage() {
   const { id } = useParams<{ id: string }>()
@@ -14,7 +15,9 @@ const SessionPage = memo(function SessionPage() {
   const [sessionState, actions] = useSessionStateAndActions()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isEndingSession, setIsEndingSession] = useState(false)
   const { speak } = useAudioControls()
+  const { clearSession } = useNavigationGuardContext()
 
   // Computed values
   const canAnswer = useMemo(() => (
@@ -24,6 +27,31 @@ const SessionPage = memo(function SessionPage() {
   const sessionComplete = useMemo(() =>
     isSessionComplete(sessionState.progress, sessionState.results)
   , [sessionState.progress, sessionState.results])
+
+  const handleEndSession = async () => {
+    if (isEndingSession) return
+
+    if (!sessionState.sessionId) {
+      navigate('/')
+      return
+    }
+
+    const confirmExit = window.confirm('End this practice session? Unanswered cards will be skipped, but answered questions stay recorded.')
+    if (!confirmExit) return
+
+    setIsEndingSession(true)
+
+    try {
+      await apiClient.cancelSession(sessionState.sessionId)
+    } catch (cancelError) {
+      console.error('Failed to cancel session:', cancelError)
+    } finally {
+      clearSession()
+      actions.resetSessionUI()
+      setIsEndingSession(false)
+      navigate('/')
+    }
+  }
 
   // Navigate to completion page when session is done
   useEffect(() => {
@@ -132,6 +160,23 @@ const SessionPage = memo(function SessionPage() {
       className={sessionState.isHighIntensityMode ? 'high-intensity' : ''}
     >
       <div className="session-content">
+        <div
+          className="session-toolbar"
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            marginBottom: '16px'
+          }}
+        >
+          <button
+            onClick={handleEndSession}
+            className="btn-secondary"
+            disabled={isEndingSession}
+          >
+            {isEndingSession ? 'Ending session…' : 'End Session'}
+          </button>
+        </div>
         <PracticeSession
           sessionState={sessionState}
           actions={actions}
