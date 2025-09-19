@@ -7,7 +7,8 @@ import type {
   AnswerPayload,
   StatsPayload,
   SrsRow,
-  PerformancePayload
+  PerformancePayload,
+  Domain
 } from '../types/api-types'
 
 export class ApiClient {
@@ -70,6 +71,10 @@ export class ApiClient {
     return this.get<string[]>('/categories')
   }
 
+  async listDomains(): Promise<Domain[]> {
+    return this.get<Domain[]>('/domains')
+  }
+
   // === STATISTICS METHODS ===
 
   async getStats(scope: 'set' | 'category', identifier: string): Promise<StatsPayload> {
@@ -117,6 +122,7 @@ export class ApiClient {
   async startAutoSession(config: {
     user_level?: 'beginner' | 'intermediate' | 'advanced'
     focus_mode?: 'review' | 'challenge'
+    domain_id?: string
   } = {}): Promise<SessionResponse> {
     return this.post<SessionResponse>('/sessions/auto-start', config)
   }

@@ -95,7 +95,7 @@ export interface SessionState extends
 // Session action categories
 export interface CoreSessionActions {
   resetSessionUI: () => void
-  beginAutoSession: () => Promise<void>
+  beginAutoSession: (domainId?: string) => Promise<void>
   beginSetSession: () => Promise<void>
   beginCategorySession: () => Promise<void>
   beginMultiSetSession: () => Promise<void>

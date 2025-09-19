@@ -1,5 +1,14 @@
 // Consolidated API types to eliminate duplication across the codebase
 
+// Domain interface
+export interface Domain {
+  id: string
+  name: string
+  icon: string
+  has_audio: boolean
+  created_at: string
+}
+
 // Base card interfaces
 export interface BaseCard {
   question: string
