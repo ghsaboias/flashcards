@@ -91,10 +91,20 @@ export function buildMultiSetQuery(options: Omit<QueryOptions, 'where'>, setCoun
 }
 
 // Multi-set SRS due query helper
-export function buildMultiSetSrsQuery(options: Omit<QueryOptions, 'where'>, setCount: number): string {
+export function buildMultiSetSrsQuery(options: Omit<QueryOptions, 'where'>, setCount: number, limit?: number): string {
   const placeholders = Array(setCount).fill('?').join(',')
   const { sql } = buildCardQuery({ ...options, where: 'multi_set_srs_due' })
-  return sql.replace(' WHERE set_key IN', ` WHERE set_key IN (${placeholders}) AND datetime(next_review_date) <= CURRENT_TIMESTAMP`)
+
+  let query = sql.replace(' WHERE set_key IN', ` WHERE set_key IN (${placeholders}) AND datetime(next_review_date) <= CURRENT_TIMESTAMP`)
+
+  // Add priority ordering: most overdue first
+  query += ` ORDER BY (julianday('now') - julianday(next_review_date)) DESC`
+
+  if (limit) {
+    query += ` LIMIT ${limit}`
+  }
+
+  return query
 }
 
 // Multi-category SRS due query helper
@@ -215,13 +225,14 @@ export async function fetchMultiSetSrsCards(
   db: D1Database,
   options: Omit<QueryOptions, 'where'>,
   setNames: string[],
+  limit?: number,
   deduplicate = false
 ): Promise<{ cards: SessionCard[], metadata: any[] }> {
   if (setNames.length === 0) {
     return { cards: [], metadata: [] }
   }
 
-  const sql = buildMultiSetSrsQuery(options, setNames.length)
+  const sql = buildMultiSetSrsQuery(options, setNames.length, limit)
   const { results } = await db.prepare(sql).bind(...setNames).all()
 
   let cardsWithMetadata = (results || []) as any[]

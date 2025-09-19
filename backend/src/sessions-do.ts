@@ -63,13 +63,15 @@ export class SessionsDO {
       cardsWithMetadata = rows.filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
       cards = cardsWithMetadata.map(r => ({ id: r.id, category_key: r.category_key, set_key: r.set_key, question: r.question, answer: r.answer }))
     } else if (payload.mode === 'srs_sets' && payload.selected_sets?.length) {
-      const result = await fetchMultiSetSrsCards(this.env.DB, { fields: 'full' }, payload.selected_sets)
+      const TARGET_SESSION_SIZE = 20
+      const result = await fetchMultiSetSrsCards(this.env.DB, { fields: 'full' }, payload.selected_sets, TARGET_SESSION_SIZE)
       cards = result.cards
       cardsWithMetadata = result.metadata
     } else if (payload.mode === 'srs_categories' && payload.selected_categories?.length) {
       // Note: This is actually querying by category, but we'll adapt the multi-set helper
       // Need to first get sets for these categories
-      const result = await fetchMultiSetSrsCards(this.env.DB, { fields: 'full' }, payload.selected_categories)
+      const TARGET_SESSION_SIZE = 20
+      const result = await fetchMultiSetSrsCards(this.env.DB, { fields: 'full' }, payload.selected_categories, TARGET_SESSION_SIZE)
       cards = result.cards
       cardsWithMetadata = result.metadata
     } else if (payload.mode === 'multi_set_all' && payload.selected_sets?.length) {
@@ -78,10 +80,31 @@ export class SessionsDO {
       cardsWithMetadata = result.metadata
       cards = result.cards
     } else if (payload.mode === 'multi_set_difficulty' && payload.selected_sets?.length && payload.difficulty_levels?.length) {
-      // Difficult cards from multiple selected sets
-      const result = await fetchMultiSetCards(this.env.DB, { fields: 'full' }, payload.selected_sets)
-      const rows = result.metadata
-      cardsWithMetadata = rows.filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
+      const TARGET_SESSION_SIZE = 20
+
+      // First: Get available SRS cards (highest priority)
+      const srsResult = await fetchMultiSetSrsCards(
+        this.env.DB,
+        { fields: 'full' },
+        payload.selected_sets,
+        TARGET_SESSION_SIZE
+      )
+
+      let allCards = [...srsResult.metadata]
+
+      // If SRS doesn't fill session, add difficult cards
+      if (allCards.length < TARGET_SESSION_SIZE) {
+        const remaining = TARGET_SESSION_SIZE - allCards.length
+        const diffResult = await fetchMultiSetCards(this.env.DB, { fields: 'full' }, payload.selected_sets)
+        const difficultCards = diffResult.metadata
+          .filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
+          .filter(r => !allCards.some(existing => existing.id === r.id)) // Avoid duplicates
+          .slice(0, remaining)
+
+        allCards = [...allCards, ...difficultCards]
+      }
+
+      cardsWithMetadata = allCards
       cards = cardsWithMetadata.map(r => ({ id: r.id, category_key: r.category_key, set_key: r.set_key, question: r.question, answer: r.answer }))
     } else if (payload.mode === 'review_incorrect' && payload.review_items?.length) {
       const out: any[] = []
