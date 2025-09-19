@@ -147,7 +147,10 @@ export function useSessionManager(): [SessionState, SessionActions] {
       return {
         ...prev,
         ...updates,
-        ...(trackStartTime && { questionStartTime: Date.now() })
+        ...(trackStartTime && {
+          questionStartTime: Date.now(),
+          sessionStartTime: Date.now()
+        })
       }
     })
 
@@ -157,10 +160,10 @@ export function useSessionManager(): [SessionState, SessionActions] {
   // Session start methods
   const beginAutoSession = useCallback(async () => {
     await initializeSession(
-      () => apiClient.startAutoSession({ user_level: state.userLevel, focus_mode: state.focusMode }),
-      { setHighIntensity: true }
+      () => apiClient.startAutoSession({}),
+      { setHighIntensity: true, trackStartTime: true }
     )
-  }, [state.userLevel, state.focusMode, initializeSession])
+  }, [initializeSession])
 
   const beginSetSession = useCallback(async () => {
     await initializeSession(
@@ -188,7 +191,7 @@ export function useSessionManager(): [SessionState, SessionActions] {
     const reviewItems = wrong.map(r => ({
       question: r.question,
       answer: r.correct_answer,
-      ...(state.mode === 'set' && state.selectedSet ? { set_name: state.selectedSet } : {})
+      set_name: r.set_name || state.selectedSet || ''
     }))
 
     try {
@@ -210,7 +213,8 @@ export function useSessionManager(): [SessionState, SessionActions] {
         question: r.question,
         pinyin: r.pinyin,
         correct_answer: r.correct_answer,
-        answer: r.correct_answer
+        answer: r.correct_answer,
+        set_name: r.set_name
       })),
       reviewPosition: 0,
       question: wrong[0]?.question || "",
@@ -238,7 +242,8 @@ export function useSessionManager(): [SessionState, SessionActions] {
             user_answer: prev.input,
             correct_answer: current?.correct_answer || '',
             correct: isCorrect,
-            answer: current?.correct_answer || ''
+            answer: current?.correct_answer || '',
+            set_name: current?.set_name
           }
         ]
 
@@ -332,13 +337,6 @@ export function useSessionManager(): [SessionState, SessionActions] {
     setState(prev => ({ ...prev, mode: value }))
   }, [])
 
-  const setUserLevel = useCallback((value: 'beginner' | 'intermediate' | 'advanced') => {
-    setState(prev => ({ ...prev, userLevel: value }))
-  }, [])
-
-  const setFocusMode = useCallback((value: 'review' | 'challenge') => {
-    setState(prev => ({ ...prev, focusMode: value }))
-  }, [])
 
   const setIsHighIntensityMode = useCallback((value: boolean) => {
     setState(prev => ({ ...prev, isHighIntensityMode: value }))
@@ -459,8 +457,6 @@ export function useSessionManager(): [SessionState, SessionActions] {
     setSelectedCategory,
     setSelectedSets,
     setMode,
-    setUserLevel,
-    setFocusMode,
     setIsHighIntensityMode,
     setOldFocusMode,
     setDiffEasy,

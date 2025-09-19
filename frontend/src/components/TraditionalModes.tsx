@@ -41,11 +41,19 @@ export default function TraditionalModes({
     beginSrsCategories,
     beginMultiSetSrs,
     beginDrawingMode,
-    viewPerformance
+    viewPerformance,
+    setIsHighIntensityMode
   } = actions
 
   return (
     <div className="section">
+      <button
+        className="btn-tertiary"
+        onClick={() => setIsHighIntensityMode(true)}
+        style={{ marginBottom: '16px' }}
+      >
+        ← Back to Simple
+      </button>
       {mode === 'set' ? (
         <div className="group">
           <select 

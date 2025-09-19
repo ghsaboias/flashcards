@@ -68,8 +68,6 @@ export function useHighIntensitySettings() {
   const state = useSessionState()
   return {
     isHighIntensityMode: state.isHighIntensityMode,
-    userLevel: state.userLevel,
-    focusMode: state.focusMode,
     adaptiveFeedbackDuration: state.adaptiveFeedbackDuration,
     questionStartTime: state.questionStartTime
   }

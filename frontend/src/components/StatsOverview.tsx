@@ -240,9 +240,22 @@ export default function StatsOverview({
           </div>
         )}
 
-        <UnifiedTable 
-          srsRows={srsRows.length > 0 ? srsRows : undefined} 
-          statsRows={stats ? stats.rows || [] : undefined} 
+        {/* Due cards preview */}
+        <div style={{
+          padding: '12px 16px',
+          margin: '0 0 16px 0',
+          background: 'var(--panel)',
+          borderRadius: '6px',
+          textAlign: 'center',
+          fontSize: '14px',
+          color: 'var(--muted)'
+        }}>
+          450 cards due now
+        </div>
+
+        <UnifiedTable
+          srsRows={srsRows.length > 0 ? srsRows : undefined}
+          statsRows={stats ? stats.rows || [] : undefined}
         />
       </div>
     )

@@ -23,13 +23,13 @@ export interface CoreSessionData {
   results: ResultCard[]
   streak: number
   bestStreak: number
+  sessionStartTime: number | null
+  currentCardSet: string
 }
 
 // High-intensity mode settings
 export interface HighIntensitySettings {
   isHighIntensityMode: boolean
-  userLevel: 'beginner' | 'intermediate' | 'advanced'
-  focusMode: 'review' | 'challenge'
   adaptiveFeedbackDuration: number
   questionStartTime: number
 }
@@ -140,8 +140,6 @@ export interface SetterActions {
   setSelectedCategory: (category: string) => void
   setSelectedSets: (sets: string[]) => void
   setMode: (mode: 'set' | 'category' | 'multi-set') => void
-  setUserLevel: (level: 'beginner' | 'intermediate' | 'advanced') => void
-  setFocusMode: (mode: 'review' | 'challenge') => void
   setIsHighIntensityMode: (enabled: boolean) => void
   setOldFocusMode: (enabled: boolean) => void
   setDiffEasy: (enabled: boolean) => void

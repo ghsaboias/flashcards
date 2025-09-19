@@ -16,11 +16,11 @@ export function createEmptySessionState(): SessionState {
     results: [],
     streak: 0,
     bestStreak: 0,
+    sessionStartTime: null,
+    currentCardSet: "",
 
     // High-intensity mode
     isHighIntensityMode: true,
-    userLevel: 'beginner',
-    focusMode: 'challenge',
     adaptiveFeedbackDuration: 2000,
     questionStartTime: 0,
 
@@ -72,7 +72,9 @@ export function createCoreSessionReset(): Partial<SessionState> {
     results: [],
     streak: 0,
     bestStreak: 0,
-    questionStartTime: 0
+    questionStartTime: 0,
+    sessionStartTime: null,
+    currentCardSet: ""
   }
 }
 
@@ -129,6 +131,7 @@ export function updateSessionFromResponse(
   if (response.card) {
     updates.question = response.card.question
     updates.pinyin = response.card.pinyin || ""
+    updates.currentCardSet = response.card.set_name || ""
   }
   updates.progress = response.progress
 

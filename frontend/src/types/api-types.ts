@@ -5,6 +5,7 @@ export interface BaseCard {
   question: string
   pinyin?: string
   answer: string
+  set_name?: string
 }
 
 export interface SessionCard extends BaseCard {

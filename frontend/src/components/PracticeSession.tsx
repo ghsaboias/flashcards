@@ -1,6 +1,8 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import type { PracticeSessionProps } from '../types/component-props'
 import { hasChinese } from '../utils/pinyin'
+import { formatSessionDuration } from '../utils/timer-utils'
+import { humanizeSetLabel } from '../utils/hsk-label-utils'
 
 export default function PracticeSession({ sessionState, actions, canAnswer, speak }: PracticeSessionProps) {
   const {
@@ -13,12 +15,15 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
     bestStreak,
     oldFocusMode,
     isHighIntensityMode,
-    adaptiveFeedbackDuration
+    adaptiveFeedbackDuration,
+    sessionStartTime,
+    currentCardSet
   } = sessionState
-  
+
   const { setInput, submitAnswer, setOldFocusMode, setIsHighIntensityMode } = actions
-  
+
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const [sessionTimer, setSessionTimer] = useState("")
   
   // Auto-focus input field when a new question loads
   useEffect(() => {
@@ -26,6 +31,19 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
       inputRef.current.focus()
     }
   }, [question, canAnswer])
+
+  // Update session timer every second
+  useEffect(() => {
+    if (!sessionStartTime) return
+
+    const updateTimer = () => {
+      setSessionTimer(formatSessionDuration(sessionStartTime))
+    }
+
+    updateTimer() // Initial update
+    const interval = setInterval(updateTimer, 1000)
+    return () => clearInterval(interval)
+  }, [sessionStartTime])
 
   // Auto-hide feedback with adaptive duration
   useEffect(() => {
@@ -41,8 +59,17 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
   return (
     <>
       {isHighIntensityMode && (
-        <div className="minimal-progress">
-          {progress.current}/{progress.total}
+        <div className="high-intensity-header" style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '8px 16px',
+          fontSize: '14px',
+          color: '#666'
+        }}>
+          <div className="session-timer">⏱️ {sessionTimer}</div>
+          <div className="minimal-progress">{progress.current}/{progress.total} · {progress.total - progress.current} left</div>
+          {currentCardSet && <div className="card-set">{humanizeSetLabel(currentCardSet)}</div>}
         </div>
       )}
       
