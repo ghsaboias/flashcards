@@ -516,6 +516,156 @@ select {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Mobile touch target optimization */
+@media (max-width: 768px) {
+  /* Ensure all interactive elements meet 44px minimum touch target */
+  button,
+  select,
+  input[type="text"],
+  input[type="checkbox"],
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Larger buttons for primary actions */
+  .btn-primary {
+    font-size: 16px;
+    padding: 14px 20px;
+    min-height: 48px;
+  }
+
+  /* Larger text inputs */
+  input[type="text"] {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px 16px;
+    min-height: 44px;
+  }
+
+  /* Larger select dropdowns */
+  select {
+    font-size: 16px;
+    padding: 12px 16px;
+    min-height: 44px;
+  }
+
+  /* Larger checkbox targets */
+  .checkbox {
+    padding: 8px 4px;
+    min-height: 44px;
+  }
+
+  .checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Table interaction improvements */
+  .statsTable thead th button,
+  .srsTable thead th button {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+
+  /* High-intensity mode mobile optimizations */
+  .high-intensity-question input {
+    font-size: 18px;
+    padding: 16px 20px;
+    min-height: 56px;
+    min-width: 250px;
+  }
+
+  .high-intensity-question button {
+    font-size: 18px;
+    padding: 16px 24px;
+    min-height: 56px;
+  }
+
+  /* Domain selector mobile optimization */
+  .domain-selector select {
+    font-size: 16px;
+    padding: 12px 16px;
+    min-height: 44px;
+  }
+
+  /* Navigation improvements */
+  .breadcrumb-item {
+    min-height: 32px;
+    padding: 6px 8px;
+  }
+}
+
+/* Very small screens (phones in portrait) */
+@media (max-width: 480px) {
+  /* Even larger touch targets for small screens */
+  .btn-primary {
+    font-size: 17px;
+    padding: 16px 24px;
+    min-height: 52px;
+  }
+
+  button {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  /* Prevent horizontal scrolling */
+  .container {
+    overflow-x: hidden;
+  }
+
+  /* Stack action buttons vertically on very small screens */
+  .row button {
+    flex: 1 1 100%;
+    max-width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  /* Larger question display for readability */
+  .question {
+    font-size: 24px;
+  }
+
+  .question.zh {
+    font-size: 64px;
+  }
+
+  .high-intensity-question .question {
+    font-size: 40px;
+  }
+
+  .high-intensity-question .question.zh {
+    font-size: 80px;
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Reduce vertical spacing in landscape */
+  .high-intensity-question {
+    min-height: 60vh;
+    padding: 16px;
+  }
+
+  .high-intensity-question .question {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+
+  .high-intensity-question .question.zh {
+    font-size: 72px;
+  }
+
+  .streamlined-start {
+    min-height: 50vh;
+    padding: 32px 24px;
+  }
+}
+
 /* Streamlined high-intensity mode */
 .streamlined-start {
   display: flex;
