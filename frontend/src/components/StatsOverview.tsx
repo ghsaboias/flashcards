@@ -29,7 +29,6 @@ export default function StatsOverview({
           <div className="statsPanel" style={{ marginTop: 8 }}>
             <div className="metaRow">
               <h3>📊 Performance Analytics</h3>
-              {performance && <div className="muted">{performance.summary.overall_accuracy}% overall accuracy</div>}
             </div>
 
             {performance && (
