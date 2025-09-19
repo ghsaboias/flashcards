@@ -251,17 +251,6 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     setState(prev => ({ ...prev, diffHard: value }))
   }, [])
 
-  const setDrawingPosition = useCallback((value: number) => {
-    setState(prev => ({ ...prev, drawingPosition: value }))
-  }, [])
-
-  const setDrawingProgress = useCallback((value: { current: number; total: number }) => {
-    setState(prev => ({ ...prev, drawingProgress: value }))
-  }, [])
-
-  const setInDrawingMode = useCallback((value: boolean) => {
-    setState(prev => ({ ...prev, inDrawingMode: value }))
-  }, [])
 
   // Multi-set helpers
   const addSetToSelectionAction = useCallback((setName: string) => {
@@ -293,18 +282,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
         .then(res => initializeSession(() => Promise.resolve(res)))
         .catch(() => beginMultiSetSession()) // Fallback
     },
-    beginDrawingMode: async () => {
-      setState(prev => ({ ...prev, inDrawingMode: true }))
-      await beginMultiSetSession()
-    },
     submitAnswer,
-    beginBrowse: async () => {
-      setState(prev => ({ ...prev, inBrowseMode: true }))
-      // Implement browse mode logic here
-    },
-    exitBrowse: () => setState(prev => ({ ...prev, inBrowseMode: false })),
-    nextBrowse: () => setState(prev => ({ ...prev, browseIndex: Math.min(prev.browseIndex + 1, Math.max(0, prev.browseRows.length - 1)) })),
-    prevBrowse: () => setState(prev => ({ ...prev, browseIndex: Math.max(prev.browseIndex - 1, 0) })),
     beginReviewIncorrect,
     setStatsMode,
     setInput,
@@ -314,11 +292,18 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     setDiffEasy,
     setDiffMedium,
     setDiffHard,
-    setDrawingPosition,
-    setDrawingProgress,
-    setInDrawingMode,
     addSetToSelection: addSetToSelectionAction,
-    removeSetFromSelection: removeSetFromSelectionAction
+    removeSetFromSelection: removeSetFromSelectionAction,
+    restoreSessionFromBackend: async (sessionId: string, sessionData: SessionResponse) => {
+      setState(prev => ({
+        ...prev,
+        sessionId,
+        done: sessionData.done,
+        progress: sessionData.progress,
+        question: sessionData.current_question || '',
+        results: sessionData.results || []
+      }))
+    }
   }
 
   return [state, actions]

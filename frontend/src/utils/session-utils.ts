@@ -27,14 +27,6 @@ export function createEmptySessionState(): SessionState {
     // UI preferences
     showPinyin: true,
 
-    // Special modes
-    inBrowseMode: false,
-    browseRows: [],
-    browseIndex: 0,
-    inDrawingMode: false,
-    drawingCards: [],
-    drawingPosition: 0,
-    drawingProgress: { current: 0, total: 0 },
 
     // Data and settings
     sets: [],
@@ -72,13 +64,7 @@ export function createCoreSessionReset(): Partial<SessionState> {
 
 export function createSpecialModesReset(): Partial<SessionState> {
   return {
-    inBrowseMode: false,
-    browseRows: [],
-    browseIndex: 0,
-    inDrawingMode: false,
-    drawingCards: [],
-    drawingPosition: 0,
-    drawingProgress: { current: 0, total: 0 },
+    // No legacy modes to reset
   }
 }
 

@@ -3,8 +3,6 @@
 import type {
   Progress,
   ResultCard,
-  DrawingCard,
-  BrowseCard,
   SrsRow,
   StatsPayload,
   PerformancePayload,
@@ -38,19 +36,6 @@ export interface UIPreferences {
   showPinyin: boolean
 }
 
-// Legacy data structures (kept for backward compatibility during migration)
-export interface LegacyModes {
-  // Browse mode (now handled by BrowsePage)
-  inBrowseMode: boolean
-  browseRows: BrowseCard[]
-  browseIndex: number
-
-  // Drawing mode (now handled by DrawingPage)
-  inDrawingMode: boolean
-  drawingCards: DrawingCard[]
-  drawingPosition: number
-  drawingProgress: Progress
-}
 
 // Data selection and settings
 export interface DataSettings {
@@ -77,7 +62,6 @@ export interface SessionState extends
   CoreSessionData,
   HighIntensitySettings,
   UIPreferences,
-  LegacyModes,
   DataSettings,
   ViewStates {}
 
@@ -87,6 +71,7 @@ export interface CoreSessionActions {
   beginAutoSession: (domainId?: string) => Promise<void>
   beginMultiSetSession: () => Promise<void>
   submitAnswer: () => Promise<void>
+  restoreSessionFromBackend: (sessionId: string, sessionData: import('./api-types').SessionResponse) => Promise<void>
 }
 
 export interface DifficultyActions {
@@ -98,17 +83,8 @@ export interface SrsActions {
 }
 
 export interface SpecialModeActions {
-  // Legacy browse actions (kept for compatibility)
-  beginBrowse: () => Promise<void>
-  exitBrowse: () => void
-  nextBrowse: () => void
-  prevBrowse: () => void
-
   // Review mode
   beginReviewIncorrect: () => Promise<void>
-
-  // Legacy drawing mode (now handled by DrawingPage)
-  beginDrawingMode: () => Promise<void>
 }
 
 export interface ViewActions {
@@ -123,9 +99,6 @@ export interface SetterActions {
   setDiffEasy: (enabled: boolean) => void
   setDiffMedium: (enabled: boolean) => void
   setDiffHard: (enabled: boolean) => void
-  setDrawingPosition: (position: number) => void
-  setDrawingProgress: (progress: Progress) => void
-  setInDrawingMode: (enabled: boolean) => void
 }
 
 export interface MultiSetActions {

@@ -73,18 +73,6 @@ export function useHighIntensitySettings() {
   }
 }
 
-export function useSpecialModes() {
-  const state = useSessionState()
-  return {
-    inBrowseMode: state.inBrowseMode,
-    browseRows: state.browseRows,
-    browseIndex: state.browseIndex,
-    inDrawingMode: state.inDrawingMode,
-    drawingCards: state.drawingCards,
-    drawingPosition: state.drawingPosition,
-    drawingProgress: state.drawingProgress
-  }
-}
 
 export function useDataSettings() {
   const state = useSessionState()
