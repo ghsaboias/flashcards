@@ -1,17 +1,11 @@
 export type StartSessionPayload = {
   mode:
-  | 'set_all'
-  | 'category_all'
-  | 'difficulty_set'
-  | 'difficulty_category'
-  | 'srs_sets'
-  | 'srs_categories'
+  | 'multi_set_all'
+  | 'multi_set_difficult'
+  | 'multi_set_srs'
   | 'review_incorrect'
-  set_name?: string
-  category?: string
   difficulty_levels?: Array<'easy' | 'medium' | 'hard'>
-  selected_sets?: string[]
-  selected_categories?: string[]
+  selected_sets: string[]
   review_items?: Array<{ question: string; answer: string; set_name?: string }>
 }
 
@@ -26,12 +20,9 @@ export type SessionCard = {
 export type SessionState = {
   session_id: string
   mode:
-  | 'set_all'
-  | 'category_all'
-  | 'difficulty_set'
-  | 'difficulty_category'
-  | 'srs_sets'
-  | 'srs_categories'
+  | 'multi_set_all'
+  | 'multi_set_difficult'
+  | 'multi_set_srs'
   | 'review_incorrect'
   started_at: string
   practice_name?: string
@@ -39,8 +30,6 @@ export type SessionState = {
   position: number
   order: number[]
   cards: SessionCard[]
-  // For category mode: duplicates mapping by key `${question}||${answer}` -> indices of cards in cards[]
-  duplicateIndexMap?: Record<string, number[]>
   // Fast lookup maps (computed on session start)
   answerMap?: Map<string, string>  // question -> correct answer
   cardMetaMap?: Map<string, { id: number; category_key: string; set_key: string }>  // question -> card metadata

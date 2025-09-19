@@ -1,7 +1,7 @@
 import { updateSrs } from './srs'
 import type { SessionCard, SessionState } from './types'
 import { validateAnswer } from './utils/validateAnswer'
-import { fetchCards, fetchMultiSetCards, fetchMultiSetSrsCards, fetchMultiCategorySrsCards, extractSrsData } from './utils/db-queries'
+import { fetchCards, fetchMultiSetCards, fetchMultiSetSrsCards, extractSrsData } from './utils/db-queries'
 
 type Env = {
   DB: D1Database
@@ -31,12 +31,9 @@ export class SessionsDO {
 
   private async start(request: Request): Promise<Response> {
     const payload = await request.json() as {
-      mode: 'set_all' | 'category_all' | 'difficulty_set' | 'difficulty_category' | 'srs_sets' | 'srs_categories' | 'multi_set_all' | 'multi_set_difficulty' | 'review_incorrect'
-      set_name?: string
-      category?: string
+      mode: 'multi_set_all' | 'multi_set_difficult' | 'multi_set_srs' | 'review_incorrect'
       difficulty_levels?: Array<'easy' | 'medium' | 'hard'>
-      selected_sets?: string[]
-      selected_categories?: string[]
+      selected_sets: string[]
       review_items?: Array<{ question: string; answer: string; set_name?: string }>
     }
     const session_id = this.state.id.toString()
@@ -44,42 +41,12 @@ export class SessionsDO {
 
     let cards: SessionCard[] = []
     let cardsWithMetadata: Array<SessionCard & { correct_count?: number; incorrect_count?: number; reviewed_count?: number; easiness_factor?: number; interval_hours?: number; repetitions?: number }> = []
-    if (payload.mode === 'set_all' && payload.set_name) {
-      const result = await fetchCards(this.env.DB, { fields: 'full', where: 'set' }, [payload.set_name])
-      cards = result.cards
-      cardsWithMetadata = result.metadata
-    } else if (payload.mode === 'category_all' && payload.category) {
-      const result = await fetchCards(this.env.DB, { fields: 'full', where: 'category' }, [payload.category], true)
-      cards = result.cards
-      cardsWithMetadata = result.metadata
-    } else if (payload.mode === 'difficulty_set' && payload.set_name && payload.difficulty_levels?.length) {
-      const result = await fetchCards(this.env.DB, { fields: 'full', where: 'set' }, [payload.set_name])
-      const rows = result.metadata
-      cardsWithMetadata = rows.filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
-      cards = cardsWithMetadata.map(r => ({ id: r.id, category_key: r.category_key, set_key: r.set_key, question: r.question, answer: r.answer }))
-    } else if (payload.mode === 'difficulty_category' && payload.category && payload.difficulty_levels?.length) {
-      const result = await fetchCards(this.env.DB, { fields: 'full', where: 'category' }, [payload.category], true)
-      const rows = result.metadata
-      cardsWithMetadata = rows.filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
-      cards = cardsWithMetadata.map(r => ({ id: r.id, category_key: r.category_key, set_key: r.set_key, question: r.question, answer: r.answer }))
-    } else if (payload.mode === 'srs_sets' && payload.selected_sets?.length) {
-      const TARGET_SESSION_SIZE = 20
-      const result = await fetchMultiSetSrsCards(this.env.DB, { fields: 'full' }, payload.selected_sets, TARGET_SESSION_SIZE)
-      cards = result.cards
-      cardsWithMetadata = result.metadata
-    } else if (payload.mode === 'srs_categories' && payload.selected_categories?.length) {
-      // Note: This is actually querying by category, but we'll adapt the multi-set helper
-      // Need to first get sets for these categories
-      const TARGET_SESSION_SIZE = 20
-      const result = await fetchMultiSetSrsCards(this.env.DB, { fields: 'full' }, payload.selected_categories, TARGET_SESSION_SIZE)
-      cards = result.cards
-      cardsWithMetadata = result.metadata
-    } else if (payload.mode === 'multi_set_all' && payload.selected_sets?.length) {
+    if (payload.mode === 'multi_set_all') {
       // All cards from multiple selected sets
       const result = await fetchMultiSetCards(this.env.DB, { fields: 'full' }, payload.selected_sets)
       cardsWithMetadata = result.metadata
       cards = result.cards
-    } else if (payload.mode === 'multi_set_difficulty' && payload.selected_sets?.length && payload.difficulty_levels?.length) {
+    } else if (payload.mode === 'multi_set_difficult' && payload.difficulty_levels?.length) {
       const TARGET_SESSION_SIZE = 20
 
       // First: Get available SRS cards (highest priority)
@@ -106,6 +73,11 @@ export class SessionsDO {
 
       cardsWithMetadata = allCards
       cards = cardsWithMetadata.map(r => ({ id: r.id, category_key: r.category_key, set_key: r.set_key, question: r.question, answer: r.answer }))
+    } else if (payload.mode === 'multi_set_srs') {
+      const TARGET_SESSION_SIZE = 20
+      const result = await fetchMultiSetSrsCards(this.env.DB, { fields: 'full' }, payload.selected_sets, TARGET_SESSION_SIZE)
+      cards = result.cards
+      cardsWithMetadata = result.metadata
     } else if (payload.mode === 'review_incorrect' && payload.review_items?.length) {
       const out: any[] = []
       for (const it of payload.review_items) {
@@ -143,11 +115,9 @@ export class SessionsDO {
       mode: payload.mode as any,
       started_at,
       session_type: this.computeSessionType(payload.mode),
-      practice_name: payload.set_name || payload.category ||
-        (payload.mode === 'srs_sets' ? 'Selected Sets' :
-          payload.mode === 'srs_categories' ? 'Selected Categories' :
-            payload.mode === 'multi_set_all' || payload.mode === 'multi_set_difficulty' ?
-              `Multi-Set (${payload.selected_sets?.length || 0} sets)` : undefined),
+      practice_name: payload.mode === 'multi_set_srs' ? 'Selected Sets' :
+            payload.mode === 'multi_set_all' || payload.mode === 'multi_set_difficult' ?
+              `Multi-Set (${payload.selected_sets?.length || 0} sets)` : undefined,
       position: 0,
       order,
       cards,
@@ -202,8 +172,8 @@ export class SessionsDO {
     // Calculate adaptive feedback duration using both response and card difficulty
     const feedbackDuration = this.calculateAdaptiveFeedbackDuration(responseTimeMs, responseDifficulty, cardDifficulty, isCorrect)
 
-    // Update counts (category: update all duplicates with same Q+A; set: only this card)
-    const doAll = state.mode === 'category_all' || state.mode === 'difficulty_category'
+    // Update counts for this specific card only (no more bulk category updates)
+    const doAll = false
 
     // Use D1 batch instead of BEGIN/COMMIT inside DO
     const stmts: D1PreparedStatement[] = []
@@ -231,7 +201,7 @@ export class SessionsDO {
       )
     }
     // SRS only for the exact card in SRS modes
-    if (state.mode === 'srs_sets' || state.mode === 'srs_categories') {
+    if (state.mode === 'multi_set_srs') {
       // Use fast Map lookup for current SRS state (0.1ms vs 100-500ms D1 query)
       const currentSRS = this.getSRSDataFast(state, card.question)
       const next = updateSrs(currentSRS, isCorrect)
@@ -305,14 +275,9 @@ export class SessionsDO {
 
   private computeSessionType(mode: string): string {
     switch (mode) {
-      case 'set_all': return 'Review All'
-      case 'category_all': return 'Category Review'
-      case 'difficulty_set': return 'Practice by Difficulty'
-      case 'difficulty_category': return 'Practice by Difficulty'
-      case 'srs_sets': return 'SRS Review'
-      case 'srs_categories': return 'SRS Review'
       case 'multi_set_all': return 'Multi-Set Review'
-      case 'multi_set_difficulty': return 'Multi-Set Practice by Difficulty'
+      case 'multi_set_difficult': return 'Multi-Set Practice by Difficulty'
+      case 'multi_set_srs': return 'SRS Review'
       case 'review_incorrect': return 'Review Incorrect'
       default: return mode
     }

@@ -6,8 +6,7 @@ const FIELD_SETS = {
   full: 'id, category_key, set_key, question, answer, correct_count, incorrect_count, reviewed_count, easiness_factor, interval_hours, repetitions',
   srs: 'question, answer, easiness_factor, interval_hours, repetitions, next_review_date',
   srs_with_set: 'set_key, question, answer, easiness_factor, interval_hours, repetitions, next_review_date',
-  distinct_sets: 'DISTINCT set_key',
-  distinct_categories: 'DISTINCT category_key'
+  distinct_sets: 'DISTINCT set_key'
 } as const
 
 type FieldSet = keyof typeof FIELD_SETS
@@ -15,7 +14,7 @@ type FieldSet = keyof typeof FIELD_SETS
 // WHERE clause builders
 interface QueryOptions {
   fields: FieldSet
-  where?: 'set' | 'category' | 'multi_set' | 'srs_due' | 'multi_set_srs_due' | 'multi_category_srs_due' | 'exact_match' | 'question_answer' | 'none'
+  where?: 'set' | 'multi_set' | 'srs_due' | 'multi_set_srs_due' | 'exact_match' | 'question_answer' | 'none'
   orderBy?: string
   limit?: number
 }
@@ -37,10 +36,6 @@ export function buildCardQuery(options: QueryOptions): CardQueryBuilder {
       sql += ' WHERE set_key = ?'
       paramCount = 1
       break
-    case 'category':
-      sql += ' WHERE category_key = ?'
-      paramCount = 1
-      break
     case 'multi_set':
       // Placeholder count will be determined by caller
       sql += ' WHERE set_key IN'
@@ -54,11 +49,6 @@ export function buildCardQuery(options: QueryOptions): CardQueryBuilder {
       // Special case for multi-set SRS due queries
       sql += ' WHERE set_key IN'
       paramCount = -2 // Special case - caller handles placeholders + SRS condition
-      break
-    case 'multi_category_srs_due':
-      // Special case for multi-category SRS due queries
-      sql += ' WHERE category_key IN'
-      paramCount = -3 // Special case - caller handles placeholders + SRS condition
       break
     case 'exact_match':
       sql += ' WHERE set_key = ? AND question = ? AND answer = ?'
@@ -107,12 +97,6 @@ export function buildMultiSetSrsQuery(options: Omit<QueryOptions, 'where'>, setC
   return query
 }
 
-// Multi-category SRS due query helper
-export function buildMultiCategorySrsQuery(options: Omit<QueryOptions, 'where'>, categoryCount: number): string {
-  const placeholders = Array(categoryCount).fill('?').join(',')
-  const { sql } = buildCardQuery({ ...options, where: 'multi_category_srs_due' })
-  return sql.replace(' WHERE category_key IN', ` WHERE category_key IN (${placeholders}) AND datetime(next_review_date) <= CURRENT_TIMESTAMP`)
-}
 
 // SRS row mapping utility
 export interface SrsRow {
@@ -251,32 +235,3 @@ export async function fetchMultiSetSrsCards(
   return { cards, metadata: cardsWithMetadata }
 }
 
-// Multi-category SRS due fetch utility
-export async function fetchMultiCategorySrsCards(
-  db: D1Database,
-  options: Omit<QueryOptions, 'where'>,
-  categoryNames: string[],
-  deduplicate = false
-): Promise<{ cards: SessionCard[], metadata: any[] }> {
-  if (categoryNames.length === 0) {
-    return { cards: [], metadata: [] }
-  }
-
-  const sql = buildMultiCategorySrsQuery(options, categoryNames.length)
-  const { results } = await db.prepare(sql).bind(...categoryNames).all()
-
-  let cardsWithMetadata = (results || []) as any[]
-
-  if (deduplicate) {
-    const map = new Map<string, any>()
-    cardsWithMetadata.forEach((r) => {
-      const key = `${r.question}||${r.answer}`
-      if (!map.has(key)) map.set(key, r)
-    })
-    cardsWithMetadata = Array.from(map.values())
-  }
-
-  const cards = cardsWithMetadata.map(mapToSessionCard)
-
-  return { cards, metadata: cardsWithMetadata }
-}

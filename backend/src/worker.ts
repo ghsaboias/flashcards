@@ -54,23 +54,6 @@ app.get('/api/sets', async (c) => {
   return c.json((results || []).map((r: any) => r.set_key))
 })
 
-// Categories
-app.get('/api/categories', async (c) => {
-  const domainId = c.req.query('domain_id') || ''
-
-  let sql = 'SELECT DISTINCT category_key FROM cards'
-  const params = []
-
-  if (domainId) {
-    sql += ' WHERE domain_id = ?'
-    params.push(domainId)
-  }
-
-  sql += ' ORDER BY category_key'
-
-  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
-  return c.json((results || []).map((r: any) => r.category_key))
-})
 
 // SRS: by set
 app.get('/api/srs/set', async (c) => {
@@ -91,24 +74,6 @@ app.get('/api/srs/set', async (c) => {
   return c.json(rows)
 })
 
-// SRS: by category
-app.get('/api/srs/category', async (c) => {
-  const category = c.req.query('category') || ''
-  const domainId = c.req.query('domain_id') || ''
-  if (!category) return c.json([], 200)
-
-  let sql = 'SELECT set_key, question, answer, easiness_factor, interval_hours, repetitions, next_review_date FROM cards WHERE category_key = ?'
-  const params = [category]
-
-  if (domainId) {
-    sql += ' AND domain_id = ?'
-    params.push(domainId)
-  }
-
-  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
-  const rows = (results || []).map((r: any) => mapToSrsRow(r))
-  return c.json(rows)
-})
 
 
 // Stats: by set
@@ -139,35 +104,6 @@ app.get('/api/stats/set', async (c) => {
   })
 })
 
-// Stats: by category (merge by question+answer)
-app.get('/api/stats/category', async (c) => {
-  const category = c.req.query('category') || ''
-  const domainId = c.req.query('domain_id') || ''
-  if (!category) return c.json({ category: '', summary: createEmptyStatsSummary(), rows: [] })
-
-  let sql = `SELECT question, answer,
-            SUM(correct_count)   AS correct,
-            SUM(incorrect_count) AS incorrect,
-            SUM(CASE WHEN reviewed_count > 0 THEN reviewed_count ELSE correct_count + incorrect_count END) AS reviewed
-     FROM cards WHERE category_key = ?`
-  const params = [category]
-
-  if (domainId) {
-    sql += ' AND domain_id = ?'
-    params.push(domainId)
-  }
-
-  sql += ' GROUP BY question, answer'
-
-  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
-  const rows = (results || []).map((r: any) => ({
-    question: r.question,
-    answer: r.answer,
-    ...computeAccuracyRow(r),
-  }))
-  const summary = computeStatsSummary(rows)
-  return c.json({ category, summary, rows })
-})
 
 // Performance analytics
 app.get('/api/performance', async (c) => {
@@ -360,7 +296,7 @@ app.post('/api/sessions/auto-start', async (c) => {
   if (dueCards && dueCards.length > 0) {
     // SRS review mode - mix of difficulties based on what's due
     const sessionPayload = {
-      mode: 'srs_sets',
+      mode: 'multi_set_srs',
       selected_sets: (dueCards as any[]).map(r => r.set_key)
     }
 
