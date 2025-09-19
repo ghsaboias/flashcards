@@ -36,9 +36,6 @@ export function createEmptySessionState(): SessionState {
     drawingCards: [],
     drawingPosition: 0,
     drawingProgress: { current: 0, total: 0 },
-    sprintMode: false,
-    sprintStartTime: 0,
-    sprintTimeLeft: 300,
     oldFocusMode: false,
 
     // Data and settings
@@ -92,8 +89,6 @@ export function createSpecialModesReset(): Partial<SessionState> {
     drawingCards: [],
     drawingPosition: 0,
     drawingProgress: { current: 0, total: 0 },
-    sprintMode: false,
-    sprintTimeLeft: 300
   }
 }
 

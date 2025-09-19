@@ -89,9 +89,6 @@ export function useSpecialModes() {
     drawingCards: state.drawingCards,
     drawingPosition: state.drawingPosition,
     drawingProgress: state.drawingProgress,
-    sprintMode: state.sprintMode,
-    sprintStartTime: state.sprintStartTime,
-    sprintTimeLeft: state.sprintTimeLeft,
     oldFocusMode: state.oldFocusMode
   }
 }

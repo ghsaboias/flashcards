@@ -13,8 +13,6 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
     bestStreak,
     oldFocusMode,
     isHighIntensityMode,
-    sprintMode,
-    sprintTimeLeft,
     adaptiveFeedbackDuration
   } = sessionState
   
@@ -68,18 +66,6 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
               </div>
             )}
             
-            {sprintMode && (
-              <div 
-                className="sprint-timer" 
-                style={{ 
-                  fontSize: '16px', 
-                  fontWeight: 'bold', 
-                  color: sprintTimeLeft <= 60 ? '#ff4444' : sprintTimeLeft <= 120 ? '#ff8800' : '#00aa44' 
-                }}
-              >
-                🏃‍♂️ {Math.floor(sprintTimeLeft / 60)}:{(sprintTimeLeft % 60).toString().padStart(2, '0')}
-              </div>
-            )}
             
             <button 
               onClick={() => setOldFocusMode(!oldFocusMode)}

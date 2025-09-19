@@ -53,10 +53,6 @@ export interface SpecialModes {
   drawingPosition: number
   drawingProgress: Progress
 
-  // Sprint mode
-  sprintMode: boolean
-  sprintStartTime: number
-  sprintTimeLeft: number
 
   // Focus mode
   oldFocusMode: boolean
@@ -129,7 +125,6 @@ export interface SpecialModeActions {
   beginReviewIncorrect: () => Promise<void>
 
   // Other modes
-  beginSprintMode: () => Promise<void>
   beginDrawingMode: () => Promise<void>
 }
 

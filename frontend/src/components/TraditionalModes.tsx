@@ -41,7 +41,6 @@ export default function TraditionalModes({
     beginSrsCategories,
     beginMultiSetSrs,
     beginDrawingMode,
-    beginSprintMode,
     viewPerformance
   } = actions
 
@@ -210,19 +209,6 @@ export default function TraditionalModes({
           }
         >
           Practice Drawing
-        </button>
-        <button
-          className="btn-primary"
-          style={{ background: '#ff6b35' }}
-          title="5-minute high-intensity practice session"
-          onClick={beginSprintMode}
-          disabled={
-            mode === 'set' ? !selectedSet :
-            mode === 'category' ? !selectedCategory :
-            selectedSets.length === 0
-          }
-        >
-          🏃‍♂️ Sprint Mode
         </button>
         <button
           className="btn-tertiary"

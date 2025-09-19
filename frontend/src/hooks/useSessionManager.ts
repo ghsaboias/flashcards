@@ -424,10 +424,6 @@ export function useSessionManager(): [SessionState, SessionActions] {
         .then(res => initializeSession(() => Promise.resolve(res)))
         .catch(() => beginMultiSetSession()) // Fallback
     },
-    beginSprintMode: async () => {
-      setState(prev => ({ ...prev, sprintMode: true, sprintTimeLeft: 300 }))
-      await beginSetSession()
-    },
     beginDrawingMode: async () => {
       setState(prev => ({ ...prev, inDrawingMode: true }))
       await beginSetSession()
@@ -450,6 +446,13 @@ export function useSessionManager(): [SessionState, SessionActions] {
         showStats: false,
         showSrs: false
       }))
+
+      try {
+        const performanceData = await apiClient.getPerformanceData()
+        setState(prev => ({ ...prev, performance: performanceData }))
+      } catch (error) {
+        console.error('Failed to fetch performance data:', error)
+      }
     },
     setInput,
     setSelectedSet,
