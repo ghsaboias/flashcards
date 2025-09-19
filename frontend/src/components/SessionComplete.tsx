@@ -90,7 +90,7 @@ export default function SessionComplete({
         )}
         
         <div className="next-actions">
-          <button className="btn-primary" onClick={beginAutoSession}>Continue Practice</button>
+          <button className="btn-primary" onClick={() => beginAutoSession()}>Continue Practice</button>
           <button className="btn-secondary" onClick={() => setIsHighIntensityMode(false)}>View Details</button>
         </div>
       </div>
