@@ -38,14 +38,14 @@ export interface UIPreferences {
   showPinyin: boolean
 }
 
-// Special practice modes
-export interface SpecialModes {
-  // Browse mode
+// Legacy data structures (kept for backward compatibility during migration)
+export interface LegacyModes {
+  // Browse mode (now handled by BrowsePage)
   inBrowseMode: boolean
   browseRows: BrowseCard[]
   browseIndex: number
 
-  // Drawing mode
+  // Drawing mode (now handled by DrawingPage)
   inDrawingMode: boolean
   drawingCards: DrawingCard[]
   drawingPosition: number
@@ -77,7 +77,7 @@ export interface SessionState extends
   CoreSessionData,
   HighIntensitySettings,
   UIPreferences,
-  SpecialModes,
+  LegacyModes,
   DataSettings,
   ViewStates {}
 
@@ -98,7 +98,7 @@ export interface SrsActions {
 }
 
 export interface SpecialModeActions {
-  // Browse mode
+  // Legacy browse actions (kept for compatibility)
   beginBrowse: () => Promise<void>
   exitBrowse: () => void
   nextBrowse: () => void
@@ -107,7 +107,7 @@ export interface SpecialModeActions {
   // Review mode
   beginReviewIncorrect: () => Promise<void>
 
-  // Other modes
+  // Legacy drawing mode (now handled by DrawingPage)
   beginDrawingMode: () => Promise<void>
 }
 
