@@ -55,7 +55,7 @@ bun run schema:apply  # Execute ./schema.sql against bound DB
   - Response: `[{ set_name, question, answer, easiness_factor, interval_hours, repetitions, next_review_date }]`
 - `GET /api/stats/set?set_name=...&domain_id=<domain>` — Accuracy + counts per card
   - Response: `{ set_name, summary, rows }`
-- `GET /api/performance?domain_id=<domain>` — Daily performance summary → `{ summary, daily }`
+- `GET /api/performance` — Daily performance summary (global across all domains) → `{ summary, daily }`
 
 ### High-Intensity Learning
 - `POST /api/sessions/auto-start` — **Intelligent session creation** (Recommended)
@@ -65,8 +65,8 @@ bun run schema:apply  # Execute ./schema.sql against bound DB
 
 ### Traditional Sessions
 - `POST /api/sessions/start` — Manual session creation (Durable Object)
-  - Body: `{ mode, set_name?, difficulty_levels?, selected_sets?, review_items?, domain_id? }`
-  - Modes: `set_all | difficulty_set | srs_sets | multi_set_all | multi_set_difficulty | review_incorrect`
+  - Body: `{ mode, selected_sets?, difficulty_levels?, review_items? }`
+  - Modes: `multi_set_all | multi_set_difficult | multi_set_srs | review_incorrect`
   - Response: `{ session_id, done, card?, progress }`
 
 ### Session Management
@@ -118,15 +118,13 @@ CREATE TABLE IF NOT EXISTS cards (
 -- Session tracking with performance analytics
 CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
-  domain_id TEXT,
   practice_name TEXT,
   session_type TEXT,
   started_at TEXT NOT NULL,
   ended_at TEXT,
   duration_seconds REAL,
   correct_count INTEGER,
-  total INTEGER,
-  FOREIGN KEY (domain_id) REFERENCES domains(id)
+  total INTEGER
 );
 
 -- Detailed session events for analytics
@@ -134,7 +132,6 @@ CREATE TABLE IF NOT EXISTS session_events (
   session_id TEXT NOT NULL,
   position INTEGER NOT NULL,
   card_id INTEGER,
-  domain_id TEXT,
   category_key TEXT,
   set_key TEXT,
   question TEXT NOT NULL,
@@ -142,11 +139,9 @@ CREATE TABLE IF NOT EXISTS session_events (
   correct_answer TEXT,
   correct INTEGER NOT NULL,
   duration_seconds REAL NOT NULL,
-  response_time_ms INTEGER,
   created_at TEXT NOT NULL,
   PRIMARY KEY (session_id, position),
-  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
-  FOREIGN KEY (domain_id) REFERENCES domains(id)
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE
 );
 
 -- Simple key-value config store
@@ -164,32 +159,12 @@ CREATE TABLE IF NOT EXISTS settings (
 SELECT * FROM domains;
 
 -- Recent sessions with performance
-SELECT s.*, COUNT(se.position) as questions,
-       ROUND(AVG(CASE WHEN se.correct = 1 THEN 100.0 ELSE 0.0 END), 1) as accuracy
-FROM sessions s
-LEFT JOIN session_events se ON s.id = se.session_id
-WHERE s.started_at > datetime('now', '-7 days')
-GROUP BY s.id ORDER BY s.started_at DESC LIMIT 10;
-
--- Cards due for review (SRS)
 SELECT domain_id, category_key, set_key, question, answer, next_review_date
 FROM cards
 WHERE next_review_date <= datetime('now')
   AND domain_id = 'chinese'
 ORDER BY next_review_date
 LIMIT 20;
-
--- Performance by set (last 30 days)
-SELECT se.set_key, se.domain_id,
-       COUNT(*) as total_attempts,
-       SUM(se.correct) as correct_answers,
-       ROUND(AVG(CASE WHEN se.correct = 1 THEN 100.0 ELSE 0.0 END), 1) as accuracy,
-       ROUND(AVG(se.response_time_ms), 0) as avg_response_ms
-FROM session_events se
-JOIN sessions s ON se.session_id = s.id
-WHERE s.started_at > datetime('now', '-30 days')
-GROUP BY se.set_key, se.domain_id
-ORDER BY accuracy ASC;
 
 -- Progressive unlock status
 SELECT set_key,
@@ -274,4 +249,3 @@ backend/
 - **`srs.ts`**: Lightweight SM-2 spaced repetition implementation
 
 > **Frontend Integration**: See `../frontend/CLAUDE.md` for React app architecture and session management hooks.
-
