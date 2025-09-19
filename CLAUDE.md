@@ -278,44 +278,40 @@ The build process:
 - ✅ **Optimized bundle sizes** with lazy loading
 - ✅ **Code splitting** for better performance
 
-## Performance Optimizations ⚡
+## Performance Optimizations
 
 ### Bundle Optimization
-- **Main app**: 222KB (68KB gzipped) - optimized for high-intensity mode
-- **Pinyin library**: 302KB (138KB gzipped) - lazy loaded
-- **React vendor**: 11KB (4KB gzipped)  
-- **Utils**: 35KB (14KB gzipped)
-- **Build time**: <700ms (13% faster)
+- Main app: 222KB (68KB gzipped)
+- Pinyin library: 302KB (138KB gzipped) - lazy loaded
+- React vendor: 11KB (4KB gzipped)
+- Utils: 35KB (14KB gzipped)
+- Build time: <700ms
 
-### High-Intensity Performance
-- **Exercise density**: 20+ questions per 30 minutes (target achieved)
-- **Response time tracking**: Millisecond precision for adaptive feedback
-- **Pre-loading logic**: Eliminates navigation delays between questions
-- **Minimal UI overhead**: Full-screen questions with essential controls only
+### Core Performance
+- Exercise density: 20+ questions per 30 minutes
+- Response time tracking: Millisecond precision
+- Pre-loading logic for seamless navigation
+- Minimal UI overhead in practice mode
 
-### Lazy Loading & Code Splitting
-- Pinyin processing only loads when Chinese characters are encountered
-- High-intensity mode components loaded on-demand
-- Advanced options UI lazy-loaded to prioritize practice interface
+### Code Splitting
+- Pinyin processing: lazy loaded when Chinese characters detected
+- High-intensity components: on-demand loading
+- Advanced UI: lazy loaded
 
-## API Endpoints (summary)
+## API Reference
 
-For detailed API docs and examples, see `backend/CLAUDE.md` (to be added next).
-
-**Cards & Sets:**
+**Core Endpoints:**
+- `GET /api/domains` - List available knowledge domains
 - `GET /api/sets` - List available flashcard sets
-- `GET /api/sets/{id}/cards` - Get cards for specific set
-- `GET /api/categories` - List HSK categories
-
-**Sessions:**
 - `POST /api/sessions/start` - Create new practice session
+- `POST /api/sessions/auto-start` - Intelligent session with auto-content selection
 - `GET /api/sessions/{id}` - Get session state
 - `POST /api/sessions/{id}/answer` - Submit answer
-
-**SRS & Statistics:**
 - `GET /api/srs/set?set_name=...` - Get SRS data for set
 - `GET /api/stats/set?set_name=...` - Get performance stats
-- `GET /api/performance` - Daily performance summary for in-app analytics
+- `GET /api/performance` - Daily performance summary
+
+Complete API documentation: `backend/CLAUDE.md`
 
 ## Database Schema (D1 SQLite)
 
@@ -326,48 +322,40 @@ See `backend/CLAUDE.md` for the authoritative schema, indexes, and common querie
 - Sets: `Recognition_Practice/HSK_Level_1/HSK1_Set_01` … `HSK1_Set_10`
 - Session Types: Review All, SRS Review, Practice by Difficulty, Review Incorrect, Multi-Set modes
 
-## Features 🚀
+## Features
 
-### **Multi-Domain Learning System**
-- **🌍 Domain Selection** - Choose between Chinese (HSK), World Geography, and more
-- **🎯 Domain-Specific Sessions** - Content filtering ensures relevant practice
-- **📚 Extensible Architecture** - Easy addition of new knowledge domains
-- **🔄 Independent Progress** - Each domain tracks progress separately
+### Multi-Domain Learning
+- Domain selection: Chinese (HSK), World Geography
+- Independent progress tracking per domain
+- Extensible architecture for additional domains
 
-### **High-Intensity Practice (Default)**
-- **🚀 Start Practice** - Single-click auto-start with intelligent content selection
-- **🎯 Challenge/Review Mode** - Adaptive difficulty based on user level
-- **⚡ Exercise Density** - 20+ questions per 30 minutes with minimal navigation
-- **📈 Progressive Unlocks** - Master fundamentals before advancing
+### Practice Modes
+- **High-Intensity**: Auto-start with intelligent content selection
+- **Traditional**: Review all, practice difficult, SRS review, browse mode
 
-### **Traditional Practice Modes**
-- **Start Practice** - Review all cards in set/category
-- **Practice Difficult** - Focus on cards with <80% accuracy
-- **Practice SRS** - Review cards due for spaced repetition
-- **Start Review** - Browse all cards with answers visible
+### Core Functionality
+- Adaptive feedback timing (2-6 seconds based on difficulty/speed)
+- Progressive unlocks (70-85% accuracy gates)
+- Response time tracking (millisecond precision)
+- Audio support for Chinese characters
+- Keyboard shortcuts (R for audio, Enter to submit)
+- Performance analytics and difficulty assessment
 
-### Key Functionality
-- **🎯 Adaptive Feedback** - 2-6 second timing based on difficulty and response speed  
-- **📊 Knowledge Gap Analysis** - Completion screen focuses on struggling concepts
-- **🔓 Progressive Unlocks** - 70-85% accuracy gates ensure systematic advancement
-- **⏱️ Response Time Tracking** - Millisecond precision for learning analytics
-- **🎵 Audio Support** - Text-to-speech for Chinese characters
-- **⌨️ Keyboard Shortcuts** - Efficient navigation (R for repeat audio, Enter to submit)
-- **📈 Performance Analytics** - Real-time difficulty assessment and progress tracking
+### Socratic Tutoring
+Character reinforcement flow:
+1. Identify low-accuracy characters (<80%)
+2. Prompt for visual associations
+3. Reinforce semantic connections
+4. Create memorable bridges between imagery and meaning
 
-### Socratic Tutoring Methodology
-**Flow for character reinforcement:**
-1. **Identify struggling characters** - Query database for low-accuracy characters (<80%)
-2. **Ask 1-2 guiding questions** - "What do you see?" "What associations come to mind?"  
-3. **User provides visual mnemonics** - Personal visual/memory associations
-4. **AI reinforces connections** - Links user's mnemonics to character meaning/usage
-5. **Create memorable bridges** - Connect visual imagery to semantic meaning
-
-**Example:**
-- Character: 比 (compare; than) - 25% accuracy
-- User mnemonic: "Two T's, like antlers" 
-- AI reinforcement: "Antlers show who's stronger - perfect for **comparing** who's bigger **than** others!"
-- Result: Visual-semantic bridge strengthens recall
+### Session Management
+- **20-question cap**: Prevents overwhelming sessions
+- **Context switching limit**: Maximum 2 sets per session
+- **Priority scoring algorithm**:
+  * +100 points for SRS due cards (memory maintenance)
+  * +80 points for struggling sets (<80% accuracy)
+  * +60 points for active learning sets (80-90% accuracy)
+  * -50 points for mastered sets (>90% accuracy, skipped)
 
 ## Development Guidelines
 
@@ -429,62 +417,6 @@ cd backend && bun update
 - Backend: Check port 8787 (Wrangler default)
 - CORS issues: Verify API endpoints
 
-## Recent Optimizations (Latest Updates) ⚡
-
-### **Multi-Domain Architecture (September 2025)**
-- ✅ **Domain System**: Complete multi-domain support with D1 migrations and API endpoints
-- ✅ **Domain Selection UI**: Dynamic dropdown with 🇨🇳 Chinese (HSK) and 🌍 World Geography
-- ✅ **Content Filtering**: Session creation respects domain selection for targeted practice
-- ✅ **Domain Independence**: Each domain maintains separate progress and statistics
-- ✅ **Extensible Design**: Easy addition of new domains (sports, history, etc.)
-- ✅ **Stats & SRS Tables Filtering**: Complete domain-aware filtering for stats and SRS tables with auto-set selection
-
-### **Major Architecture Refactor (September 2025)**
-- ✅ **Frontend Restructure**: Extracted 3,200+ lines into modular hooks, contexts, and utilities
-- ✅ **Backend Modularity**: Split utility functions into `db-queries.ts`, `stats-utils.ts`, `difficulty-utils.ts`
-- ✅ **Dependency Updates**: Hono 4.9.8, TypeScript 5.9.2, Wrangler 4.38.0
-- ✅ **Session Management**: Centralized in `useSessionManager` hook with Context pattern
-- ✅ **Type Safety**: Comprehensive TypeScript definitions in `types/` directory
-- ✅ **API Client**: Replaced monolithic `api.ts` with modular `utils/api-client.ts`
-- ✅ **Code Cleanup**: Removed obsolete `App_original.tsx` and duplicate files
-
-### **Efficient Learning Implementation (September 2025)**
-- ✅ **High-Intensity Mode**: Streamlined single-click start with auto-content detection
-- ✅ **Adaptive Feedback System**: Backend calculates 2-6s timing based on difficulty/speed
-- ✅ **Progressive Unlock Logic**: Server-side accuracy gates (70-85%) for systematic advancement
-- ✅ **Knowledge Gap Focus**: Session completion emphasizes struggling concepts over stats
-- ✅ **Exercise Density Optimization**: 20+ questions per 30-minute target achieved
-- ✅ **Response Time Analytics**: Millisecond precision tracking for learning optimization
-
-### **Smart Session Management (September 2025)**
-- ✅ **Session Size Control**: 20-question maximum cap prevents overwhelming sessions
-- ✅ **SRS Priority System**: Review cards take precedence over new learning content
-- ✅ **Intelligent Set Selection**: Learning-based progression replaces alphabetical selection
-- ✅ **Priority Scoring Algorithm**:
-  * +100 points for SRS due cards (memory maintenance)
-  * +80 points for struggling sets (<80% accuracy)
-  * +60 points for active learning sets (80-90% accuracy)
-  * -50 points for mastered sets (>90% accuracy, skipped)
-- ✅ **Context Switching Reduction**: Maximum 2 sets per session for focused learning
-- ✅ **Adaptive Content Selection**: System focuses on learning edge instead of mastered material
-
-### **Performance & Quality**
-- ✅ **Session Memory Optimization**: 0.1ms Map lookups replace 500ms D1 queries (5000x faster)
-- ✅ **Database Load Reduction**: 75% fewer queries through cached SRS/difficulty data
-- ✅ **Exercise Density Achievement**: 25+ questions per 30 minutes enabled
-- ✅ **Bundle size optimization** with code splitting (222KB main, 13% faster build)
-- ✅ **Lazy loading** for pinyin-pro library and advanced UI components
-- ✅ **Zero warnings/errors** in build process
-- ✅ **Perfect TypeScript/ESLint compliance**
-- ✅ **Chinese flag favicon** and updated branding
-
-### **Session Interface Enhancements (September 2025)**
-- ✅ **Session Timer**: Real-time elapsed time tracking with MM:SS format during high-intensity practice
-- ✅ **Card Set Display**: Shows current set (e.g., "HSK1 Set 1") in session header for learning context
-- ✅ **Progress Clarity**: Enhanced "5/10 · 5 left" format to eliminate confusion about completion status
-- ✅ **Quick Reinforcement Fix**: Fixed critical bug where only subset of incorrect cards were reviewed
-- ✅ **Comprehensive Error Tracking**: Backend now includes `set_name` in session results for accurate database matching
-- ✅ **High-Intensity Header**: Clean three-column layout with timer, progress, and set info
 
 ## Important Notes
 

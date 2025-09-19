@@ -2,13 +2,25 @@
 
 Backend service built with Hono and Cloudflare Workers. Serves the REST API and static assets from `../frontend/dist` via Wrangler assets binding.
 
+> **Main Documentation**: See `../CLAUDE.md` for complete project overview, efficient learning principles, and cross-module architecture.
+
 ## Overview
-- Runtime: Cloudflare Workers (Wrangler)
-- Framework: Hono (TypeScript)
-- Storage: D1 (SQLite) bound as `DB`
-- State: Durable Object `SESSIONS` → class `SessionsDO`
-- Assets: `[assets]` serves `../frontend/dist`
-- Auth: Optional Bearer token via `Authorization: Bearer <API_TOKEN>`
+- **Runtime**: Cloudflare Workers (Wrangler)
+- **Framework**: Hono (TypeScript) with modular utilities
+- **Storage**: D1 (SQLite) bound as `DB` with multi-domain support
+- **State**: Durable Object `SESSIONS` → class `SessionsDO`
+- **Assets**: `[assets]` serves `../frontend/dist`
+- **Auth**: Optional Bearer token via `Authorization: Bearer <API_TOKEN>`
+- **Architecture**: Multi-domain spaced repetition system (Chinese HSK, World Geography)
+
+## Multi-Domain Architecture
+
+The backend supports multiple knowledge domains with independent progression:
+
+- **Domains**: Chinese (HSK), World Geography, extensible for more
+- **Independent Progress**: Each domain has separate unlock criteria and SRS tracking
+- **Domain Filtering**: All endpoints support optional `domain_id` parameter
+- **Smart Selection**: Auto-start API intelligently selects content based on domain and user level
 
 ## Quick Commands
 ```bash
@@ -26,36 +38,66 @@ bun run schema:apply  # Execute ./schema.sql against bound DB
 - If not set, API is open for local/dev.
 
 ## API Endpoints
+
+### Core System
 - `GET /api/health` — Health probe → `{ status: "ok" }`
-
-- `GET /api/sets` — List available flashcard sets → `[set_key]`
-- `GET /api/categories` — List available categories → `[category_key]`
-
-- `GET /api/srs/set?set_name=...` — SRS fields for a set → `[{ set_name, question, answer, easiness_factor, interval_hours, repetitions, next_review_date }]`
-- `GET /api/srs/category?category=...` — SRS fields for a category → `[{ set_name, question, answer, ... }]`
-
-- `GET /api/stats/set?set_name=...` — Accuracy + counts per card, with summary → `{ set_name, summary, rows }`
-- `GET /api/stats/category?category=...` — Aggregated accuracy across category → `{ category, summary, rows }`
-
-- `GET /api/performance` — Daily performance summary → `{ summary, daily }`
-
-- `POST /api/sessions/start` — Start a practice session (Durable Object)
-  - Body: `{ mode, set_name?, category?, difficulty_levels?, selected_sets?, selected_categories?, review_items? }`
-  - Modes: `set_all | category_all | difficulty_set | difficulty_category | srs_sets | srs_categories | multi_set_all | multi_set_difficulty | review_incorrect`
-  - Response: `{ session_id, done, card?, progress }`
-
-- `GET /api/sessions/:id` — Get session state → `{ done, progress, current_question, results }`
-- `POST /api/sessions/:id/answer` — Submit `{ answer }`; returns next card or final results
-
 - `*` (fallback) — Serves built frontend assets via `ASSETS.fetch`
 
+### Multi-Domain Support
+- `GET /api/domains` — List available knowledge domains
+  - Response: `[{ id: string, name: string, icon: string, has_audio: boolean }]`
+  - Domains: `chinese` (HSK), `geography` (World Geography)
+
+### Domain-Aware Data
+- `GET /api/sets?domain_id=<domain>` — List sets filtered by domain → `[set_key]`
+- `GET /api/categories?domain_id=<domain>` — List categories filtered by domain → `[category_key]`
+- `GET /api/srs/set?set_name=...&domain_id=<domain>` — SRS fields for a set
+  - Response: `[{ set_name, question, answer, easiness_factor, interval_hours, repetitions, next_review_date }]`
+- `GET /api/stats/set?set_name=...&domain_id=<domain>` — Accuracy + counts per card
+  - Response: `{ set_name, summary, rows }`
+- `GET /api/performance?domain_id=<domain>` — Daily performance summary → `{ summary, daily }`
+
+### High-Intensity Learning
+- `POST /api/sessions/auto-start` — **Intelligent session creation** (Recommended)
+  - Body: `{ user_level: 'beginner'|'intermediate'|'advanced', focus_mode: 'review'|'challenge', domain_id?: string }`
+  - Features: Smart content selection, adaptive difficulty, 20-question cap
+  - Response: `{ session_id, done, card?, progress }`
+
+### Traditional Sessions
+- `POST /api/sessions/start` — Manual session creation (Durable Object)
+  - Body: `{ mode, set_name?, difficulty_levels?, selected_sets?, review_items?, domain_id? }`
+  - Modes: `set_all | difficulty_set | srs_sets | multi_set_all | multi_set_difficulty | review_incorrect`
+  - Response: `{ session_id, done, card?, progress }`
+
+### Session Management
+- `GET /api/sessions/:id` — Get session state → `{ done, progress, current_question, results }`
+- `POST /api/sessions/:id/answer` — Submit answer with timing analytics
+  - Body: `{ answer: string, response_time_ms: number }`
+  - Response: Includes `feedback_duration_ms` and difficulty assessment
+
 ## Database (D1)
-- Schema file: `backend/schema.sql`
-- Primary tables (excerpts):
+
+### Schema Overview
+- **Schema file**: `backend/schema.sql`
+- **Database ID**: `98e5c374-ba8d-4cce-8490-10a3414fba0a`
+- **Multi-domain support**: `domains` table with `domain_id` foreign keys
+- **Performance**: Indexed on category/set/question+answer/next_review_date
+
+### Core Tables
 
 ```sql
+-- Multi-domain support
+CREATE TABLE IF NOT EXISTS domains (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  icon TEXT NOT NULL,
+  has_audio INTEGER NOT NULL DEFAULT 0
+);
+
+-- Flashcards with domain association
 CREATE TABLE IF NOT EXISTS cards (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  domain_id TEXT NOT NULL DEFAULT 'chinese',
   category_key TEXT NOT NULL,
   set_key TEXT NOT NULL,
   question TEXT NOT NULL,
@@ -69,24 +111,30 @@ CREATE TABLE IF NOT EXISTS cards (
   next_review_date TEXT NOT NULL DEFAULT '1970-01-01 00:00:00',
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
   updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
-  UNIQUE(category_key, set_key, question, answer)
+  FOREIGN KEY (domain_id) REFERENCES domains(id),
+  UNIQUE(domain_id, category_key, set_key, question, answer)
 );
 
+-- Session tracking with performance analytics
 CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
+  domain_id TEXT,
   practice_name TEXT,
   session_type TEXT,
   started_at TEXT NOT NULL,
   ended_at TEXT,
   duration_seconds REAL,
   correct_count INTEGER,
-  total INTEGER
+  total INTEGER,
+  FOREIGN KEY (domain_id) REFERENCES domains(id)
 );
 
+-- Detailed session events for analytics
 CREATE TABLE IF NOT EXISTS session_events (
   session_id TEXT NOT NULL,
   position INTEGER NOT NULL,
   card_id INTEGER,
+  domain_id TEXT,
   category_key TEXT,
   set_key TEXT,
   question TEXT NOT NULL,
@@ -94,19 +142,85 @@ CREATE TABLE IF NOT EXISTS session_events (
   correct_answer TEXT,
   correct INTEGER NOT NULL,
   duration_seconds REAL NOT NULL,
+  response_time_ms INTEGER,
   created_at TEXT NOT NULL,
   PRIMARY KEY (session_id, position),
-  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+  FOREIGN KEY (domain_id) REFERENCES domains(id)
+);
+
+-- Simple key-value config store
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY,
+  value TEXT
 );
 ```
 
-- Additional: `settings(key primary key, value text)` for simple flags/config.
-- Indexes: category/set/question+answer/next_review_date for query speed.
+### Common Queries
+
+**Using Cloudflare MCP tools** (recommended):
+```sql
+-- List domains
+SELECT * FROM domains;
+
+-- Recent sessions with performance
+SELECT s.*, COUNT(se.position) as questions,
+       ROUND(AVG(CASE WHEN se.correct = 1 THEN 100.0 ELSE 0.0 END), 1) as accuracy
+FROM sessions s
+LEFT JOIN session_events se ON s.id = se.session_id
+WHERE s.started_at > datetime('now', '-7 days')
+GROUP BY s.id ORDER BY s.started_at DESC LIMIT 10;
+
+-- Cards due for review (SRS)
+SELECT domain_id, category_key, set_key, question, answer, next_review_date
+FROM cards
+WHERE next_review_date <= datetime('now')
+  AND domain_id = 'chinese'
+ORDER BY next_review_date
+LIMIT 20;
+
+-- Performance by set (last 30 days)
+SELECT se.set_key, se.domain_id,
+       COUNT(*) as total_attempts,
+       SUM(se.correct) as correct_answers,
+       ROUND(AVG(CASE WHEN se.correct = 1 THEN 100.0 ELSE 0.0 END), 1) as accuracy,
+       ROUND(AVG(se.response_time_ms), 0) as avg_response_ms
+FROM session_events se
+JOIN sessions s ON se.session_id = s.id
+WHERE s.started_at > datetime('now', '-30 days')
+GROUP BY se.set_key, se.domain_id
+ORDER BY accuracy ASC;
+
+-- Progressive unlock status
+SELECT set_key,
+       COUNT(*) as total_cards,
+       SUM(correct_count) as total_correct,
+       SUM(reviewed_count) as total_reviewed,
+       ROUND(AVG(CASE WHEN reviewed_count > 0
+                 THEN (correct_count * 100.0 / reviewed_count)
+                 ELSE 0 END), 1) as accuracy
+FROM cards
+WHERE domain_id = 'chinese'
+GROUP BY set_key
+ORDER BY set_key;
+```
 
 ## Durable Objects
-- Namespace binding: `SESSIONS`
-- Class: `SessionsDO` (see `src/sessions-do.ts`)
-- Responsibilities: start sessions, evaluate answers, update SRS fields, persist events, compute progress.
+
+### SessionsDO (`src/sessions-do.ts`)
+- **Namespace binding**: `SESSIONS`
+- **Responsibilities**:
+  - Session lifecycle management (start/answer/complete)
+  - Real-time SRS algorithm updates (SM-2 based)
+  - Performance analytics and timing tracking
+  - Progressive unlock enforcement
+  - Domain-aware content filtering
+
+### Key Features
+- **Intelligent Auto-Start**: Selects optimal cards based on user level and domain
+- **Adaptive Timing**: Calculates feedback duration (2-6s) based on difficulty/speed
+- **Priority Scoring**: SRS due (+100), struggling sets (+80), active learning (+60)
+- **Session Limits**: 20-question cap, max 2 sets per session
 
 ## Configuration (wrangler.toml)
 - `main = "src/worker.ts"`
@@ -122,19 +236,42 @@ CREATE TABLE IF NOT EXISTS session_events (
 - DO migration problems: ensure class name `SessionsDO` is listed under `[[migrations]]` and active.
 - Logs: `bunx wrangler tail` for live traces.
 
-## Directory Structure
+## Modular Architecture
+
+### Directory Structure
 ```
 backend/
 ├── src/
-│   ├── worker.ts        # Hono app + routes
-│   ├── sessions-do.ts   # Durable Object implementation
-│   ├── srs.ts           # SM-2 SRS logic
-│   ├── types.ts         # Shared types
-│   └── utils/
-│       └── validateAnswer.ts
-├── schema.sql           # D1 schema
-├── seed-hsk1.sql        # Seed dataset (HSK1)
-├── wrangler.toml        # Worker config
-└── package.json
+│   ├── worker.ts              # Hono app + domain-aware routes
+│   ├── sessions-do.ts         # Durable Object with intelligent session mgmt
+│   ├── srs.ts                 # SM-2 SRS algorithm (38 lines)
+│   ├── types.ts               # Shared TypeScript definitions (58 lines)
+│   └── utils/                 # Extracted utility functions
+│       ├── validateAnswer.ts  # Answer validation logic (13 lines)
+│       ├── db-queries.ts      # Database query utilities (271 lines)
+│       ├── stats-utils.ts     # Statistics computation (77 lines)
+│       └── difficulty-utils.ts # Difficulty assessment (22 lines)
+├── migrations/                # D1 database migrations
+│   ├── 0001_add_domains_table.sql
+│   ├── 0002_add_domain_id_to_cards.sql
+│   └── 0003_add_geography_domain.sql
+├── schema.sql                 # Complete D1 schema
+├── seed-hsk1.sql             # HSK Level 1 sample data
+├── wrangler.toml             # Cloudflare Worker configuration
+├── package.json              # Dependencies (Hono 4.9.8, TS 5.9.2)
+└── bun.lock                  # Lockfile
 ```
+
+### Utility Modules
+- **`db-queries.ts`**: Centralized database operations with domain filtering
+- **`stats-utils.ts`**: Performance analytics and aggregation functions
+- **`difficulty-utils.ts`**: Smart difficulty assessment based on response patterns
+- **`validateAnswer.ts`**: Flexible answer validation (exact match, trimmed, case-insensitive)
+
+### Key Files
+- **`worker.ts`**: Main API router with domain-aware endpoints
+- **`sessions-do.ts`**: Stateful session management with intelligent card selection
+- **`srs.ts`**: Lightweight SM-2 spaced repetition implementation
+
+> **Frontend Integration**: See `../frontend/CLAUDE.md` for React app architecture and session management hooks.
 
