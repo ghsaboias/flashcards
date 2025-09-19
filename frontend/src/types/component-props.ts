@@ -29,14 +29,10 @@ export interface BaseLabelProps {
   getMultiSetLabel: () => string
 }
 
-// For components that need drawing functionality
+// For components that need drawing functionality (simplified after page migration)
 export interface BaseDrawingProps {
-  exitBrowse: () => void
-  nextBrowse: () => void
-  prevBrowse: () => void
-  setInDrawingMode: (enabled: boolean) => void
-  setDrawingProgress: (progress: { current: number; total: number }) => void
-  onDrawingComplete: (nextPos: number, total: number) => void
+  // Drawing functionality now handled by dedicated DrawingPage
+  placeholder?: never // Prevent empty interface
 }
 
 // For stats/overview components
@@ -85,13 +81,11 @@ export interface SrsTableProps {
   getMultiSetLabel: () => string
 }
 
-// For drawing canvas component
+// For drawing canvas component (simplified after page migration)
 export interface DrawingCanvasProps {
-  drawingCards: SessionState['drawingCards']
-  drawingPosition: SessionState['drawingPosition']
-  drawingProgress: SessionState['drawingProgress']
-  setDrawingProgress: SessionActions['setDrawingProgress']
-  onDrawingComplete: (nextPos: number, total: number) => void
+  character: string
+  onComplete?: () => void
+  onProgressUpdate?: (progress: number) => void
 }
 
 // For audio controls
