@@ -24,37 +24,29 @@ export function createEmptySessionState(): SessionState {
     adaptiveFeedbackDuration: 2000,
     questionStartTime: 0,
 
+    // UI preferences
+    showPinyin: true,
+
     // Special modes
     inBrowseMode: false,
     browseRows: [],
     browseIndex: 0,
-    browsePinyin: "",
-    inReviewMode: false,
-    reviewCards: [],
-    reviewPosition: 0,
     inDrawingMode: false,
     drawingCards: [],
     drawingPosition: 0,
     drawingProgress: { current: 0, total: 0 },
-    oldFocusMode: false,
 
     // Data and settings
     sets: [],
-    categories: [],
-    selectedSet: "",
-    selectedCategory: "",
     selectedSets: [],
-    mode: 'set',
     diffEasy: false,
     diffMedium: false,
     diffHard: true,
 
     // Views
-    showSrs: true,
+    statsMode: 'accuracy',
     srsRows: [],
-    showStats: true,
     stats: null,
-    showPerformance: false,
     performance: null,
     difficultyRows: null
   }
@@ -83,10 +75,6 @@ export function createSpecialModesReset(): Partial<SessionState> {
     inBrowseMode: false,
     browseRows: [],
     browseIndex: 0,
-    browsePinyin: "",
-    inReviewMode: false,
-    reviewCards: [],
-    reviewPosition: 0,
     inDrawingMode: false,
     drawingCards: [],
     drawingPosition: 0,
@@ -96,11 +84,9 @@ export function createSpecialModesReset(): Partial<SessionState> {
 
 export function createViewStatesReset(): Partial<SessionState> {
   return {
-    showSrs: false,
+    statsMode: null,
     srsRows: [],
-    showStats: false,
     stats: null,
-    showPerformance: false,
     performance: null
   }
 }
@@ -183,18 +169,6 @@ export function getIncorrectResults(results: ResultCard[]): ResultCard[] {
   return results.filter(r => !r.correct)
 }
 
-// Convert results to review cards format
-export function resultsToReviewCards(results: ResultCard[]): Array<{
-  question: string
-  pinyin?: string
-  correct_answer: string
-}> {
-  return results.map(r => ({
-    question: r.question,
-    pinyin: r.pinyin,
-    correct_answer: r.correct_answer
-  }))
-}
 
 // Progress calculation utilities
 export function calculateProgressPercent(progress: { current: number; total: number }): number {
@@ -250,19 +224,6 @@ export function canStartByDifficulty(settings: { diffEasy: boolean; diffMedium: 
   return settings.diffEasy || settings.diffMedium || settings.diffHard
 }
 
-export function hasSelectedData(mode: 'set' | 'category' | 'multi-set', data: {
-  selectedSet: string
-  selectedCategory: string
-  selectedSets: string[]
-}): boolean {
-  switch (mode) {
-    case 'set':
-      return !!data.selectedSet
-    case 'category':
-      return !!data.selectedCategory
-    case 'multi-set':
-      return data.selectedSets.length > 0
-    default:
-      return false
-  }
+export function validateSessionStart(data: { selectedSets: string[] }): boolean {
+  return data.selectedSets.length > 0
 }

@@ -11,8 +11,8 @@ import StatsOverview from './components/StatsOverview'
 import KeyboardHandler from './components/KeyboardHandler'
 import { useAudioControls } from './hooks/useAudioControls'
 import { AutoTTS } from './components/AudioControls'
-import { getPinyinForText, hasChinese } from './utils/pinyin'
-import { humanizeSetLabel, humanizeCategoryLabel, formatMultiSetLabel } from './utils/hsk-label-utils'
+import { hasChinese } from './utils/pinyin'
+import { humanizeSetLabel, formatMultiSetLabel } from './utils/hsk-label-utils'
 import { countByDifficulty, isSessionComplete } from './utils/session-utils'
 import type { Domain } from './types/api-types'
 
@@ -25,8 +25,8 @@ function App() {
 
   // Computed values
   const canAnswer = useMemo(() => (
-    (!!sessionState.sessionId || sessionState.inReviewMode) && !!sessionState.question
-  ), [sessionState.sessionId, sessionState.inReviewMode, sessionState.question])
+    !!sessionState.sessionId && !!sessionState.question
+  ), [sessionState.sessionId, sessionState.question])
 
   const sessionComplete = useMemo(() =>
     isSessionComplete(sessionState.progress, sessionState.results)
@@ -59,31 +59,12 @@ function App() {
     previousResultsLengthRef.current = sessionState.results.length
   }, [sessionState.results])
 
-  // Fetch pinyin for browse mode question (client-side)
-  useEffect(() => {
-    if (!sessionState.inBrowseMode) return
-    const q = sessionState.browseRows[sessionState.browseIndex]?.question
-    if (!q || !hasChinese(q)) {
-      // setBrowsePinyin("") - would need to add this to actions
-      return
-    }
-    getPinyinForText(q).then(() => {
-      // setBrowsePinyin(py) - would need to add this to actions
-    }).catch(() => {
-      // setBrowsePinyin('') - would need to add this to actions
-    })
-  }, [sessionState.inBrowseMode, sessionState.browseIndex, sessionState.browseRows])
 
   // Use consolidated utility for multi-set label formatting
   function getMultiSetLabel(): string {
     return formatMultiSetLabel(sessionState.selectedSets)
   }
 
-  // Additional handlers for StatsOverview
-  const exitBrowse = () => {
-    actions.setInDrawingMode(false)
-    // Additional browse exit logic would go here
-  }
 
   const onDrawingComplete = (nextPos: number, total: number) => {
     if (nextPos >= total) {
@@ -110,7 +91,7 @@ function App() {
         <KeyboardHandler sessionState={sessionState} actions={actions} speak={speak} />
 
       {!sessionState.isHighIntensityMode && (
-        <div className="main-panel" role="main" style={{ display: sessionState.oldFocusMode && (sessionState.sessionId || sessionState.inReviewMode) ? 'none' : 'block' }}>
+        <div className="main-panel" role="main">
           <DomainSelector
             selectedDomain={selectedDomain}
             onDomainChange={setSelectedDomain}
@@ -121,8 +102,6 @@ function App() {
             actions={actions}
             canStartByDifficulty={canStartByDifficulty}
             difficultyCounts={difficultyCounts}
-            humanizeSetLabel={humanizeSetLabel}
-            humanizeCategoryLabel={humanizeCategoryLabel}
             getMultiSetLabel={getMultiSetLabel}
           />
 
@@ -160,12 +139,11 @@ function App() {
         </div>
       )}
 
-      {sessionState.isHighIntensityMode && !sessionState.sessionId && !sessionState.inReviewMode && (
+      {sessionState.isHighIntensityMode && !sessionState.sessionId && (
         <HighIntensityMode
           sessionState={sessionState}
           actions={actions}
           humanizeSetLabel={humanizeSetLabel}
-          humanizeCategoryLabel={humanizeCategoryLabel}
           getMultiSetLabel={getMultiSetLabel}
           selectedDomain={selectedDomain}
           onDomainChange={setSelectedDomain}
@@ -175,11 +153,9 @@ function App() {
       <div className="right" role="region" aria-label="Session">
         <StatsOverview
           sessionState={sessionState}
-          humanizeSetLabel={humanizeSetLabel}
-          humanizeCategoryLabel={humanizeCategoryLabel}
           getMultiSetLabel={getMultiSetLabel}
           speak={speak}
-          exitBrowse={exitBrowse}
+          exitBrowse={actions.exitBrowse}
           nextBrowse={actions.nextBrowse}
           prevBrowse={actions.prevBrowse}
           setInDrawingMode={actions.setInDrawingMode}
@@ -192,8 +168,6 @@ function App() {
             sessionState={sessionState}
             actions={actions}
             canStartByDifficulty={canStartByDifficulty}
-            humanizeSetLabel={humanizeSetLabel}
-            humanizeCategoryLabel={humanizeCategoryLabel}
             getMultiSetLabel={getMultiSetLabel}
           />
         ) : (

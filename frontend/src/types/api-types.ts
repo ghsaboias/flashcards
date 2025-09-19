@@ -27,9 +27,6 @@ export interface ResultCard extends BaseCard {
   correct: boolean
 }
 
-export interface ReviewCard extends BaseCard {
-  correct_answer: string
-}
 
 export interface DrawingCard {
   question: string

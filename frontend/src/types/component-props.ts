@@ -26,8 +26,6 @@ export interface BaseCompletionProps extends BaseSessionProps {
 
 // For components that need specific label formatters
 export interface BaseLabelProps {
-  humanizeSetLabel: (raw: string) => string
-  humanizeCategoryLabel: (raw: string) => string
   getMultiSetLabel: () => string
 }
 
@@ -60,7 +58,6 @@ export type SessionCompleteProps = BaseCompletionProps & BaseLabelProps
 
 export interface HighIntensityModeProps extends BaseSessionProps {
   humanizeSetLabel: (raw: string) => string
-  humanizeCategoryLabel: (raw: string) => string
   getMultiSetLabel: () => string
 }
 
@@ -79,14 +76,12 @@ export interface KeyboardHandlerProps extends BaseSessionProps {
 export interface StatsTableProps {
   stats: NonNullable<SessionState['stats']>
   humanizeSetLabel: (raw: string) => string
-  humanizeCategoryLabel: (raw: string) => string
   getMultiSetLabel: () => string
 }
 
 export interface SrsTableProps {
   srsRows: SessionState['srsRows']
   humanizeSetLabel: (raw: string) => string
-  humanizeCategoryLabel: (raw: string) => string
   getMultiSetLabel: () => string
 }
 

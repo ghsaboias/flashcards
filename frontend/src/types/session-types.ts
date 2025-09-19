@@ -3,7 +3,6 @@
 import type {
   Progress,
   ResultCard,
-  ReviewCard,
   DrawingCard,
   BrowseCard,
   SrsRow,
@@ -34,38 +33,29 @@ export interface HighIntensitySettings {
   questionStartTime: number
 }
 
+// UI preferences
+export interface UIPreferences {
+  showPinyin: boolean
+}
+
 // Special practice modes
 export interface SpecialModes {
   // Browse mode
   inBrowseMode: boolean
   browseRows: BrowseCard[]
   browseIndex: number
-  browsePinyin: string
-
-  // Review mode
-  inReviewMode: boolean
-  reviewCards: ReviewCard[]
-  reviewPosition: number
 
   // Drawing mode
   inDrawingMode: boolean
   drawingCards: DrawingCard[]
   drawingPosition: number
   drawingProgress: Progress
-
-
-  // Focus mode
-  oldFocusMode: boolean
 }
 
 // Data selection and settings
 export interface DataSettings {
   sets: string[]
-  categories: string[]
-  selectedSet: string
-  selectedCategory: string
   selectedSets: string[]
-  mode: 'set' | 'category' | 'multi-set'
 
   // Difficulty filters
   diffEasy: boolean
@@ -75,11 +65,9 @@ export interface DataSettings {
 
 // View states for stats and performance
 export interface ViewStates {
-  showSrs: boolean
+  statsMode: 'srs' | 'accuracy' | 'performance' | null
   srsRows: SrsRow[]
-  showStats: boolean
   stats: StatsPayload | null
-  showPerformance: boolean
   performance: PerformancePayload | null
   difficultyRows: StatRow[] | null
 }
@@ -88,6 +76,7 @@ export interface ViewStates {
 export interface SessionState extends
   CoreSessionData,
   HighIntensitySettings,
+  UIPreferences,
   SpecialModes,
   DataSettings,
   ViewStates {}
@@ -96,21 +85,15 @@ export interface SessionState extends
 export interface CoreSessionActions {
   resetSessionUI: () => void
   beginAutoSession: (domainId?: string) => Promise<void>
-  beginSetSession: () => Promise<void>
-  beginCategorySession: () => Promise<void>
   beginMultiSetSession: () => Promise<void>
   submitAnswer: () => Promise<void>
 }
 
 export interface DifficultyActions {
-  beginDifficultSet: () => Promise<void>
-  beginDifficultCategory: () => Promise<void>
   beginMultiSetDifficult: () => Promise<void>
 }
 
 export interface SrsActions {
-  beginSrsSets: () => Promise<void>
-  beginSrsCategories: () => Promise<void>
   beginMultiSetSrs: () => Promise<void>
 }
 
@@ -129,19 +112,14 @@ export interface SpecialModeActions {
 }
 
 export interface ViewActions {
-  viewSrs: () => Promise<void>
-  viewStats: () => Promise<void>
-  viewPerformance: () => Promise<void>
+  setStatsMode: (mode: 'srs' | 'accuracy' | 'performance' | null) => void
 }
 
 export interface SetterActions {
   setInput: (input: string) => void
-  setSelectedSet: (set: string) => void
-  setSelectedCategory: (category: string) => void
   setSelectedSets: (sets: string[]) => void
-  setMode: (mode: 'set' | 'category' | 'multi-set') => void
   setIsHighIntensityMode: (enabled: boolean) => void
-  setOldFocusMode: (enabled: boolean) => void
+  setShowPinyin: (enabled: boolean) => void
   setDiffEasy: (enabled: boolean) => void
   setDiffMedium: (enabled: boolean) => void
   setDiffHard: (enabled: boolean) => void
@@ -172,6 +150,5 @@ export interface SessionHelpers {
   hasChinese: (text: string) => boolean
   formatProgress: (progress: Progress) => string
   humanizeSetLabel: (raw: string) => string
-  humanizeCategoryLabel: (raw: string) => string
   getMultiSetLabel: () => string
 }

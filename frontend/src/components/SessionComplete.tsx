@@ -1,37 +1,26 @@
 import { useMemo } from 'react'
 import type { SessionCompleteProps } from '../types/component-props'
 
-export default function SessionComplete({ 
-  sessionState, 
-  actions, 
+export default function SessionComplete({
+  sessionState,
+  actions,
   canStartByDifficulty,
-  humanizeSetLabel,
-  humanizeCategoryLabel,
   getMultiSetLabel
 }: SessionCompleteProps) {
   const {
     results,
     progress,
-    selectedSet,
-    selectedCategory,
     selectedSets,
-    mode,
     isHighIntensityMode
   } = sessionState
 
   const {
     beginAutoSession,
-    beginSetSession,
-    beginCategorySession,
     beginMultiSetSession,
     beginReviewIncorrect,
-    beginDifficultSet,
-    beginDifficultCategory,
     beginMultiSetDifficult,
     setIsHighIntensityMode,
-    viewStats,
-    viewSrs,
-    viewPerformance
+    setStatsMode
   } = actions
 
   const summaryStats = useMemo(() => {
@@ -45,15 +34,11 @@ export default function SessionComplete({
   const progressPercent = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0
 
   const restartPractice = () => {
-    if (mode === 'set') return beginSetSession()
-    if (mode === 'category') return beginCategorySession()
-    if (mode === 'multi-set') return beginMultiSetSession()
+    return beginMultiSetSession()
   }
 
   const practiceDifficultNow = () => {
-    if (mode === 'set') return beginDifficultSet()
-    if (mode === 'category') return beginDifficultCategory()
-    if (mode === 'multi-set') return beginMultiSetDifficult()
+    return beginMultiSetDifficult()
   }
 
   if (isHighIntensityMode) {
@@ -100,11 +85,7 @@ export default function SessionComplete({
   return (
     <div className="completePanel" role="region" aria-label="Session complete">
       <h3 className="completeTitle">
-        Session Complete {
-          mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
-          mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
-          `— ${getMultiSetLabel()}`
-        }
+        Session Complete — {getMultiSetLabel()}
       </h3>
       
       <div className="progress" aria-label={`Progress ${progress.current} of ${progress.total}`}>
@@ -176,26 +157,33 @@ export default function SessionComplete({
         >
           Review Incorrect
         </button>
-        <button 
-          className="btn-secondary" 
-          onClick={practiceDifficultNow} 
-          disabled={
-            (mode === 'set' ? !selectedSet :
-             mode === 'category' ? !selectedCategory :
-             selectedSets.length === 0) || !canStartByDifficulty
-          }
+        <button
+          className="btn-secondary"
+          onClick={practiceDifficultNow}
+          disabled={selectedSets.length === 0 || !canStartByDifficulty}
         >
           Practice by Difficulty
         </button>
-        <button className="btn-tertiary" onClick={viewStats}>
-          View Stats
-        </button>
-        <button className="btn-tertiary" onClick={viewSrs}>
-          View SRS
-        </button>
-        <button className="btn-tertiary" onClick={viewPerformance}>
-          View Performance
-        </button>
+        <div className="stats-tabs" style={{ display: 'flex', gap: '8px' }}>
+          <button
+            className={`btn-tertiary ${sessionState.statsMode === 'accuracy' ? 'active' : ''}`}
+            onClick={() => setStatsMode('accuracy')}
+          >
+            Stats & Accuracy
+          </button>
+          <button
+            className={`btn-tertiary ${sessionState.statsMode === 'srs' ? 'active' : ''}`}
+            onClick={() => setStatsMode('srs')}
+          >
+            SRS Schedule
+          </button>
+          <button
+            className={`btn-tertiary ${sessionState.statsMode === 'performance' ? 'active' : ''}`}
+            onClick={() => setStatsMode('performance')}
+          >
+            Performance
+          </button>
+        </div>
       </div>
     </div>
   )

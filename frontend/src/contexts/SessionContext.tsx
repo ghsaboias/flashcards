@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import type { SessionState, SessionActions, SessionHelpers } from '../types/session-types'
 import { validateUserAnswer } from '../utils/text-utils'
 import { hasChinese } from '../utils/pinyin'
-import { humanizeSetLabel, humanizeCategoryLabel, formatMultiSetLabel } from '../utils/hsk-label-utils'
+import { humanizeSetLabel, formatMultiSetLabel } from '../utils/hsk-label-utils'
 import type { Progress } from '../types/api-types'
 import { SessionContext, type SessionContextValue } from '../hooks/useSessionContext'
 
@@ -29,7 +29,6 @@ export function SessionProvider({
     hasChinese,
     formatProgress: (progress: Progress) => `${progress.current}/${progress.total}`,
     humanizeSetLabel,
-    humanizeCategoryLabel,
     getMultiSetLabel: () => formatMultiSetLabel(sessionState.selectedSets)
   }
 

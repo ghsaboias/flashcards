@@ -6,7 +6,6 @@ import type { SessionResponse, Domain } from '../types/api-types'
 import { apiClient } from '../utils/api-client'
 import { aggregateMultiSetStats, createEmptyStatsSummary } from '../utils/stats-aggregation'
 import { getPinyinForText, hasChinese } from '../utils/pinyin'
-import { validateUserAnswer } from '../utils/text-utils'
 import {
   createEmptySessionState,
   createCoreSessionReset,
@@ -25,68 +24,48 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
   useEffect(() => {
     (async () => {
       try {
-        const [sets, categories] = await Promise.all([
-          apiClient.listSets(selectedDomain?.id),
-          apiClient.listCategories(selectedDomain?.id)
-        ])
+        const sets = await apiClient.listSets(selectedDomain?.id)
 
         setState(prev => ({
           ...prev,
-          sets: Array.isArray(sets) ? sets : [],
-          categories: Array.isArray(categories) ? categories : [],
-          selectedSet: Array.isArray(sets) && sets.length > 0 ? sets[0] : "",
-          selectedCategory: Array.isArray(categories) && categories.length > 0 ? categories[0] : ""
+          sets: Array.isArray(sets) ? sets : []
         }))
       } catch (error) {
-        console.error('Failed to load sets/categories:', error)
+        console.error('Failed to load sets:', error)
         setState(prev => ({
           ...prev,
-          sets: [],
-          categories: [],
-          selectedSet: "",
-          selectedCategory: ""
+          sets: []
         }))
       }
     })()
   }, [selectedDomain?.id])
 
-  // Keep Stats & SRS view in sync when mode or selection changes
+  // Keep stats view in sync when selection changes
   useEffect(() => {
-    if (!state.showStats && !state.showSrs) return
+    if (!state.statsMode) return
 
     ;(async () => {
       try {
-        if (state.mode === 'set' && state.selectedSet) {
-          const [statsRes, srsRes] = await Promise.all([
-            state.showStats ? apiClient.getStatsForSet(state.selectedSet, selectedDomain?.id) : Promise.resolve(null),
-            state.showSrs ? apiClient.getSrsForSet(state.selectedSet, selectedDomain?.id) : Promise.resolve([])
-          ])
-
-          setState(prev => ({
-            ...prev,
-            stats: statsRes || prev.stats,
-            srsRows: srsRes || []
-          }))
-        } else if (state.mode === 'category' && state.selectedCategory) {
-          const [statsRes, srsRes] = await Promise.all([
-            state.showStats ? apiClient.getStatsForCategory(state.selectedCategory, selectedDomain?.id) : Promise.resolve(null),
-            state.showSrs ? apiClient.getSrsForCategory(state.selectedCategory, selectedDomain?.id) : Promise.resolve([])
-          ])
-
-          setState(prev => ({
-            ...prev,
-            stats: statsRes || prev.stats,
-            srsRows: srsRes || []
-          }))
-        } else if (state.mode === 'multi-set' && state.selectedSets.length > 0) {
-          if (state.showStats) {
-            const statsResult = await aggregateMultiSetStats(state.selectedSets, selectedDomain?.id)
-            setState(prev => ({ ...prev, stats: statsResult }))
-          }
-
-          if (state.showSrs) {
-            const allSrsRows = await apiClient.getMultiSetSrs(state.selectedSets, selectedDomain?.id)
-            setState(prev => ({ ...prev, srsRows: allSrsRows }))
+        if (state.selectedSets.length > 0) {
+          switch (state.statsMode) {
+            case 'accuracy': {
+              const statsResult = await aggregateMultiSetStats(state.selectedSets, selectedDomain?.id)
+              setState(prev => ({ ...prev, stats: statsResult }))
+              // Also load SRS data for unified view
+              const allSrsRows = await apiClient.getMultiSetSrs(state.selectedSets, selectedDomain?.id)
+              setState(prev => ({ ...prev, srsRows: allSrsRows }))
+              break
+            }
+            case 'srs': {
+              const srsRows = await apiClient.getMultiSetSrs(state.selectedSets, selectedDomain?.id)
+              setState(prev => ({ ...prev, srsRows: srsRows }))
+              break
+            }
+            case 'performance': {
+              const performanceData = await apiClient.getPerformanceData()
+              setState(prev => ({ ...prev, performance: performanceData }))
+              break
+            }
           }
         }
       } catch {
@@ -99,7 +78,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
         }))
       }
     })()
-  }, [state.showStats, state.showSrs, state.mode, state.selectedSet, state.selectedCategory, state.selectedSets, selectedDomain?.id])
+  }, [state.statsMode, state.selectedSets, selectedDomain?.id])
 
   // Consolidated reset function
   const resetSessionUI = useCallback(() => {
@@ -167,17 +146,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     )
   }, [initializeSession])
 
-  const beginSetSession = useCallback(async () => {
-    await initializeSession(
-      () => apiClient.startSession({ mode: 'set_all', set_name: state.selectedSet })
-    )
-  }, [state.selectedSet, initializeSession])
 
-  const beginCategorySession = useCallback(async () => {
-    await initializeSession(
-      () => apiClient.startSession({ mode: 'category_all', category: state.selectedCategory })
-    )
-  }, [state.selectedCategory, initializeSession])
 
   const beginMultiSetSession = useCallback(async () => {
     await initializeSession(
@@ -193,7 +162,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     const reviewItems = wrong.map(r => ({
       question: r.question,
       answer: r.correct_answer,
-      set_name: r.set_name || state.selectedSet || ''
+      set_name: r.set_name || state.selectedSets[0] || ''
     }))
 
     try {
@@ -203,71 +172,13 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
         return
       }
     } catch (error) {
-      console.warn('Falling back to local review mode:', error)
+      console.error('Failed to start review session:', error)
     }
-
-    // Fallback to local review mode
-    setState(prev => ({
-      ...prev,
-      ...createCoreSessionReset(),
-      inReviewMode: true,
-      reviewCards: wrong.map(r => ({
-        question: r.question,
-        pinyin: r.pinyin,
-        correct_answer: r.correct_answer,
-        answer: r.correct_answer,
-        set_name: r.set_name
-      })),
-      reviewPosition: 0,
-      question: wrong[0]?.question || "",
-      pinyin: wrong[0]?.pinyin || '',
-      progress: { current: 0, total: wrong.length },
-      questionStartTime: Date.now()
-    }))
-  }, [state.results, state.mode, state.selectedSet, initializeSession])
+  }, [state.results, state.selectedSets, initializeSession])
 
   const submitAnswer = useCallback(async () => {
     if (!state.input.trim()) return
 
-    // Local review mode branch
-    if (state.inReviewMode) {
-      const current = state.reviewCards[state.reviewPosition]
-      const isCorrect = validateUserAnswer(state.input, current?.correct_answer || '')
-
-      setState(prev => {
-        const newStreak = isCorrect ? prev.streak + 1 : 0
-        const newResults = [
-          ...prev.results,
-          {
-            question: current?.question || '',
-            pinyin: current?.pinyin || '',
-            user_answer: prev.input,
-            correct_answer: current?.correct_answer || '',
-            correct: isCorrect,
-            answer: current?.correct_answer || '',
-            set_name: current?.set_name
-          }
-        ]
-
-        const nextPos = prev.reviewPosition + 1
-        const isComplete = nextPos >= prev.reviewCards.length
-
-        return {
-          ...prev,
-          input: "",
-          lastEval: { correct: isCorrect, correct_answer: current?.correct_answer || '' },
-          streak: newStreak,
-          bestStreak: Math.max(prev.bestStreak, newStreak),
-          results: newResults,
-          reviewPosition: nextPos,
-          question: isComplete ? "" : prev.reviewCards[nextPos]?.question || "",
-          pinyin: isComplete ? "" : prev.reviewCards[nextPos]?.pinyin || '',
-          progress: { current: nextPos, total: prev.reviewCards.length },
-          inReviewMode: !isComplete
-        }
-      })
-      return
-    }
 
     // Normal server-backed session with timing
     if (!state.sessionId) return
@@ -300,21 +211,10 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
   }, [state])
 
   // View actions
-  const viewStats = useCallback(async () => {
+  const setStatsMode = useCallback((mode: 'srs' | 'accuracy' | 'performance' | null) => {
     setState(prev => ({
       ...prev,
-      showStats: true,
-      showSrs: true,
-      showPerformance: false
-    }))
-  }, [])
-
-  const viewSrs = useCallback(async () => {
-    setState(prev => ({
-      ...prev,
-      showStats: true,
-      showSrs: true,
-      showPerformance: false
+      statsMode: mode
     }))
   }, [])
 
@@ -323,29 +223,20 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     setState(prev => ({ ...prev, input: value }))
   }, [])
 
-  const setSelectedSet = useCallback((value: string) => {
-    setState(prev => ({ ...prev, selectedSet: value }))
-  }, [])
 
-  const setSelectedCategory = useCallback((value: string) => {
-    setState(prev => ({ ...prev, selectedCategory: value }))
-  }, [])
 
   const setSelectedSets = useCallback((value: string[]) => {
     setState(prev => ({ ...prev, selectedSets: value }))
   }, [])
 
-  const setMode = useCallback((value: 'set' | 'category' | 'multi-set') => {
-    setState(prev => ({ ...prev, mode: value }))
-  }, [])
 
 
   const setIsHighIntensityMode = useCallback((value: boolean) => {
     setState(prev => ({ ...prev, isHighIntensityMode: value }))
   }, [])
 
-  const setOldFocusMode = useCallback((value: boolean) => {
-    setState(prev => ({ ...prev, oldFocusMode: value }))
+  const setShowPinyin = useCallback((value: boolean) => {
+    setState(prev => ({ ...prev, showPinyin: value }))
   }, [])
 
   const setDiffEasy = useCallback((value: boolean) => {
@@ -391,33 +282,11 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
   const actions: SessionActions = {
     resetSessionUI,
     beginAutoSession,
-    beginSetSession,
-    beginCategorySession,
     beginMultiSetSession,
-    beginDifficultSet: async () => {
-      await apiClient.startSession({ mode: 'set_difficult', set_name: state.selectedSet })
-        .then(res => initializeSession(() => Promise.resolve(res)))
-        .catch(() => beginSetSession()) // Fallback
-    },
-    beginDifficultCategory: async () => {
-      await apiClient.startSession({ mode: 'category_difficult', category: state.selectedCategory })
-        .then(res => initializeSession(() => Promise.resolve(res)))
-        .catch(() => beginCategorySession()) // Fallback
-    },
     beginMultiSetDifficult: async () => {
       await apiClient.startSession({ mode: 'multi_set_difficult', selected_sets: state.selectedSets })
         .then(res => initializeSession(() => Promise.resolve(res)))
         .catch(() => beginMultiSetSession()) // Fallback
-    },
-    beginSrsSets: async () => {
-      await apiClient.startSession({ mode: 'set_srs', set_name: state.selectedSet })
-        .then(res => initializeSession(() => Promise.resolve(res)))
-        .catch(() => beginSetSession()) // Fallback
-    },
-    beginSrsCategories: async () => {
-      await apiClient.startSession({ mode: 'category_srs', category: state.selectedCategory })
-        .then(res => initializeSession(() => Promise.resolve(res)))
-        .catch(() => beginCategorySession()) // Fallback
     },
     beginMultiSetSrs: async () => {
       await apiClient.startSession({ mode: 'multi_set_srs', selected_sets: state.selectedSets })
@@ -426,7 +295,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     },
     beginDrawingMode: async () => {
       setState(prev => ({ ...prev, inDrawingMode: true }))
-      await beginSetSession()
+      await beginMultiSetSession()
     },
     submitAnswer,
     beginBrowse: async () => {
@@ -437,30 +306,11 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     nextBrowse: () => setState(prev => ({ ...prev, browseIndex: Math.min(prev.browseIndex + 1, Math.max(0, prev.browseRows.length - 1)) })),
     prevBrowse: () => setState(prev => ({ ...prev, browseIndex: Math.max(prev.browseIndex - 1, 0) })),
     beginReviewIncorrect,
-    viewSrs,
-    viewStats,
-    viewPerformance: async () => {
-      setState(prev => ({
-        ...prev,
-        showPerformance: true,
-        showStats: false,
-        showSrs: false
-      }))
-
-      try {
-        const performanceData = await apiClient.getPerformanceData()
-        setState(prev => ({ ...prev, performance: performanceData }))
-      } catch (error) {
-        console.error('Failed to fetch performance data:', error)
-      }
-    },
+    setStatsMode,
     setInput,
-    setSelectedSet,
-    setSelectedCategory,
     setSelectedSets,
-    setMode,
     setIsHighIntensityMode,
-    setOldFocusMode,
+    setShowPinyin,
     setDiffEasy,
     setDiffMedium,
     setDiffHard,

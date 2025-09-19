@@ -13,14 +13,14 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
     lastEval,
     streak,
     bestStreak,
-    oldFocusMode,
     isHighIntensityMode,
     adaptiveFeedbackDuration,
     sessionStartTime,
-    currentCardSet
+    currentCardSet,
+    showPinyin
   } = sessionState
 
-  const { setInput, submitAnswer, setOldFocusMode, setIsHighIntensityMode } = actions
+  const { setInput, submitAnswer, setIsHighIntensityMode, setShowPinyin } = actions
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   const [sessionTimer, setSessionTimer] = useState("")
@@ -69,12 +69,24 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
         }}>
           <div className="session-timer">⏱️ {sessionTimer}</div>
           <div className="minimal-progress">{progress.current}/{progress.total} · {progress.total - progress.current} left</div>
-          {currentCardSet && <div className="card-set">{humanizeSetLabel(currentCardSet)}</div>}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {pinyin && hasChinese(question) && (
+              <button
+                className={`btn-tertiary ${showPinyin ? 'active' : ''}`}
+                onClick={() => setShowPinyin(!showPinyin)}
+                title={showPinyin ? 'Hide pinyin' : 'Show pinyin'}
+                style={{ fontSize: '12px', padding: '2px 6px' }}
+              >
+                拼
+              </button>
+            )}
+            {currentCardSet && <div className="card-set">{humanizeSetLabel(currentCardSet)}</div>}
+          </div>
         </div>
       )}
       
       <div className={isHighIntensityMode ? "high-intensity-question" : ""}>
-        {!isHighIntensityMode && !oldFocusMode && (
+        {!isHighIntensityMode && (
           <>
             <div className="progress" aria-label={`Progress ${progress.current} of ${progress.total}`}>
               Progress: {progress.current}/{progress.total}
@@ -87,21 +99,9 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
         
         {!isHighIntensityMode && (
           <div className="metaRow">
-            {!oldFocusMode && (
-              <div className="streak">
-                🔥 Streak: {streak} <span className="muted">(Best {bestStreak})</span>
-              </div>
-            )}
-            
-            
-            <button 
-              onClick={() => setOldFocusMode(!oldFocusMode)}
-              className="btn-tertiary"
-              style={{ fontSize: '12px', padding: '4px 8px' }}
-              title={oldFocusMode ? "Exit focus mode" : "Enter focus mode"}
-            >
-              {oldFocusMode ? '👁️ Exit Focus' : '🎯 Focus'}
-            </button>
+            <div className="streak">
+              🔥 Streak: {streak} <span className="muted">(Best {bestStreak})</span>
+            </div>
           </div>
         )}
         
@@ -109,7 +109,7 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
           <div className={`question ${hasChinese(question) ? 'zh' : ''}`} lang={hasChinese(question) ? 'zh' : undefined}>
             {question || 'No active question'}
           </div>
-          {pinyin && !oldFocusMode && !isHighIntensityMode && (
+          {pinyin && showPinyin && hasChinese(question) && (
             <div className="pinyin" style={{ color: '#9da7b3', marginTop: 8 }}>{pinyin}</div>
           )}
         </div>
@@ -129,12 +129,23 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
             <button onClick={submitAnswer} disabled={!input.trim()}>Submit</button>
             
             {hasChinese(question) && (
-              <button 
-                aria-label="Play audio (R)" 
-                title="Play audio (R)" 
+              <button
+                aria-label="Play audio (R)"
+                title="Play audio (R)"
                 onClick={() => speak(question)}
               >
                 🔊
+              </button>
+            )}
+
+            {!isHighIntensityMode && pinyin && hasChinese(question) && (
+              <button
+                className={`btn-tertiary ${showPinyin ? 'active' : ''}`}
+                onClick={() => setShowPinyin(!showPinyin)}
+                title={showPinyin ? 'Hide pinyin' : 'Show pinyin'}
+                style={{ fontSize: '12px' }}
+              >
+                拼音
               </button>
             )}
             

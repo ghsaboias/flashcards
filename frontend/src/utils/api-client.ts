@@ -68,10 +68,6 @@ export class ApiClient {
     return this.get<string[]>('/sets', params)
   }
 
-  async listCategories(domainId?: string): Promise<string[]> {
-    const params = domainId ? { domain_id: domainId } : undefined
-    return this.get<string[]>('/categories', params)
-  }
 
   async listDomains(): Promise<Domain[]> {
     return this.get<Domain[]>('/domains')
@@ -79,43 +75,29 @@ export class ApiClient {
 
   // === STATISTICS METHODS ===
 
-  async getStats(scope: 'set' | 'category', identifier: string, domainId?: string): Promise<StatsPayload> {
+  async getStatsForSet(setName: string, domainId?: string): Promise<StatsPayload> {
     const params: Record<string, string> = {
-      [scope === 'set' ? 'set_name' : 'category']: identifier
+      set_name: setName
     }
     if (domainId) {
       params.domain_id = domainId
     }
-    return this.get<StatsPayload>(`/stats/${scope}`, params)
+    return this.get<StatsPayload>('/stats/set', params)
   }
 
-  async getStatsForSet(setName: string, domainId?: string): Promise<StatsPayload> {
-    return this.getStats('set', setName, domainId)
-  }
-
-  async getStatsForCategory(category: string, domainId?: string): Promise<StatsPayload> {
-    return this.getStats('category', category, domainId)
-  }
 
   // === SRS METHODS ===
 
-  async getSrs(scope: 'set' | 'category', identifier: string, domainId?: string): Promise<SrsRow[]> {
+  async getSrsForSet(setName: string, domainId?: string): Promise<SrsRow[]> {
     const params: Record<string, string> = {
-      [scope === 'set' ? 'set_name' : 'category']: identifier
+      set_name: setName
     }
     if (domainId) {
       params.domain_id = domainId
     }
-    return this.get<SrsRow[]>(`/srs/${scope}`, params)
+    return this.get<SrsRow[]>('/srs/set', params)
   }
 
-  async getSrsForSet(setName: string, domainId?: string): Promise<SrsRow[]> {
-    return this.getSrs('set', setName, domainId)
-  }
-
-  async getSrsForCategory(category: string, domainId?: string): Promise<SrsRow[]> {
-    return this.getSrs('category', category, domainId)
-  }
 
   // === PERFORMANCE ANALYTICS ===
 

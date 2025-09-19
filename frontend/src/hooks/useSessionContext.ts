@@ -79,15 +79,10 @@ export function useSpecialModes() {
     inBrowseMode: state.inBrowseMode,
     browseRows: state.browseRows,
     browseIndex: state.browseIndex,
-    browsePinyin: state.browsePinyin,
-    inReviewMode: state.inReviewMode,
-    reviewCards: state.reviewCards,
-    reviewPosition: state.reviewPosition,
     inDrawingMode: state.inDrawingMode,
     drawingCards: state.drawingCards,
     drawingPosition: state.drawingPosition,
-    drawingProgress: state.drawingProgress,
-    oldFocusMode: state.oldFocusMode
+    drawingProgress: state.drawingProgress
   }
 }
 
@@ -95,11 +90,7 @@ export function useDataSettings() {
   const state = useSessionState()
   return {
     sets: state.sets,
-    categories: state.categories,
-    selectedSet: state.selectedSet,
-    selectedCategory: state.selectedCategory,
     selectedSets: state.selectedSets,
-    mode: state.mode,
     diffEasy: state.diffEasy,
     diffMedium: state.diffMedium,
     diffHard: state.diffHard
@@ -109,11 +100,9 @@ export function useDataSettings() {
 export function useViewStates() {
   const state = useSessionState()
   return {
-    showSrs: state.showSrs,
+    statsMode: state.statsMode,
     srsRows: state.srsRows,
-    showStats: state.showStats,
     stats: state.stats,
-    showPerformance: state.showPerformance,
     performance: state.performance,
     difficultyRows: state.difficultyRows
   }

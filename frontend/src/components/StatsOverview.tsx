@@ -5,8 +5,6 @@ import { hasChinese } from '../utils/pinyin'
 
 interface StatsOverviewProps {
   sessionState: SessionState
-  humanizeSetLabel: (raw: string) => string
-  humanizeCategoryLabel: (raw: string) => string
   getMultiSetLabel: () => string
   speak: (text: string) => void
   exitBrowse: () => void
@@ -19,8 +17,6 @@ interface StatsOverviewProps {
 
 export default function StatsOverview({
   sessionState,
-  humanizeSetLabel,
-  humanizeCategoryLabel,
   getMultiSetLabel,
   speak,
   exitBrowse,
@@ -31,9 +27,6 @@ export default function StatsOverview({
   onDrawingComplete
 }: StatsOverviewProps) {
   const {
-    mode,
-    selectedSet,
-    selectedCategory,
     inDrawingMode,
     drawingCards,
     drawingPosition,
@@ -41,8 +34,7 @@ export default function StatsOverview({
     inBrowseMode,
     browseRows,
     browseIndex,
-    browsePinyin,
-    showPerformance,
+    statsMode,
     performance,
     srsRows,
     stats
@@ -68,11 +60,7 @@ export default function StatsOverview({
     return (
       <div className="statsPanel" style={{ marginTop: 8 }}>
         <div className="metaRow">
-          <h3>Practice Drawing {
-            mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
-            mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
-            `— ${getMultiSetLabel()}`
-          }</h3>
+          <h3>Practice Drawing — {getMultiSetLabel()}</h3>
           <div className="muted">{total > 0 ? `${drawingPosition + 1}/${total}` : '0/0'}</div>
         </div>
         
@@ -127,11 +115,7 @@ export default function StatsOverview({
     return (
       <div className="statsPanel" style={{ marginTop: 8 }}>
         <div className="metaRow">
-          <h3>Review {
-            mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
-            mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
-            `— ${getMultiSetLabel()}`
-          }</h3>
+          <h3>Review — {getMultiSetLabel()}</h3>
           <div className="muted">{total > 0 ? `${i + 1}/${total}` : '0/0'}</div>
         </div>
 
@@ -140,9 +124,6 @@ export default function StatsOverview({
             <div className={`question ${hasChinese(current.question) ? 'zh' : ''}`} lang={hasChinese(current.question) ? 'zh' : undefined}>
               {current.question}
             </div>
-            {browsePinyin && (
-              <div className="pinyin" style={{ color: '#9da7b3' }}>{browsePinyin}</div>
-            )}
             <div style={{ fontSize: 18, marginTop: 16 }}>{current.answer}</div>
           </div>
         ) : (
@@ -161,104 +142,122 @@ export default function StatsOverview({
     )
   }
 
-  if (showPerformance) {
-    return (
-      <div className="statsPanel" style={{ marginTop: 8 }}>
-        <div className="metaRow">
-          <h3>📊 Performance Analytics</h3>
-          {performance && <div className="muted">{performance.summary.overall_accuracy}% overall accuracy</div>}
-        </div>
+  // Handle different stats modes
+  if (statsMode) {
+    switch (statsMode) {
+      case 'performance':
+        return (
+          <div className="statsPanel" style={{ marginTop: 8 }}>
+            <div className="metaRow">
+              <h3>📊 Performance Analytics</h3>
+              {performance && <div className="muted">{performance.summary.overall_accuracy}% overall accuracy</div>}
+            </div>
 
-        {performance && (
-          <div className="panelSubtext muted">
-            <div>
-              Sessions: <strong>{performance.summary.total_sessions}</strong> · Questions: <strong>{performance.summary.total_questions}</strong> · Study Days: <strong>{performance.summary.study_days}</strong>
-            </div>
-            <div>
-              Avg Questions/Session: <strong>{performance.summary.avg_questions_per_session}</strong> · Overall Accuracy: <strong>{performance.summary.overall_accuracy}%</strong>
-            </div>
+            {performance && (
+              <div className="panelSubtext muted">
+                <div>
+                  Sessions: <strong>{performance.summary.total_sessions}</strong> · Questions: <strong>{performance.summary.total_questions}</strong> · Study Days: <strong>{performance.summary.study_days}</strong>
+                </div>
+                <div>
+                  Avg Questions/Session: <strong>{performance.summary.avg_questions_per_session}</strong> · Overall Accuracy: <strong>{performance.summary.overall_accuracy}%</strong>
+                </div>
+              </div>
+            )}
+
+            {performance && performance.daily.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <h4 style={{ fontSize: 14, marginBottom: 8 }}>Daily Performance</h4>
+                <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                  <table className="statsTable">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Sessions</th>
+                        <th>Questions</th>
+                        <th>Accuracy</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {performance.daily.slice(-20).map((day, i) => (
+                        <tr key={i}>
+                          <td>{day.date}</td>
+                          <td>{day.sessions}</td>
+                          <td>{day.questions}</td>
+                          <td className={day.accuracy >= 90 ? 'ok' : day.accuracy >= 80 ? '' : 'bad'}>
+                            {day.accuracy.toFixed(1)}%
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        )
 
-        {performance && performance.daily.length > 0 && (
-          <div style={{ marginTop: 16 }}>
-            <h4 style={{ fontSize: 14, marginBottom: 8 }}>Daily Performance</h4>
-            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-              <table className="statsTable">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Sessions</th>
-                    <th>Questions</th>
-                    <th>Accuracy</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {performance.daily.slice(-20).map((day, i) => (
-                    <tr key={i}>
-                      <td>{day.date}</td>
-                      <td>{day.sessions}</td>
-                      <td>{day.questions}</td>
-                      <td className={day.accuracy >= 90 ? 'ok' : day.accuracy >= 80 ? '' : 'bad'}>
-                        {day.accuracy.toFixed(1)}%
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      case 'srs':
+        return (
+          <div className="statsPanel" style={{ marginTop: 8 }}>
+            <div className="metaRow">
+              <h3>📅 SRS Schedule — {getMultiSetLabel()}</h3>
+              <div className="muted">{srsRows.length} items</div>
             </div>
+
+            <UnifiedTable
+              srsRows={srsRows.length > 0 ? srsRows : undefined}
+              statsRows={undefined}
+            />
           </div>
-        )}
-      </div>
-    )
-  }
+        )
 
-  // Always show unified SRS & Stats table when data is available
-  if (stats || srsRows.length > 0) {
-    const title = 'SRS & Stats'
-    const subtitle = stats ? `${stats.summary.accuracy}% accuracy` : srsRows.length > 0 ? `${srsRows.length} items` : ''
-    
-    return (
-      <div className="statsPanel" style={{ marginTop: 8 }}>
-        <div className="metaRow">
-          <h3>{title} {
-            mode === 'set' ? `— ${humanizeSetLabel(selectedSet)}` :
-            mode === 'category' ? `— ${humanizeCategoryLabel(selectedCategory)}` :
-            `— ${getMultiSetLabel()}`
-          }</h3>
-          <div className="muted">{subtitle}</div>
-        </div>
+      case 'accuracy':
+      default:
+        // Unified stats & SRS view (existing default behavior)
+        if (stats || srsRows.length > 0) {
+          const title = 'SRS & Stats'
+          const subtitle = stats ? `${stats.summary.accuracy}% accuracy` : srsRows.length > 0 ? `${srsRows.length} items` : ''
 
-        {stats && (
-          <div className="panelSubtext muted" style={{ marginBottom: 16 }}>
-            <div>
-              <strong>{stats.summary.accuracy}% accuracy</strong> · Correct: {stats.summary.correct} · Incorrect: {stats.summary.incorrect} · Attempts: {stats.summary.total}
+          return (
+            <div className="statsPanel" style={{ marginTop: 8 }}>
+              <div className="metaRow">
+                <h3>{title} — {getMultiSetLabel()}</h3>
+                <div className="muted">{subtitle}</div>
+              </div>
+
+              {stats && (
+                <div className="panelSubtext muted" style={{ marginBottom: 16 }}>
+                  <div>
+                    <strong>{stats.summary.accuracy}% accuracy</strong> · Correct: {stats.summary.correct} · Incorrect: {stats.summary.incorrect} · Attempts: {stats.summary.total}
+                  </div>
+                  <div>
+                    Cards: {stats.summary.total_cards} · Attempted: {stats.summary.attempted_cards} · Difficult (&lt;80%): {stats.summary.difficult_count}
+                  </div>
+                </div>
+              )}
+
+              {/* Due cards preview */}
+              <div style={{
+                padding: '12px 16px',
+                margin: '0 0 16px 0',
+                background: 'var(--panel)',
+                borderRadius: '6px',
+                textAlign: 'center',
+                fontSize: '14px',
+                color: 'var(--muted)'
+              }}>
+                450 cards due now
+              </div>
+
+              <UnifiedTable
+                srsRows={srsRows.length > 0 ? srsRows : undefined}
+                statsRows={stats ? stats.rows || [] : undefined}
+              />
             </div>
-            <div>
-              Cards: {stats.summary.total_cards} · Attempted: {stats.summary.attempted_cards} · Difficult (&lt;80%): {stats.summary.difficult_count}
-            </div>
-          </div>
-        )}
-
-        {/* Due cards preview */}
-        <div style={{
-          padding: '12px 16px',
-          margin: '0 0 16px 0',
-          background: 'var(--panel)',
-          borderRadius: '6px',
-          textAlign: 'center',
-          fontSize: '14px',
-          color: 'var(--muted)'
-        }}>
-          450 cards due now
-        </div>
-
-        <UnifiedTable
-          srsRows={srsRows.length > 0 ? srsRows : undefined}
-          statsRows={stats ? stats.rows || [] : undefined}
-        />
-      </div>
-    )
+          )
+        }
+        break
+    }
   }
 
   return null
