@@ -158,9 +158,9 @@ export function useSessionManager(): [SessionState, SessionActions] {
   }, [])
 
   // Session start methods
-  const beginAutoSession = useCallback(async () => {
+  const beginAutoSession = useCallback(async (domainId?: string) => {
     await initializeSession(
-      () => apiClient.startAutoSession({}),
+      () => apiClient.startAutoSession({ domain_id: domainId }),
       { setHighIntensity: true, trackStartTime: true }
     )
   }, [initializeSession])

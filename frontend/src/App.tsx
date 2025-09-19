@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect } from 'react'
+import { useMemo, useRef, useEffect, useState } from 'react'
 import './styles/index.css'
 import { useSessionManager } from './hooks/useSessionManager'
 import { SessionProvider } from './contexts/SessionContext'
@@ -6,6 +6,7 @@ import PracticeSession from './components/PracticeSession'
 import SessionComplete from './components/SessionComplete'
 import HighIntensityMode from './components/HighIntensityMode'
 import TraditionalModes from './components/TraditionalModes'
+import DomainSelector from './components/DomainSelector'
 import StatsOverview from './components/StatsOverview'
 import KeyboardHandler from './components/KeyboardHandler'
 import { useAudioControls } from './hooks/useAudioControls'
@@ -13,10 +14,12 @@ import { AutoTTS } from './components/AudioControls'
 import { getPinyinForText, hasChinese } from './utils/pinyin'
 import { humanizeSetLabel, humanizeCategoryLabel, formatMultiSetLabel } from './utils/hsk-label-utils'
 import { countByDifficulty, isSessionComplete } from './utils/session-utils'
+import type { Domain } from './types/api-types'
 
 function App() {
   const [sessionState, actions] = useSessionManager()
   const { speak } = useAudioControls()
+  const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null)
   const summaryRef = useRef<HTMLDivElement | null>(null)
   const previousResultsLengthRef = useRef<number>(0)
 
@@ -108,7 +111,10 @@ function App() {
 
       {!sessionState.isHighIntensityMode && (
         <div className="main-panel" role="main" style={{ display: sessionState.oldFocusMode && (sessionState.sessionId || sessionState.inReviewMode) ? 'none' : 'block' }}>
-          <h1>🇨🇳 HSK Flashcards</h1>
+          <DomainSelector
+            selectedDomain={selectedDomain}
+            onDomainChange={setSelectedDomain}
+          />
           
           <TraditionalModes
             sessionState={sessionState}
@@ -161,6 +167,8 @@ function App() {
           humanizeSetLabel={humanizeSetLabel}
           humanizeCategoryLabel={humanizeCategoryLabel}
           getMultiSetLabel={getMultiSetLabel}
+          selectedDomain={selectedDomain}
+          onDomainChange={setSelectedDomain}
         />
       )}
 
