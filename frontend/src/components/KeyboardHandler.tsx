@@ -11,18 +11,13 @@ interface KeyboardHandlerProps {
 export default function KeyboardHandler({ sessionState, actions, speak }: KeyboardHandlerProps) {
   const {
     question,
-    selectedSets,
-    inBrowseMode,
-    browseIndex,
-    browseRows
+    selectedSets
   } = sessionState
 
   const {
     beginMultiSetSession,
     beginMultiSetDifficult,
-    beginMultiSetSrs,
-    nextBrowse,
-    prevBrowse
+    beginMultiSetSrs
   } = actions
 
   useEffect(() => {
@@ -42,22 +37,12 @@ export default function KeyboardHandler({ sessionState, actions, speak }: Keyboa
 
       if (e.key === 'r' || e.key === 'R') {
         if (question && hasChinese(question)) speak(question)
-        if (inBrowseMode) {
-          const q = browseRows[browseIndex]?.question
-          if (q && hasChinese(q)) speak(q)
-        }
       } else if (e.key === '1') {
         if (selectedSets.length > 0) beginMultiSetSession()
       } else if (e.key === '2') {
         if (selectedSets.length > 0) beginMultiSetDifficult()
       } else if (e.key === '3') {
         if (selectedSets.length > 0) beginMultiSetSrs()
-      } else if (inBrowseMode && (e.key === 'ArrowRight' || e.key === 'PageDown')) {
-        e.preventDefault()
-        nextBrowse()
-      } else if (inBrowseMode && (e.key === 'ArrowLeft' || e.key === 'PageUp')) {
-        e.preventDefault()
-        prevBrowse()
       }
     }
 
@@ -66,15 +51,10 @@ export default function KeyboardHandler({ sessionState, actions, speak }: Keyboa
   }, [
     question,
     selectedSets,
-    inBrowseMode,
-    browseIndex,
-    browseRows,
     speak,
     beginMultiSetSession,
     beginMultiSetDifficult,
-    beginMultiSetSrs,
-    nextBrowse,
-    prevBrowse
+    beginMultiSetSrs
   ])
 
   return null // This component only provides keyboard handling side effects

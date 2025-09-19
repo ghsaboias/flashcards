@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import type { TraditionalModesProps } from '../types/component-props'
 
 export default function TraditionalModes({
@@ -7,6 +8,7 @@ export default function TraditionalModes({
   difficultyCounts,
   getMultiSetLabel
 }: TraditionalModesProps) {
+  const navigate = useNavigate()
   const {
     sets,
     selectedSets,
@@ -21,14 +23,25 @@ export default function TraditionalModes({
     setDiffHard,
     addSetToSelection,
     removeSetFromSelection,
-    beginBrowse,
     beginMultiSetSession,
     beginMultiSetDifficult,
     beginMultiSetSrs,
-    beginDrawingMode,
     setStatsMode,
     setIsHighIntensityMode
   } = actions
+
+  // Navigate to Browse/Drawing pages instead of legacy mode switching
+  const handleStartReview = () => {
+    if (selectedSets.length > 0) {
+      navigate(`/browse/${selectedSets[0]}`)
+    }
+  }
+
+  const handleStartDrawing = () => {
+    if (selectedSets.length > 0) {
+      navigate(`/drawing/${selectedSets[0]}`)
+    }
+  }
 
   return (
     <div className="section">
@@ -92,7 +105,7 @@ export default function TraditionalModes({
       <div className="row">
         <button
           className="btn-primary"
-          onClick={beginBrowse}
+          onClick={handleStartReview}
           disabled={selectedSets.length === 0}
         >
           Start Review
@@ -122,7 +135,7 @@ export default function TraditionalModes({
         <button
           className="btn-secondary"
           title="Draw characters within their outlines"
-          onClick={beginDrawingMode}
+          onClick={handleStartDrawing}
           disabled={selectedSets.length === 0}
         >
           Practice Drawing

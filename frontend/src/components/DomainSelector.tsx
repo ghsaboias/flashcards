@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { Domain } from '../types/api-types'
 import { apiClient } from '../utils/api-client'
+import LoadingSpinner from './LoadingSpinner'
 
 interface DomainSelectorProps {
   selectedDomain: Domain | null
@@ -33,9 +34,49 @@ export default function DomainSelector({ selectedDomain, onDomainChange }: Domai
     loadDomains()
   }, [selectedDomain, onDomainChange])
 
-  if (loading) return <div>Loading domains...</div>
-  if (error) return <div>Error: {error}</div>
-  if (domains.length === 0) return <div>No domains available</div>
+  if (loading) {
+    return (
+      <LoadingSpinner
+        size="small"
+        text="Loading domains..."
+      />
+    )
+  }
+
+  if (error) {
+    return (
+      <div style={{
+        padding: '16px',
+        background: 'var(--panel)',
+        borderRadius: '6px',
+        border: '1px solid var(--bad)',
+        textAlign: 'center'
+      }}>
+        <span style={{ color: 'var(--bad)' }}>⚠️ Error: {error}</span>
+        <button
+          onClick={() => window.location.reload()}
+          style={{ marginLeft: '12px', padding: '4px 8px', fontSize: '12px' }}
+          className="btn-secondary"
+        >
+          Retry
+        </button>
+      </div>
+    )
+  }
+
+  if (domains.length === 0) {
+    return (
+      <div style={{
+        padding: '16px',
+        background: 'var(--panel)',
+        borderRadius: '6px',
+        textAlign: 'center',
+        color: 'var(--muted)'
+      }}>
+        No domains available
+      </div>
+    )
+  }
 
   return (
     <div className="domain-selector">

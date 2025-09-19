@@ -1,39 +1,16 @@
 import type { SessionState } from '../types/session-types'
 import UnifiedTable from './UnifiedTable'
-import DrawingCanvas from './DrawingCanvas'
-import { hasChinese } from '../utils/pinyin'
 
 interface StatsOverviewProps {
   sessionState: SessionState
   getMultiSetLabel: () => string
-  speak: (text: string) => void
-  exitBrowse: () => void
-  nextBrowse: () => void
-  prevBrowse: () => void
-  setInDrawingMode: (enabled: boolean) => void
-  setDrawingProgress: (progress: { current: number; total: number }) => void
-  onDrawingComplete: (nextPos: number, total: number) => void
 }
 
 export default function StatsOverview({
   sessionState,
-  getMultiSetLabel,
-  speak,
-  exitBrowse,
-  nextBrowse,
-  prevBrowse,
-  setInDrawingMode,
-  setDrawingProgress,
-  onDrawingComplete
+  getMultiSetLabel
 }: StatsOverviewProps) {
   const {
-    inDrawingMode,
-    drawingCards,
-    drawingPosition,
-    drawingProgress,
-    inBrowseMode,
-    browseRows,
-    browseIndex,
     statsMode,
     performance,
     srsRows,
@@ -43,104 +20,6 @@ export default function StatsOverview({
   // Get due count for SRS  
   // const dueNowCount = 0 // Placeholder - would need to implement SRS due logic
 
-  if (inDrawingMode) {
-    const total = drawingCards.length
-    const current = total > 0 ? drawingCards[drawingPosition] : null
-    
-    const handleProgressUpdate = () => {
-      // This is just for the canvas drawing percentage, not session progress
-    }
-    
-    const handleComplete = () => {
-      const nextPos = drawingPosition + 1
-      setDrawingProgress({ current: nextPos, total })
-      onDrawingComplete(nextPos, total)
-    }
-
-    return (
-      <div className="statsPanel" style={{ marginTop: 8 }}>
-        <div className="metaRow">
-          <h3>Practice Drawing — {getMultiSetLabel()}</h3>
-          <div className="muted">{total > 0 ? `${drawingPosition + 1}/${total}` : '0/0'}</div>
-        </div>
-        
-        {/* Session progress */}
-        <div style={{ marginBottom: 16 }}>
-          <div className="progress" aria-label={`Session Progress ${drawingProgress.current} of ${drawingProgress.total}`}>
-            Session Progress: {drawingProgress.current}/{drawingProgress.total}
-          </div>
-          <div className="progressBar" role="progressbar" aria-valuemin={0} aria-valuemax={100} 
-               aria-valuenow={drawingProgress.total > 0 ? Math.round((drawingProgress.current / drawingProgress.total) * 100) : 0}>
-            <div className="progressFill" style={{ 
-              width: `${drawingProgress.total > 0 ? Math.round((drawingProgress.current / drawingProgress.total) * 100) : 0}%` 
-            }} />
-          </div>
-        </div>
-
-        {current ? (
-          <div>
-            <div style={{ fontSize: 24, marginBottom: 16, textAlign: 'center' }}>
-              Draw: <strong>{current.question}</strong>
-            </div>
-            <div style={{ fontSize: 16, marginBottom: 16, textAlign: 'center', color: '#666' }}>
-              Meaning: {current.answer}
-            </div>
-            <DrawingCanvas 
-              character={current.question}
-              onProgressUpdate={handleProgressUpdate}
-              onComplete={handleComplete}
-            />
-          </div>
-        ) : (
-          <div className="muted" style={{ marginTop: 8 }}>No Chinese characters found</div>
-        )}
-
-        <div className="row" style={{ marginTop: 12 }}>
-          <button 
-            className="btn-tertiary" 
-            onClick={() => setInDrawingMode(false)}
-          >
-            Exit Drawing
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  if (inBrowseMode) {
-    const total = browseRows.length
-    const i = Math.min(Math.max(browseIndex, 0), Math.max(0, total - 1))
-    const current = total > 0 ? browseRows[i] : null
-
-    return (
-      <div className="statsPanel" style={{ marginTop: 8 }}>
-        <div className="metaRow">
-          <h3>Review — {getMultiSetLabel()}</h3>
-          <div className="muted">{total > 0 ? `${i + 1}/${total}` : '0/0'}</div>
-        </div>
-
-        {current ? (
-          <div className="questionWrap">
-            <div className={`question ${hasChinese(current.question) ? 'zh' : ''}`} lang={hasChinese(current.question) ? 'zh' : undefined}>
-              {current.question}
-            </div>
-            <div style={{ fontSize: 18, marginTop: 16 }}>{current.answer}</div>
-          </div>
-        ) : (
-          <div className="muted" style={{ marginTop: 8 }}>No items</div>
-        )}
-
-        <div className="row" style={{ marginTop: 12 }}>
-          <button onClick={prevBrowse} disabled={i <= 0}>Prev</button>
-          <button onClick={nextBrowse} disabled={i >= total - 1}>Next</button>
-          {current && hasChinese(current.question) && (
-            <button aria-label="Play audio (R)" title="Play audio (R)" onClick={() => speak(current.question)}>🔊</button>
-          )}
-          <button className="btn-tertiary" onClick={exitBrowse}>Exit Review</button>
-        </div>
-      </div>
-    )
-  }
 
   // Handle different stats modes
   if (statsMode) {
