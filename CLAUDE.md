@@ -134,10 +134,23 @@ flashcards/
     │   ├── 🇨🇳 china-flag.svg       # Custom favicon
     │   └── 📄 vite.svg              # Default Vite logo
     └── 📁 src/
-        ├── 📄 App.tsx              # Main React component (refactored, ~150 lines)
+        ├── 📄 router.tsx           # React Router configuration with 7 routes
+        ├── 📄 main.tsx             # React entry point with RouterProvider (14 lines)
+        ├── 📄 App.tsx.legacy       # Legacy conditional rendering (archived)
         ├── 📄 App.css              # Application styles
-        ├── 📄 main.tsx             # React entry point (10 lines)
-        ├── 📁 components/          # React components (updated imports)
+        ├── 📁 pages/               # Page components (URL-based routing)
+        │   ├── 📄 HomePage.tsx         # High-intensity quick start (41 lines)
+        │   ├── 📄 PracticePage.tsx     # Traditional practice modes (191 lines)
+        │   ├── 📄 SessionPage.tsx      # Active practice sessions (69 lines)
+        │   ├── 📄 CompletePage.tsx     # Session results & analytics (168 lines)
+        │   ├── 📄 StatsPage.tsx        # Analytics dashboard (137 lines)
+        │   ├── 📄 BrowsePage.tsx       # Card browsing by set (154 lines)
+        │   ├── 📄 DrawingPage.tsx      # Character drawing practice (159 lines)
+        │   └── 📄 ErrorPage.tsx        # 404 and error handling (24 lines)
+        ├── 📁 layouts/             # Layout components
+        │   ├── 📄 MainLayout.tsx       # Shared navigation & domain selector (98 lines)
+        │   └── 📄 SessionLayout.tsx    # Practice session layout (44 lines)
+        ├── 📁 components/          # React components (extracted from pages)
         │   ├── 📄 AudioControls.tsx     # Audio controls component
         │   ├── 📄 DomainSelector.tsx    # Multi-domain selection dropdown
         │   ├── 📄 HighIntensityMode.tsx # High-intensity practice mode
@@ -151,11 +164,14 @@ flashcards/
         │   ├── 📄 UnifiedTable.tsx      # Unified SRS/stats table (updated)
         │   └── 📄 DrawingCanvas.tsx     # Character drawing (289 lines)
         ├── 📁 contexts/            # React Context providers
-        │   └── 📄 SessionContext.tsx    # Session state context (49 lines)
+        │   ├── 📄 SessionContext.tsx    # Session state context (49 lines)
+        │   ├── 📄 AppContext.tsx        # Global app context provider (32 lines)
+        │   └── 📄 AppContextDefinition.ts # App context type definition (9 lines)
         ├── 📁 hooks/               # Custom React hooks
         │   ├── 📄 useAudioControls.ts   # Audio controls hook
         │   ├── 📄 useSessionContext.ts  # Session context hook (125 lines)
-        │   └── 📄 useSessionManager.ts  # Session management hook (474 lines)
+        │   ├── 📄 useSessionManager.ts  # Session management hook (474 lines)
+        │   └── 📄 useAppContext.ts      # Global app context hook (9 lines)
         ├── 📁 types/               # TypeScript type definitions
         │   ├── 📄 api-types.ts          # API response types (146 lines)
         │   ├── 📄 component-props.ts    # Component prop types (107 lines)
@@ -171,11 +187,11 @@ flashcards/
         └── 📁 assets/              # Static assets
 
 ## 📊 Codebase Statistics
-- **Total Lines of Code:** ~4,200 lines (TypeScript/React)
+- **Total Lines of Code:** ~4,400 lines (TypeScript/React)
 - **Backend Total:** ~1,000+ lines across 8 files (modularized utilities)
-- **Frontend Total:** ~3,200+ lines across 30+ files (restructured architecture)
-- **Architecture:** Modular backend with extracted utilities, React app with hooks/contexts pattern
-- **Refactor Impact:** Eliminated ~3,200 lines of duplicated/obsolete code, added ~600 lines of organized utilities
+- **Frontend Total:** ~3,400+ lines across 40+ files (page-based architecture)
+- **Architecture:** Page-based React Router app with layouts, modular backend with extracted utilities
+- **Migration Impact:** Added ~1,000 lines of page components, eliminated ~200 lines of conditional rendering
 ```
 
 ## Module Documentation
@@ -232,11 +248,36 @@ The build process:
 
 ## Key Technologies
 
-- **Frontend**: React 19, TypeScript, Vite, Axios with lazy-loaded components
+- **Frontend**: React 19, TypeScript, Vite, React Router, Axios with lazy-loaded components
 - **Backend**: Hono, Cloudflare Workers, D1 Database, Durable Objects
-- **Storage**: D1 Database with progressive unlock logic, Durable Objects for session state  
+- **Storage**: D1 Database with progressive unlock logic, Durable Objects for session state
 - **Deployment**: Cloudflare Pages with Workers integration
 - **Features**: Adaptive SRS algorithm, progressive unlocks, Chinese pinyin support, audio TTS
+
+## React Router Migration (ONGOING)
+
+The frontend has been migrated from conditional rendering to a proper page-based architecture:
+
+### URL Routes
+- **`/`** - HomePage: High-intensity quick start
+- **`/practice`** - PracticePage: Traditional practice modes
+- **`/session/:id`** - SessionPage: Active practice sessions
+- **`/complete/:id`** - CompletePage: Session results & analytics
+- **`/stats`** - StatsPage: Comprehensive analytics dashboard
+- **`/browse/:set`** - BrowsePage: Card browsing by set
+- **`/drawing/:set`** - DrawingPage: Character drawing practice
+
+### Architecture Benefits
+- ✅ **URL-based navigation**: Bookmarkable sessions, browser back/forward support
+- ✅ **Eliminated mode flags**: Removed `isHighIntensityMode`, `inBrowseMode`, `inDrawingMode`
+- ✅ **Clean separation**: Global app context vs page-specific session state
+- ✅ **Professional UX**: Navigation breadcrumbs, error boundaries, loading states
+- ✅ **Developer experience**: Easier testing, simpler component structure
+
+### Migration Impact
+- **Added**: 8 page components, 2 layout components, global app context
+- **Removed**: 187 lines of conditional rendering logic from legacy App.tsx
+- **Maintained**: Full backward compatibility with existing backend API
 
 ## New API Endpoints
 

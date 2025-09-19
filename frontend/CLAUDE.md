@@ -38,8 +38,24 @@ bun run preview   # Preview built app locally
 
 ## Component Architecture
 
-### Core Components
-- **`App.tsx`**: Main application with domain selection and practice mode routing
+### Page-Based Router Architecture (ONGOING)
+The app has migrated from conditional rendering to React Router with dedicated page components:
+
+### Page Components (`src/pages/`)
+- **`HomePage.tsx`**: High-intensity quick start landing page (41 lines)
+- **`PracticePage.tsx`**: Traditional practice modes selection (191 lines)
+- **`SessionPage.tsx`**: Active practice sessions interface (69 lines)
+- **`CompletePage.tsx`**: Session results and analytics (168 lines)
+- **`StatsPage.tsx`**: Comprehensive analytics dashboard (137 lines)
+- **`BrowsePage.tsx`**: Card browsing by set (154 lines)
+- **`DrawingPage.tsx`**: Character drawing practice (159 lines)
+- **`ErrorPage.tsx`**: 404 and error handling (24 lines)
+
+### Layout Components (`src/layouts/`)
+- **`MainLayout.tsx`**: Shared navigation & domain selector (98 lines)
+- **`SessionLayout.tsx`**: Practice session layout (44 lines)
+
+### Core Components (`src/components/`)
 - **`DomainSelector.tsx`**: Multi-domain selection dropdown (Chinese/Geography)
 - **`HighIntensityMode.tsx`**: Streamlined practice interface with auto-start
 - **`TraditionalModes.tsx`**: Classic practice modes (review all, SRS, difficulty-based)
@@ -59,8 +75,11 @@ bun run preview   # Preview built app locally
 - **`DrawingCanvas.tsx`**: Character drawing for Chinese practice (289 lines)
 - **`AudioControls.tsx`**: TTS audio playback for Chinese characters
 
-### State Management
-- **`SessionContext.tsx`**: Global session state provider (49 lines)
+### State Management (`src/contexts/` & `src/hooks/`)
+- **`AppContext.tsx`**: Global app context provider (32 lines)
+- **`AppContextDefinition.ts`**: App context type definition (9 lines)
+- **`useAppContext.ts`**: Global app context hook (9 lines)
+- **`SessionContext.tsx`**: Session state context provider (49 lines)
 - **`useSessionManager.ts`**: Centralized session logic with auto-start integration (474 lines)
 - **`useSessionContext.ts`**: Session state hook with performance tracking (125 lines)
 
@@ -140,11 +159,13 @@ build: {
 - **Progress Visualization**: Real-time accuracy and timing feedback
 
 ## Recent Architecture Updates
+- **React Router Migration**: Migrated from conditional rendering to page-based architecture
+- **URL-Based Navigation**: Added proper routing with bookmarkable URLs and browser history
+- **Layout System**: Created MainLayout and SessionLayout for consistent page structure
+- **Component Separation**: Extracted page components from monolithic App.tsx (archived as App.tsx.legacy)
+- **Global Context**: Added AppContext for domain state separate from session state
 - **Multi-Domain Support**: Added domain selection and filtering throughout
-- **Session Management Refactor**: Extracted into hooks and contexts pattern
-- **Component Modularity**: Separated concerns with specialized components
 - **Performance Optimization**: Bundle splitting and lazy loading implementation
-- **TypeScript Enhancement**: Comprehensive type definitions across modules
 
 ## Quality Standards
 - **Zero TypeScript errors** on build (`bun run build`)
