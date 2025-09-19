@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-A modern web-based spaced repetition system (SRS) for learning Chinese characters using HSK vocabulary. Built with React frontend and Cloudflare Workers backend.
+A modern multi-domain spaced repetition system (SRS) for learning Chinese characters, world geography, and any flashcard content. Built with React 19 frontend and Cloudflare Workers backend.
 
 **Live App**: https://game.fasttakeoff.org  
 **Repository**: https://github.com/ghsaboias/flashcards  
@@ -108,6 +108,10 @@ flashcards/
 │   ├── 📄 seed-hsk1.sql            # HSK Level 1 data
 │   ├── 📄 wrangler.toml            # Cloudflare Worker config
 │   ├── 📄 tsconfig.json            # TypeScript config
+│   ├── 📁 migrations/              # D1 database migrations
+│   │   ├── 📄 0001_add_domains_table.sql     # Multi-domain support
+│   │   ├── 📄 0002_add_domain_id_to_cards.sql # Domain foreign key
+│   │   └── 📄 0003_add_geography_domain.sql   # Geography sample data
 │   └── 📁 src/
 │       ├── 📄 worker.ts            # Main Hono API routes (refactored)
 │       ├── 📄 sessions-do.ts       # Durable Objects for sessions (refactored)
@@ -135,6 +139,7 @@ flashcards/
         ├── 📄 main.tsx             # React entry point (10 lines)
         ├── 📁 components/          # React components (updated imports)
         │   ├── 📄 AudioControls.tsx     # Audio controls component
+        │   ├── 📄 DomainSelector.tsx    # Multi-domain selection dropdown
         │   ├── 📄 HighIntensityMode.tsx # High-intensity practice mode
         │   ├── 📄 KeyboardHandler.tsx   # Keyboard shortcuts handler
         │   ├── 📄 PracticeSession.tsx   # Practice session component
@@ -235,12 +240,18 @@ The build process:
 
 ## New API Endpoints
 
+### **Multi-Domain Support**
+- `GET /api/domains` - List available knowledge domains
+  - Response: `[{ id: string, name: string, icon: string, has_audio: boolean }]`
+  - Domains: Chinese (HSK), World Geography, and extensible for more
+
 ### **High-Intensity Learning**
 - `POST /api/sessions/auto-start` - Intelligent session creation with content auto-detection
-  - Body: `{ user_level: 'beginner'|'intermediate'|'advanced', focus_mode: 'review'|'challenge' }`
+  - Body: `{ user_level: 'beginner'|'intermediate'|'advanced', focus_mode: 'review'|'challenge', domain_id?: string }`
   - Response: Session with optimal card selection and batch loading
+  - Domain filtering: Only shows cards from selected domain
 
-### **Adaptive Feedback**  
+### **Adaptive Feedback**
 - `POST /api/sessions/:id/answer` - Enhanced with timing analytics
   - Body: `{ answer: string, response_time_ms: number }`
   - Response: Includes `feedback_duration_ms` and difficulty assessment
@@ -248,6 +259,7 @@ The build process:
 ### **Progressive Unlock System**
 - Unlock criteria enforced server-side based on accuracy and attempt thresholds
 - Auto-start respects unlock status and selects appropriate content automatically
+- Domain-aware: Each domain has independent progression
 
 ## Code Quality Standards
 
@@ -307,13 +319,19 @@ See `backend/CLAUDE.md` for the authoritative schema, indexes, and common querie
 
 ## Features 🚀
 
+### **Multi-Domain Learning System**
+- **🌍 Domain Selection** - Choose between Chinese (HSK), World Geography, and more
+- **🎯 Domain-Specific Sessions** - Content filtering ensures relevant practice
+- **📚 Extensible Architecture** - Easy addition of new knowledge domains
+- **🔄 Independent Progress** - Each domain tracks progress separately
+
 ### **High-Intensity Practice (Default)**
 - **🚀 Start Practice** - Single-click auto-start with intelligent content selection
 - **🎯 Challenge/Review Mode** - Adaptive difficulty based on user level
 - **⚡ Exercise Density** - 20+ questions per 30 minutes with minimal navigation
 - **📈 Progressive Unlocks** - Master fundamentals before advancing
 
-### **Traditional Practice Modes**  
+### **Traditional Practice Modes**
 - **Start Practice** - Review all cards in set/category
 - **Practice Difficult** - Focus on cards with <80% accuracy
 - **Practice SRS** - Review cards due for spaced repetition
@@ -403,6 +421,13 @@ cd backend && bun update
 - CORS issues: Verify API endpoints
 
 ## Recent Optimizations (Latest Updates) ⚡
+
+### **Multi-Domain Architecture (September 2025)**
+- ✅ **Domain System**: Complete multi-domain support with D1 migrations and API endpoints
+- ✅ **Domain Selection UI**: Dynamic dropdown with 🇨🇳 Chinese (HSK) and 🌍 World Geography
+- ✅ **Content Filtering**: Session creation respects domain selection for targeted practice
+- ✅ **Domain Independence**: Each domain maintains separate progress and statistics
+- ✅ **Extensible Design**: Easy addition of new domains (sports, history, etc.)
 
 ### **Major Architecture Refactor (September 2025)**
 - ✅ **Frontend Restructure**: Extracted 3,200+ lines into modular hooks, contexts, and utilities

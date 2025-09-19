@@ -1,8 +1,14 @@
-# HSK Flashcards Web App
+# Multi-Domain Flashcards Web App
 
-A high-intensity spaced repetition system (SRS) optimized for efficient Chinese character learning using HSK vocabulary.
+A high-intensity spaced repetition system (SRS) for learning Chinese characters, world geography, and any flashcard content with domain-specific optimization.
 
 ## 🚀 Efficient Learning Features
+
+### **Multi-Domain Learning System**
+- **🌍 Domain Selection**: Choose between Chinese (HSK), World Geography, and more
+- **🎯 Content Filtering**: Sessions respect domain selection for targeted practice
+- **📚 Extensible Architecture**: Easy addition of new knowledge domains
+- **🔄 Independent Progress**: Each domain tracks progress separately
 
 ### **High-Intensity Mode (Default)**
 - **Single-click start**: Auto-detects optimal practice content
@@ -30,7 +36,7 @@ A high-intensity spaced repetition system (SRS) optimized for efficient Chinese 
   - Extracted utilities: database queries, statistics, difficulty assessment
   - Updated dependencies: Hono 4.9.8, TypeScript 5.9.2, Wrangler 4.38.0
 - **Database**: Cloudflare D1 (SQLite) with progressive unlock logic
-- **Data**: HSK Level 1 vocabulary (150+ characters across 10 sets)
+- **Data**: Multi-domain content (HSK Level 1: 150+ characters, Geography: countries/capitals)
 
 ## 🎯 Learning Principles
 
@@ -92,7 +98,13 @@ cd ../backend && npm run deploy
 
 ## Performance Metrics
 
-### **Architecture Refactor (Latest)**
+### **Multi-Domain System (Latest)**
+- **Domain Architecture**: Complete multi-domain support with D1 migrations and API endpoints
+- **UI Integration**: Dynamic domain selection with 🇨🇳 Chinese (HSK) and 🌍 World Geography
+- **Content Filtering**: Session creation respects domain selection for targeted practice
+- **Extensible Design**: Easy addition of new domains (sports, history, etc.)
+
+### **Architecture Refactor**
 - **Code Reduction**: Eliminated 3,200+ lines of duplicated/obsolete code
 - **Modularization**: 30+ organized TypeScript modules with clear separation of concerns
 - **Type Safety**: Comprehensive TypeScript definitions across hooks, components, and utilities
