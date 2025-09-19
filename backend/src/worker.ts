@@ -30,6 +30,12 @@ app.use('/api/*', async (c, next) => {
 // Health
 app.get('/api/health', (c) => c.json({ status: 'ok' }))
 
+// Domains
+app.get('/api/domains', async (c) => {
+  const { results } = await c.env.DB.prepare('SELECT * FROM domains ORDER BY name').all()
+  return c.json(results || [])
+})
+
 // Sets
 app.get('/api/sets', async (c) => {
   const { sql } = buildCardQuery({ fields: 'distinct_sets', orderBy: 'set_key' })
@@ -188,8 +194,14 @@ async function checkUnlockStatus(db: D1Database, setName: string): Promise<boole
   return accuracy >= criteria.minAccuracy
 }
 
-async function getUnlockedSets(db: D1Database): Promise<string[]> {
-  const { results: allSets } = await db.prepare('SELECT DISTINCT set_key FROM cards ORDER BY set_key').all()
+async function getUnlockedSets(db: D1Database, domainId?: string): Promise<string[]> {
+  const query = domainId
+    ? 'SELECT DISTINCT set_key FROM cards WHERE domain_id = ? ORDER BY set_key'
+    : 'SELECT DISTINCT set_key FROM cards ORDER BY set_key'
+
+  const { results: allSets } = domainId
+    ? await db.prepare(query).bind(domainId).all()
+    : await db.prepare(query).all()
   if (!allSets) return []
   
   const unlockedSets: string[] = []
@@ -204,16 +216,19 @@ async function getUnlockedSets(db: D1Database): Promise<string[]> {
   return unlockedSets
 }
 
-// Intelligent auto-start session - no user parameters needed
+// Intelligent auto-start session - with optional domain filtering
 app.post('/api/sessions/auto-start', async (c) => {
-  // Get unlocked sets first
-  const unlockedSets = await getUnlockedSets(c.env.DB)
+  const body = await c.req.json().catch(() => ({}))
+  const domainId = body.domain_id || 'chinese' // Default to chinese for backward compatibility
+
+  // Get unlocked sets first (filtered by domain)
+  const unlockedSets = await getUnlockedSets(c.env.DB, domainId)
 
   // Priority 1: SRS due cards (spaced repetition takes precedence)
   const placeholders = unlockedSets.map(() => '?').join(',')
   const { results: dueCards } = await c.env.DB.prepare(
-    `SELECT DISTINCT set_key FROM cards WHERE set_key IN (${placeholders}) AND datetime(next_review_date) <= CURRENT_TIMESTAMP LIMIT 5`
-  ).bind(...unlockedSets).all()
+    `SELECT DISTINCT set_key FROM cards WHERE set_key IN (${placeholders}) AND domain_id = ? AND datetime(next_review_date) <= CURRENT_TIMESTAMP LIMIT 5`
+  ).bind(...unlockedSets, domainId).all()
 
   if (dueCards && dueCards.length > 0) {
     // SRS review mode - mix of difficulties based on what's due
@@ -234,7 +249,7 @@ app.post('/api/sessions/auto-start', async (c) => {
 
   // Priority 2: Struggling cards (< 80% accuracy) + new cards
   // Auto-detect user progression through available content
-  const availableSets = unlockedSets.filter(s => s.includes('HSK_Level_1'))
+  const availableSets = unlockedSets // Use all unlocked sets for the selected domain
 
   // Smart progression: start with early sets, expand as user improves
   let selected_sets: string[] = []
