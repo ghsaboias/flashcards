@@ -227,7 +227,7 @@ export class SessionsDO {
     )
     await this.env.DB.batch(stmts)
 
-    state.results.push({ question: card.question, correct: isCorrect, correct_answer: card.answer, user_answer: body.answer })
+    state.results.push({ question: card.question, correct: isCorrect, correct_answer: card.answer, user_answer: body.answer, set_name: card.set_key })
     if (isCorrect) state.correct_count += 1
     state.position += 1
     await this.state.storage.put('state', state)

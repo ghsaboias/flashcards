@@ -431,6 +431,14 @@ cd backend && bun update
 - ✅ **Perfect TypeScript/ESLint compliance**
 - ✅ **Chinese flag favicon** and updated branding
 
+### **Session Interface Enhancements (September 2025)**
+- ✅ **Session Timer**: Real-time elapsed time tracking with MM:SS format during high-intensity practice
+- ✅ **Card Set Display**: Shows current set (e.g., "HSK1 Set 1") in session header for learning context
+- ✅ **Progress Clarity**: Enhanced "5/10 · 5 left" format to eliminate confusion about completion status
+- ✅ **Quick Reinforcement Fix**: Fixed critical bug where only subset of incorrect cards were reviewed
+- ✅ **Comprehensive Error Tracking**: Backend now includes `set_name` in session results for accurate database matching
+- ✅ **High-Intensity Header**: Clean three-column layout with timer, progress, and set info
+
 ## Important Notes
 
 - **Never** commit node_modules or dist directories

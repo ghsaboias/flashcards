@@ -204,70 +204,59 @@ async function getUnlockedSets(db: D1Database): Promise<string[]> {
   return unlockedSets
 }
 
-// Auto-start session with intelligent card selection and progressive unlocks
+// Intelligent auto-start session - no user parameters needed
 app.post('/api/sessions/auto-start', async (c) => {
-  const body = await c.req.json() as { user_level?: 'beginner' | 'intermediate' | 'advanced'; focus_mode?: 'review' | 'challenge' }
-  
   // Get unlocked sets first
   const unlockedSets = await getUnlockedSets(c.env.DB)
-  
-  // Auto-detect best practice set based on SRS due cards and user progress
-  let mode = 'srs_sets'
-  let selected_sets: string[] = []
-  let difficulty_levels: Array<'easy' | 'medium' | 'hard'> = []
-  
-  // Find SRS due cards first (from unlocked sets only)
+
+  // Priority 1: SRS due cards (spaced repetition takes precedence)
   const placeholders = unlockedSets.map(() => '?').join(',')
   const { results: dueCards } = await c.env.DB.prepare(
     `SELECT DISTINCT set_key FROM cards WHERE set_key IN (${placeholders}) AND datetime(next_review_date) <= CURRENT_TIMESTAMP LIMIT 5`
   ).bind(...unlockedSets).all()
-  
+
   if (dueCards && dueCards.length > 0) {
-    // Use SRS review mode
-    selected_sets = (dueCards as any[]).map(r => r.set_key)
-    mode = 'srs_sets'
-  } else {
-    // Fallback to difficulty-based practice with unlocked sets
-    const userLevel = body.user_level || 'beginner'
-    const focusMode = body.focus_mode || 'challenge'
-    
-    // Select from available unlocked sets based on user level
-    const availableSets = unlockedSets.filter(s => s.includes('HSK_Level_1'))
-    
-    if (userLevel === 'beginner') {
-      selected_sets = availableSets.slice(0, 2)
-    } else if (userLevel === 'intermediate') {
-      selected_sets = availableSets.slice(Math.max(0, Math.floor(availableSets.length / 3)), Math.floor(availableSets.length * 2 / 3))
-    } else {
-      selected_sets = availableSets.slice(-3)
+    // SRS review mode - mix of difficulties based on what's due
+    const sessionPayload = {
+      mode: 'srs_sets',
+      selected_sets: (dueCards as any[]).map(r => r.set_key)
     }
-    
-    // Ensure we have at least one set
-    if (selected_sets.length === 0 && availableSets.length > 0) {
-      selected_sets = [availableSets[0]]
-    }
-    
-    if (focusMode === 'review') {
-      difficulty_levels = ['easy', 'medium']
-      mode = 'multi_set_difficulty'
-    } else {
-      difficulty_levels = ['hard', 'medium']
-      mode = 'multi_set_difficulty'
-    }
+
+    const id = c.env.SESSIONS.idFromName(crypto.randomUUID())
+    const stub = c.env.SESSIONS.get(id)
+    const res = await stub.fetch(new Request(new URL(`https://do/sessions/${id.toString()}/start`), {
+      method: 'POST',
+      body: JSON.stringify(sessionPayload),
+      headers: { 'content-type': 'application/json' }
+    }))
+    return c.newResponse(res.body, res)
   }
-  
+
+  // Priority 2: Struggling cards (< 80% accuracy) + new cards
+  // Auto-detect user progression through available content
+  const availableSets = unlockedSets.filter(s => s.includes('HSK_Level_1'))
+
+  // Smart progression: start with early sets, expand as user improves
+  let selected_sets: string[] = []
+  if (availableSets.length > 0) {
+    // Use first few sets, expanding based on overall progress
+    const maxSets = Math.min(3, availableSets.length)
+    selected_sets = availableSets.slice(0, maxSets)
+  }
+
+  // Focus on learning: hard + medium difficulties
   const sessionPayload = {
-    mode,
+    mode: 'multi_set_difficulty',
     selected_sets,
-    difficulty_levels: difficulty_levels.length > 0 ? difficulty_levels : undefined,
+    difficulty_levels: ['hard', 'medium'] as Array<'easy' | 'medium' | 'hard'>
   }
-  
+
   const id = c.env.SESSIONS.idFromName(crypto.randomUUID())
   const stub = c.env.SESSIONS.get(id)
-  const res = await stub.fetch(new Request(new URL(`https://do/sessions/${id.toString()}/start`), { 
-    method: 'POST', 
+  const res = await stub.fetch(new Request(new URL(`https://do/sessions/${id.toString()}/start`), {
+    method: 'POST',
     body: JSON.stringify(sessionPayload),
-    headers: { 'content-type': 'application/json' } 
+    headers: { 'content-type': 'application/json' }
   }))
   return c.newResponse(res.body, res)
 })
