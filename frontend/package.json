@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "bunx vite",
     "build": "bunx tsc -b && bunx vite build",
+    "build:analyze": "bunx tsc -b && bunx vite build --mode analyze",
     "lint": "bunx eslint .",
-    "preview": "bunx vite preview"
+    "preview": "bunx vite preview",
+    "analyze": "bunx vite-bundle-analyzer dist/assets"
   },
   "dependencies": {
     "axios": "^1.12.2",
@@ -27,6 +29,7 @@
     "globals": "^16.4.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.44.0",
-    "vite": "^7.1.6"
+    "vite": "^7.1.6",
+    "vite-bundle-analyzer": "^0.11.0"
   }
 }
