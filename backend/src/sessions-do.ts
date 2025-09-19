@@ -121,7 +121,6 @@ export class SessionsDO {
       position: 0,
       order,
       cards,
-      duplicateIndexMap,
       // Fast lookup maps for O(1) performance
       answerMap,
       cardMetaMap,
@@ -220,7 +219,7 @@ export class SessionsDO {
     )
     await this.env.DB.batch(stmts)
 
-    state.results.push({ question: card.question, correct: isCorrect, correct_answer: card.answer, user_answer: body.answer, set_name: card.set_key })
+    state.results.push({ question: card.question, correct: isCorrect, correct_answer: card.answer, user_answer: body.answer })
     if (isCorrect) state.correct_count += 1
     state.position += 1
     await this.state.storage.put('state', state)
