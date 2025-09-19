@@ -141,6 +141,44 @@ app.get('/api/srs/set', async (c) => {
 })
 
 
+// SRS: by domain (optional set filters)
+app.get('/api/srs/domain', async (c) => {
+  const domainId = c.req.query('domain_id') || ''
+  const setFilters = c.req.queries('set_name') || []
+  const filteredSets = setFilters.filter(Boolean)
+
+  let sql = 'SELECT set_key, question, answer, easiness_factor, interval_hours, repetitions, next_review_date FROM cards'
+  const clauses: string[] = []
+  const params: string[] = []
+
+  if (domainId) {
+    clauses.push('domain_id = ?')
+    params.push(domainId)
+  }
+
+  if (filteredSets.length > 0) {
+    const placeholders = filteredSets.map(() => '?').join(',')
+    clauses.push(`set_key IN (${placeholders})`)
+    params.push(...filteredSets)
+  }
+
+  if (clauses.length > 0) {
+    sql += ` WHERE ${clauses.join(' AND ')}`
+  }
+
+  sql += ' ORDER BY set_key, question'
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
+  const rows = (results || []).map((r: any) => mapToSrsRow(r, r.set_key))
+
+  return c.json({
+    domain_id: domainId || null,
+    applied_sets: filteredSets,
+    rows,
+  })
+})
+
+
 
 // Stats: by set
 app.get('/api/stats/set', async (c) => {
@@ -171,8 +209,124 @@ app.get('/api/stats/set', async (c) => {
 })
 
 
-// Performance analytics
+// Stats: by domain (optional set filters)
+app.get('/api/stats/domain', async (c) => {
+  const domainId = c.req.query('domain_id') || ''
+  const setFilters = c.req.queries('set_name') || []
+  const filteredSets = setFilters.filter(Boolean)
+
+  let sql = 'SELECT set_key, question, answer, correct_count AS correct, incorrect_count AS incorrect, reviewed_count AS reviewed FROM cards'
+  const clauses: string[] = []
+  const params: string[] = []
+
+  if (domainId) {
+    clauses.push('domain_id = ?')
+    params.push(domainId)
+  }
+
+  if (filteredSets.length > 0) {
+    const placeholders = filteredSets.map(() => '?').join(',')
+    clauses.push(`set_key IN (${placeholders})`)
+    params.push(...filteredSets)
+  }
+
+  if (clauses.length > 0) {
+    sql += ` WHERE ${clauses.join(' AND ')}`
+  }
+
+  sql += ' ORDER BY set_key, question'
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
+  const rows = (results || []).map((r: any) => ({
+    set_name: r.set_key,
+    question: r.question,
+    answer: r.answer,
+    ...computeAccuracyRow(r),
+  }))
+  const summary = computeStatsSummary(rows)
+
+  return c.json({
+    domain_id: domainId || null,
+    applied_sets: filteredSets,
+    summary,
+    rows,
+  })
+})
+
+
+// Performance analytics (global or domain-specific)
 app.get('/api/performance', async (c) => {
+  const domainId = c.req.query('domain_id') || ''
+
+  if (domainId) {
+    const { results } = await c.env.DB.prepare(
+      `WITH domain_sessions AS (
+         SELECT
+           s.id AS session_id,
+           DATE(s.started_at) AS date,
+           SUM(CASE WHEN c.domain_id = ? THEN 1 ELSE 0 END) AS questions,
+           SUM(CASE WHEN c.domain_id = ? AND se.correct = 1 THEN 1 ELSE 0 END) AS correct,
+           SUM(CASE WHEN c.domain_id = ? THEN COALESCE(se.duration_seconds, 0) ELSE 0 END) AS duration_seconds
+         FROM sessions s
+         LEFT JOIN session_events se ON se.session_id = s.id
+         LEFT JOIN cards c ON c.id = se.card_id
+         GROUP BY s.id, DATE(s.started_at)
+         HAVING questions > 0
+       )
+       SELECT session_id, date, questions, correct, duration_seconds
+       FROM domain_sessions`
+    ).bind(domainId, domainId, domainId).all()
+
+    const domainRows = (results || []).map((r: any) => ({
+      sessionId: r.session_id,
+      date: r.date,
+      questions: Number(r.questions) || 0,
+      correct: Number(r.correct) || 0,
+      durationSeconds: Number(r.duration_seconds) || 0,
+    }))
+
+    const dailyMap = new Map<string, { sessions: number; questions: number; correct: number; durationSeconds: number }>()
+
+    for (const row of domainRows) {
+      if (!dailyMap.has(row.date)) {
+        dailyMap.set(row.date, { sessions: 0, questions: 0, correct: 0, durationSeconds: 0 })
+      }
+      const day = dailyMap.get(row.date)!
+      day.sessions += 1
+      day.questions += row.questions
+      day.correct += row.correct
+      day.durationSeconds += row.durationSeconds
+    }
+
+    const daily = Array.from(dailyMap.entries())
+      .map(([date, data]) => ({
+        date,
+        sessions: data.sessions,
+        questions: data.questions,
+        accuracy: data.questions > 0 ? Math.round(((data.correct / data.questions) * 100) * 10) / 10 : 0,
+        duration_minutes: data.durationSeconds > 0 ? Math.round(((data.durationSeconds / 60) * 10)) / 10 : undefined,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date))
+
+    const totalSessions = domainRows.length
+    const totalQuestions = domainRows.reduce((sum, row) => sum + row.questions, 0)
+    const totalCorrect = domainRows.reduce((sum, row) => sum + row.correct, 0)
+    const avgQuestionsPerSession = totalSessions > 0 ? Math.round(((totalQuestions / totalSessions) * 10)) / 10 : 0
+    const overallAccuracy = totalQuestions > 0 ? Math.round(((totalCorrect / totalQuestions) * 100) * 10) / 10 : 0
+    const studyDays = daily.length
+
+    return c.json({
+      summary: {
+        total_sessions: totalSessions,
+        total_questions: totalQuestions,
+        overall_accuracy: overallAccuracy,
+        study_days: studyDays,
+        avg_questions_per_session: avgQuestionsPerSession,
+      },
+      daily,
+    })
+  }
+
   const { results: sessionResults } = await c.env.DB.prepare(
     `SELECT DATE(started_at) AS date,
             COUNT(*) AS sessions,
@@ -192,15 +346,12 @@ app.get('/api/performance', async (c) => {
     duration_minutes: r.duration_minutes ? Math.round(r.duration_minutes * 10) / 10 : undefined,
   }))
 
-  // Summary statistics
   const totalSessions = dailyData.reduce((a, b) => a + b.sessions, 0)
   const totalQuestions = dailyData.reduce((a, b) => a + b.questions, 0)
   const studyDays = dailyData.filter(d => d.sessions > 0).length
   const avgQuestionsPerSession = totalSessions > 0 ? Math.round((totalQuestions / totalSessions) * 10) / 10 : 0
-  
-  // Calculate overall accuracy weighted by questions answered, not sessions
   const totalQuestionsWithAccuracy = dailyData.reduce((sum, d) => sum + (d.questions > 0 ? d.questions : 0), 0)
-  const overallAccuracy = totalQuestionsWithAccuracy > 0 ? 
+  const overallAccuracy = totalQuestionsWithAccuracy > 0 ?
     Math.round((dailyData.reduce((sum, d) => sum + d.accuracy * d.questions, 0) / totalQuestionsWithAccuracy) * 10) / 10 : 0
 
   return c.json({
@@ -211,7 +362,7 @@ app.get('/api/performance', async (c) => {
       study_days: studyDays,
       avg_questions_per_session: avgQuestionsPerSession,
     },
-    daily: dailyData.reverse(), // Show chronological order (oldest first)
+    daily: dailyData.reverse(),
   })
 })
 
@@ -464,4 +615,3 @@ export class SessionsDO {
 }
 
 // Removed unused RateLimitDO
-

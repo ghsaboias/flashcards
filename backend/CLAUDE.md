@@ -53,9 +53,14 @@ bun run schema:apply  # Execute ./schema.sql against bound DB
 - `GET /api/categories?domain_id=<domain>` — List categories filtered by domain → `[category_key]`
 - `GET /api/srs/set?set_name=...&domain_id=<domain>` — SRS fields for a set
   - Response: `[{ set_name, question, answer, easiness_factor, interval_hours, repetitions, next_review_date }]`
+- `GET /api/srs/domain?domain_id=<domain>&set_name=<optional>` — Aggregated SRS rows for the domain (optional multi-set filter)
+  - Response: `{ domain_id, applied_sets, rows }`
 - `GET /api/stats/set?set_name=...&domain_id=<domain>` — Accuracy + counts per card
   - Response: `{ set_name, summary, rows }`
-- `GET /api/performance` — Daily performance summary (global across all domains) → `{ summary, daily }`
+- `GET /api/stats/domain?domain_id=<domain>&set_name=<optional>` — Domain-wide accuracy summary (optional multi-set filter)
+  - Response: `{ domain_id, applied_sets, summary, rows }`
+- `GET /api/performance?domain_id=<optional>` — Daily performance summary (global or domain-specific)
+  - Response: `{ summary, daily }`
 
 ### High-Intensity Learning
 - `POST /api/sessions/auto-start` — **Intelligent session creation** (Recommended)

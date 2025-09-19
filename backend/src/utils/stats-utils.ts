@@ -5,6 +5,7 @@ export interface StatsRow {
   incorrect: number
   total: number
   accuracy: number
+  set_name?: string
 }
 
 export interface StatsSummary {

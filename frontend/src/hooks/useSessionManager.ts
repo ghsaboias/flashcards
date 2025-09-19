@@ -47,7 +47,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     ;(async () => {
       try {
         if (state.statsMode === 'performance') {
-          const performanceData = await apiClient.getPerformanceData()
+          const performanceData = await apiClient.getPerformanceData(selectedDomain?.id)
           setState(prev => ({ ...prev, performance: performanceData }))
           return
         }

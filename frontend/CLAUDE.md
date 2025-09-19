@@ -46,7 +46,7 @@ The app has migrated from conditional rendering to React Router with dedicated p
 - **`PracticePage.tsx`**: Traditional practice modes selection (191 lines)
 - **`SessionPage.tsx`**: Active practice sessions interface (69 lines)
 - **`CompletePage.tsx`**: Session results and analytics (168 lines)
-- **`StatsPage.tsx`**: Comprehensive analytics dashboard (137 lines)
+- **`StatsPage.tsx`**: Domain-scoped analytics dashboard with set filters (200+ lines)
 - **`BrowsePage.tsx`**: Card browsing by set (154 lines)
 - **`DrawingPage.tsx`**: Character drawing practice (159 lines)
 - **`ErrorPage.tsx`**: 404 and error handling (24 lines)
@@ -67,6 +67,7 @@ The app has migrated from conditional rendering to React Router with dedicated p
 
 ### Data Visualization
 - **`StatsOverview.tsx`**: Performance dashboard with domain-filtered analytics
+- **`StatsPage.tsx`**: Domain performance/SRS/accuracy views backed by aggregated endpoints
 - **`SrsTable.tsx`**: SRS schedule table with due card prioritization
 - **`StatsTable.tsx`**: Per-card accuracy statistics with filtering
 - **`UnifiedTable.tsx`**: Combined SRS/stats view
@@ -84,7 +85,7 @@ The app has migrated from conditional rendering to React Router with dedicated p
 - **`useSessionContext.ts`**: Session state hook with performance tracking (125 lines)
 
 ### Utility Modules
-- **`api-client.ts`**: REST client with domain-aware endpoints (167 lines)
+- **`api-client.ts`**: REST client with domain analytics endpoints (stats/SRS/performance)
 - **`pinyin.ts`**: Lazy-loaded pinyin processing (21 lines)
 - **`session-utils.ts`**: Session management utilities (270 lines)
 - **`hsk-label-utils.ts`**: HSK set labeling and progressive unlock logic (154 lines)

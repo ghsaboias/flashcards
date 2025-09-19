@@ -6,7 +6,9 @@ import type {
   SessionConfig,
   AnswerPayload,
   StatsPayload,
+  DomainStatsPayload,
   SrsRow,
+  DomainSrsPayload,
   PerformancePayload,
   Domain,
   BrowseCard,
@@ -92,6 +94,23 @@ export class ApiClient {
     return this.get<StatsPayload>('/stats/set', params)
   }
 
+  async getDomainStats(domainId?: string, setNames: string[] = []): Promise<DomainStatsPayload> {
+    const params = new URLSearchParams()
+    if (domainId) {
+      params.set('domain_id', domainId)
+    }
+
+    setNames.filter(Boolean).forEach(setName => {
+      params.append('set_name', setName)
+    })
+
+    const endpoint = params.toString().length > 0
+      ? `/stats/domain?${params.toString()}`
+      : '/stats/domain'
+
+    return this.get<DomainStatsPayload>(endpoint)
+  }
+
 
   // === SRS METHODS ===
 
@@ -105,11 +124,29 @@ export class ApiClient {
     return this.get<SrsRow[]>('/srs/set', params)
   }
 
+  async getDomainSrs(domainId?: string, setNames: string[] = []): Promise<DomainSrsPayload> {
+    const params = new URLSearchParams()
+    if (domainId) {
+      params.set('domain_id', domainId)
+    }
+
+    setNames.filter(Boolean).forEach(setName => {
+      params.append('set_name', setName)
+    })
+
+    const endpoint = params.toString().length > 0
+      ? `/srs/domain?${params.toString()}`
+      : '/srs/domain'
+
+    return this.get<DomainSrsPayload>(endpoint)
+  }
+
 
   // === PERFORMANCE ANALYTICS ===
 
-  async getPerformanceData(): Promise<PerformancePayload> {
-    return this.get<PerformancePayload>('/performance')
+  async getPerformanceData(domainId?: string): Promise<PerformancePayload> {
+    const params = domainId ? { domain_id: domainId } : undefined
+    return this.get<PerformancePayload>('/performance', params)
   }
 
   // === SESSION METHODS ===

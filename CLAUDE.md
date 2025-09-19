@@ -446,7 +446,7 @@ The frontend has been fully migrated from conditional rendering to a high-perfor
 - Response time tracking (millisecond precision)
 - Audio support for Chinese characters
 - Keyboard shortcuts (R for audio, Enter to submit)
-- Performance analytics and difficulty assessment
+- Performance analytics and difficulty assessment, including domain-scoped dashboards
 
 ### Socratic Tutoring
 Character reinforcement flow:

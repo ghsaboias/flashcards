@@ -2,11 +2,13 @@ import { pinyin as pinyinPro } from 'pinyin-pro'
 import { useMemo, useState } from 'react'
 import type { SrsRow, StatRow } from '../types/api-types'
 import { isSrsDue, parseSrsDateUTC, getCurrentUTCTime } from '../utils/srs-date-utils'
+import { humanizeSetLabel } from '../utils/hsk-label-utils'
 
 // Unified row type combining both SRS and Stats data
 type UnifiedRow = {
     question: string
     answer: string
+    set_name?: string
     // Stats data
     correct?: number
     incorrect?: number
@@ -96,10 +98,11 @@ export default function UnifiedTable({ srsRows = [], statsRows = [] }: Props) {
         
         // Add stats data
         statsRows.forEach(stat => {
-            const key = `${stat.question}|${stat.answer}`
+            const key = `${stat.set_name || ''}|${stat.question}|${stat.answer}`
             rowMap.set(key, {
                 question: stat.question,
                 answer: stat.answer,
+                set_name: stat.set_name,
                 correct: stat.correct,
                 incorrect: stat.incorrect,
                 total: stat.total,
@@ -108,13 +111,13 @@ export default function UnifiedTable({ srsRows = [], statsRows = [] }: Props) {
                 isDue: false
             })
         })
-        
+
         // Add/merge SRS data
         srsRows.forEach(srs => {
-            const key = `${srs.question}|${srs.answer}`
+            const key = `${srs.set_name || ''}|${srs.question}|${srs.answer}`
             const existing = rowMap.get(key)
             const due = isDueNow(srs.next_review_date)
-            
+
             if (existing) {
                 // Merge SRS data into existing stats row
                 existing.easiness_factor = srs.easiness_factor
@@ -122,11 +125,13 @@ export default function UnifiedTable({ srsRows = [], statsRows = [] }: Props) {
                 existing.repetitions = srs.repetitions
                 existing.next_review_date = srs.next_review_date
                 existing.isDue = due
+                existing.set_name = existing.set_name || srs.set_name
             } else {
                 // Create new row with only SRS data
                 rowMap.set(key, {
                     question: srs.question,
                     answer: srs.answer,
+                    set_name: srs.set_name,
                     easiness_factor: srs.easiness_factor,
                     interval_hours: srs.interval_hours,
                     repetitions: srs.repetitions,
@@ -200,11 +205,13 @@ export default function UnifiedTable({ srsRows = [], statsRows = [] }: Props) {
 
     const hasStatsData = statsRows.length > 0
     const hasSrsData = srsRows.length > 0
+    const showSetColumn = unifiedRows.some(row => row.set_name)
 
     return (
         <table className="statsTable unifiedTable">
             <thead>
                 <tr>
+                    {showSetColumn && header('Set', 'set_name')}
                     {header('Question', 'question')}
                     {header('Pinyin', 'pinyin')}
                     {header('Answer', 'answer')}
@@ -232,6 +239,9 @@ export default function UnifiedTable({ srsRows = [], statsRows = [] }: Props) {
                     const pinyin = hasChinese(row.question) ? pinyinPro(row.question, { toneType: 'symbol' }) : ''
                     return (
                         <tr key={i}>
+                            {showSetColumn && (
+                                <td className="muted">{row.set_name ? humanizeSetLabel(row.set_name) : '-'}</td>
+                            )}
                             <td>{row.question}</td>
                             <td className="muted">{pinyin}</td>
                             <td>{row.answer}</td>

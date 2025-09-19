@@ -105,6 +105,7 @@ export interface StatRow {
   incorrect: number
   total: number
   accuracy: number
+  set_name?: string
 }
 
 export interface StatsSummary {
@@ -122,6 +123,11 @@ export interface StatsPayload {
   rows: StatRow[]
 }
 
+export interface DomainStatsPayload extends StatsPayload {
+  domain_id: string | null
+  applied_sets: string[]
+}
+
 // SRS types (already exist in api.ts but included for completeness)
 export interface SrsRow {
   set_name: string
@@ -131,6 +137,12 @@ export interface SrsRow {
   interval_hours: number
   repetitions: number
   next_review_date: string
+}
+
+export interface DomainSrsPayload {
+  domain_id: string | null
+  applied_sets: string[]
+  rows: SrsRow[]
 }
 
 // Performance analytics types
