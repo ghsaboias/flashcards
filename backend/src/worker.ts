@@ -223,7 +223,18 @@ const UNLOCK_CRITERIA = {
   'Recognition_Practice/HSK_Level_1/HSK1_Set_07': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_06', minAccuracy: 75, minAttempts: 15 },
   'Recognition_Practice/HSK_Level_1/HSK1_Set_08': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_07', minAccuracy: 70, minAttempts: 15 },
   'Recognition_Practice/HSK_Level_1/HSK1_Set_09': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_08', minAccuracy: 70, minAttempts: 15 },
-  'Recognition_Practice/HSK_Level_1/HSK1_Set_10': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_09', minAccuracy: 70, minAttempts: 15 }
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_10': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_09', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_11': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_10', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_12': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_11', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_13': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_12', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_14': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_13', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_15': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_14', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_16': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_15', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_17': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_16', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_18': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_17', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_19': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_18', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_20': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_19', minAccuracy: 70, minAttempts: 15 },
+  'Recognition_Practice/HSK_Level_1/HSK1_Set_21': { requires: 'Recognition_Practice/HSK_Level_1/HSK1_Set_20', minAccuracy: 70, minAttempts: 15 }
 }
 
 async function checkUnlockStatus(db: D1Database, setName: string): Promise<boolean> {
