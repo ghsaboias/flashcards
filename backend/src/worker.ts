@@ -283,6 +283,66 @@ async function getUnlockedSets(db: D1Database, domainId?: string): Promise<strin
   return unlockedSets
 }
 
+// Smart set selection based on learning state
+async function selectOptimalSets(db: D1Database, unlockedSets: string[], domainId: string): Promise<string[]> {
+  if (unlockedSets.length === 0) return []
+
+  // Get learning state for all unlocked sets
+  const placeholders = unlockedSets.map(() => '?').join(',')
+  const { results } = await db.prepare(
+    `SELECT
+      set_key,
+      COUNT(*) as total_cards,
+      SUM(correct_count) as total_correct,
+      SUM(incorrect_count) as total_incorrect,
+      SUM(CASE WHEN reviewed_count > 0 THEN reviewed_count ELSE correct_count + incorrect_count END) as total_attempts,
+      SUM(CASE WHEN datetime(next_review_date) <= CURRENT_TIMESTAMP THEN 1 ELSE 0 END) as due_cards
+     FROM cards
+     WHERE set_key IN (${placeholders}) AND domain_id = ?
+     GROUP BY set_key
+     ORDER BY set_key`
+  ).bind(...unlockedSets, domainId).all()
+
+  // Score each set based on learning priority
+  const setScores = (results || []).map((row: any) => {
+    const setName = row.set_key
+    const attempts = row.total_attempts || 0
+    const correct = row.total_correct || 0
+    const dueCards = row.due_cards || 0
+
+    const accuracy = attempts > 0 ? (correct / attempts) * 100 : 0
+
+    let score = 0
+
+    // Priority 1: Sets with SRS due cards (memory maintenance)
+    if (dueCards > 0) score += 100
+
+    // Priority 2: Struggling sets (accuracy < 80% with attempts > 10)
+    if (attempts > 10 && accuracy < 80) score += 80
+
+    // Priority 3: Active learning sets (moderate attempts, room for improvement)
+    if (attempts >= 10 && attempts <= 100 && accuracy >= 80 && accuracy < 90) score += 60
+
+    // Priority 4: New sets (few attempts)
+    if (attempts > 0 && attempts <= 10) score += 40
+
+    // Deprioritize mastered sets (accuracy > 90% with many attempts)
+    if (attempts > 100 && accuracy > 90) score -= 50
+
+    return { setName, score, accuracy, attempts, dueCards }
+  })
+
+  // Sort by score (highest first) and select top 2 sets
+  const sortedSets = setScores
+    .filter(s => s.score > 0) // Only include sets with positive scores
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2) // Limit to 2 sets to avoid context switching
+    .map(s => s.setName)
+
+  // Fallback: if no sets scored positively, take first unlocked set
+  return sortedSets.length > 0 ? sortedSets : [unlockedSets[0]]
+}
+
 // Intelligent auto-start session - with optional domain filtering
 app.post('/api/sessions/auto-start', async (c) => {
   const body = await c.req.json().catch(() => ({}))
@@ -314,17 +374,8 @@ app.post('/api/sessions/auto-start', async (c) => {
     return c.newResponse(res.body, res)
   }
 
-  // Priority 2: Struggling cards (< 80% accuracy) + new cards
-  // Auto-detect user progression through available content
-  const availableSets = unlockedSets // Use all unlocked sets for the selected domain
-
-  // Smart progression: start with early sets, expand as user improves
-  let selected_sets: string[] = []
-  if (availableSets.length > 0) {
-    // Use first few sets, expanding based on overall progress
-    const maxSets = Math.min(3, availableSets.length)
-    selected_sets = availableSets.slice(0, maxSets)
-  }
+  // Priority 2: Smart set selection based on learning state
+  const selected_sets = await selectOptimalSets(c.env.DB, unlockedSets, domainId)
 
   // Focus on learning: hard + medium difficulties
   const sessionPayload = {
