@@ -1,6 +1,6 @@
 // Session context provider component
 
-import type { ReactNode } from 'react'
+import { useMemo, type ReactNode } from 'react'
 import type { SessionState, SessionActions, SessionHelpers } from '../types/session-types'
 import { validateUserAnswer } from '../utils/text-utils'
 import { hasChinese } from '../utils/pinyin'
@@ -22,21 +22,22 @@ export function SessionProvider({
   actions,
   speak
 }: SessionProviderProps) {
-  // Create consolidated helpers object
-  const helpers: SessionHelpers = {
+  // Memoize helpers object to prevent unnecessary re-renders
+  const helpers: SessionHelpers = useMemo(() => ({
     speak,
     validateAnswer: validateUserAnswer,
     hasChinese,
     formatProgress: (progress: Progress) => `${progress.current}/${progress.total}`,
     humanizeSetLabel,
     getMultiSetLabel: () => formatMultiSetLabel(sessionState.selectedSets)
-  }
+  }), [speak, sessionState.selectedSets])
 
-  const contextValue: SessionContextValue = {
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue: SessionContextValue = useMemo(() => ({
     state: sessionState,
     actions,
     helpers
-  }
+  }), [sessionState, actions, helpers])
 
   return (
     <SessionContext.Provider value={contextValue}>

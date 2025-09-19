@@ -1,104 +1,260 @@
-import type { ReactNode } from 'react'
+import { useState, memo, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import DomainSelector from '../components/DomainSelector'
+import Breadcrumbs from '../components/Breadcrumbs'
+import MobileNavDrawer from '../components/MobileNavDrawer'
+import PageTransition from '../components/PageTransition'
+import ErrorBoundary from '../components/ErrorBoundary'
+import { SessionWarningBanner, SessionRecoveryNotification } from '../components/SessionWarning'
+import { useSessionWarnings } from '../hooks/useSessionWarnings'
 import { useAppContext } from '../hooks/useAppContext'
 
 interface MainLayoutProps {
   children: ReactNode
   showDomainSelector?: boolean
   showNavigation?: boolean
+  showBreadcrumbs?: boolean
 }
 
-export default function MainLayout({
+const MainLayout = memo(function MainLayout({
   children,
   showDomainSelector = true,
-  showNavigation = true
+  showNavigation = true,
+  showBreadcrumbs = true
 }: MainLayoutProps) {
   const { selectedDomain, setSelectedDomain } = useAppContext()
   const location = useLocation()
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
+  const {
+    showRecoveryNotification,
+    savedSessionId,
+    handleRestoreSession,
+    handleDismissRecovery
+  } = useSessionWarnings()
+
+  const navigationItems = [
+    { path: '/', label: 'Home', icon: '🏠' },
+    { path: '/practice', label: 'Practice', icon: '📚' },
+    { path: '/stats', label: 'Stats', icon: '📊' }
+  ]
 
   return (
-    <div className="container">
-      {/* Global keyboard handler - will be added later when we implement global shortcuts */}
+    <>
+      {/* Session Warning Banner */}
+      <SessionWarningBanner />
 
-      {showNavigation && (
-        <nav className="main-nav" style={{
-          padding: '16px 0',
-          borderBottom: '1px solid #eee',
-          marginBottom: '16px',
-          background: '#fafafa'
-        }}>
-          <div style={{
-            display: 'flex',
-            gap: '24px',
-            alignItems: 'center',
-            maxWidth: '1200px',
-            margin: '0 auto',
-            padding: '0 16px'
-          }}>
-            <div style={{ fontWeight: 'bold', fontSize: '18px', color: '#333' }}>
-              🎯 HSK Flashcards
-            </div>
-            <div style={{ display: 'flex', gap: '16px', marginLeft: 'auto' }}>
-              <Link
-                to="/"
-                style={{
-                  textDecoration: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  fontWeight: location.pathname === '/' ? 'bold' : 'normal',
-                  backgroundColor: location.pathname === '/' ? '#007bff' : 'transparent',
-                  color: location.pathname === '/' ? 'white' : '#666',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                🏠 Home
-              </Link>
-              <Link
-                to="/practice"
-                style={{
-                  textDecoration: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  fontWeight: location.pathname === '/practice' ? 'bold' : 'normal',
-                  backgroundColor: location.pathname === '/practice' ? '#007bff' : 'transparent',
-                  color: location.pathname === '/practice' ? 'white' : '#666',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                📚 Practice
-              </Link>
-              <Link
-                to="/stats"
-                style={{
-                  textDecoration: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  fontWeight: location.pathname === '/stats' ? 'bold' : 'normal',
-                  backgroundColor: location.pathname === '/stats' ? '#007bff' : 'transparent',
-                  color: location.pathname === '/stats' ? 'white' : '#666',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                📊 Stats
-              </Link>
-            </div>
-          </div>
-        </nav>
+      {/* Session Recovery Notification */}
+      {showRecoveryNotification && savedSessionId && (
+        <SessionRecoveryNotification
+          sessionId={savedSessionId}
+          onRestore={handleRestoreSession}
+          onDismiss={handleDismissRecovery}
+        />
       )}
 
-      {showDomainSelector && (
-        <div style={{ marginBottom: '16px' }}>
-          <DomainSelector
-            selectedDomain={selectedDomain}
-            onDomainChange={setSelectedDomain}
+      <style>{`
+        .main-layout {
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+        }
+
+        .main-nav {
+          background: var(--panel);
+          border-bottom: 1px solid #262b36;
+          padding: 12px 0;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+        }
+
+        .nav-content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 16px;
+        }
+
+        .nav-brand {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-weight: bold;
+          font-size: 18px;
+          color: var(--text);
+          text-decoration: none;
+        }
+
+        .nav-links {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+        }
+
+        .nav-link {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          text-decoration: none;
+          padding: 8px 16px;
+          border-radius: 6px;
+          color: var(--muted);
+          transition: all 0.2s ease;
+          font-size: 14px;
+          min-height: 44px;
+          min-width: 44px;
+          justify-content: center;
+        }
+
+        .nav-link:hover {
+          background: rgba(255, 255, 255, 0.05);
+          color: var(--text);
+        }
+
+        .nav-link.active {
+          background: var(--accent);
+          color: #06131f;
+          font-weight: 500;
+        }
+
+        .mobile-nav-toggle {
+          display: none;
+          background: transparent;
+          border: none;
+          color: var(--text);
+          font-size: 20px;
+          cursor: pointer;
+          padding: 8px;
+          border-radius: 6px;
+          transition: background-color 0.2s ease;
+          min-width: 44px;
+          min-height: 44px;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .mobile-nav-toggle:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-content {
+          flex: 1;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 16px;
+          width: 100%;
+        }
+
+        .domain-selector-container {
+          margin-bottom: 16px;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+          .nav-links {
+            display: none;
+          }
+
+          .mobile-nav-toggle {
+            display: flex;
+          }
+
+          .nav-content {
+            padding: 0 12px;
+          }
+
+          .main-content {
+            padding: 0 12px;
+          }
+
+          .nav-link {
+            font-size: 16px;
+            padding: 12px 16px;
+            min-height: 48px;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .nav-brand {
+            font-size: 16px;
+          }
+
+          .main-content {
+            padding: 0 8px;
+          }
+        }
+      `}</style>
+
+      <ErrorBoundary>
+        <div className="main-layout">
+          {/* Navigation */}
+          {showNavigation && (
+            <nav className="main-nav">
+              <div className="nav-content">
+                <Link to="/" className="nav-brand">
+                  🎯 HSK Flashcards
+                </Link>
+
+                {/* Desktop Navigation */}
+                <div className="nav-links">
+                  {navigationItems.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                    >
+                      <span>{item.icon}</span>
+                      <span>{item.label}</span>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Mobile Navigation Toggle */}
+                <button
+                  className="mobile-nav-toggle"
+                  onClick={() => setIsMobileNavOpen(true)}
+                  aria-label="Open navigation menu"
+                >
+                  ☰
+                </button>
+              </div>
+            </nav>
+          )}
+
+          {/* Mobile Navigation Drawer */}
+          <MobileNavDrawer
+            isOpen={isMobileNavOpen}
+            onClose={() => setIsMobileNavOpen(false)}
           />
-        </div>
-      )}
 
-      <main>
-        {children}
-      </main>
-    </div>
+          {/* Main Content */}
+          <div className="main-content">
+            {/* Domain Selector */}
+            {showDomainSelector && (
+              <div className="domain-selector-container">
+                <DomainSelector
+                  selectedDomain={selectedDomain}
+                  onDomainChange={setSelectedDomain}
+                />
+              </div>
+            )}
+
+            {/* Breadcrumbs */}
+            {showBreadcrumbs && <Breadcrumbs />}
+
+            {/* Page Content with Transitions */}
+            <PageTransition>
+              <main>
+                {children}
+              </main>
+            </PageTransition>
+          </div>
+        </div>
+      </ErrorBoundary>
+    </>
   )
-}
+})
+
+export default MainLayout
