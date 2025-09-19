@@ -8,7 +8,9 @@ import type {
   StatsPayload,
   SrsRow,
   PerformancePayload,
-  Domain
+  Domain,
+  BrowseCard,
+  DrawingCard
 } from '../types/api-types'
 
 export class ApiClient {
@@ -71,6 +73,11 @@ export class ApiClient {
 
   async listDomains(): Promise<Domain[]> {
     return this.get<Domain[]>('/domains')
+  }
+
+  async listCategories(domainId?: string): Promise<string[]> {
+    const params = domainId ? { domain_id: domainId } : undefined
+    return this.get<string[]>('/categories', params)
   }
 
   // === STATISTICS METHODS ===
@@ -138,6 +145,22 @@ export class ApiClient {
       response_time_ms: responseTimeMs,
     }
     return this.post<SessionResponse>(`/sessions/${sessionId}/answer`, payload)
+  }
+
+  async getSession(sessionId: string): Promise<SessionResponse> {
+    return this.get<SessionResponse>(`/sessions/${sessionId}`)
+  }
+
+  // === BROWSE AND DRAWING METHODS ===
+
+  async getBrowseCards(setName: string, domainId?: string): Promise<BrowseCard[]> {
+    const params = domainId ? { domain_id: domainId } : undefined
+    return this.get<BrowseCard[]>(`/browse/${encodeURIComponent(setName)}`, params)
+  }
+
+  async getDrawingCards(setName: string, domainId?: string): Promise<DrawingCard[]> {
+    const params = domainId ? { domain_id: domainId } : undefined
+    return this.get<DrawingCard[]>(`/drawing/${encodeURIComponent(setName)}`, params)
   }
 
   // === BATCH OPERATIONS ===

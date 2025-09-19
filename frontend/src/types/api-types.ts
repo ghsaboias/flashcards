@@ -69,6 +69,7 @@ export interface SessionResponse {
   session_id?: string
   done: boolean
   card?: SessionCard
+  current_question?: string | null
   progress: Progress
   evaluation?: Evaluation
   result?: SessionSummary

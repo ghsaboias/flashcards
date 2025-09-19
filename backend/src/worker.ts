@@ -54,6 +54,72 @@ app.get('/api/sets', async (c) => {
   return c.json((results || []).map((r: any) => r.set_key))
 })
 
+// Categories
+app.get('/api/categories', async (c) => {
+  const domainId = c.req.query('domain_id') || ''
+
+  let sql = 'SELECT DISTINCT category_key FROM cards'
+  const params = []
+
+  if (domainId) {
+    sql += ' WHERE domain_id = ?'
+    params.push(domainId)
+  }
+
+  sql += ' ORDER BY category_key'
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
+  return c.json((results || []).map((r: any) => r.category_key))
+})
+
+// Browse cards by set
+app.get('/api/browse/:set', async (c) => {
+  const setName = c.req.param('set')
+  const domainId = c.req.query('domain_id') || ''
+
+  if (!setName) return c.json([], 200)
+
+  let sql = 'SELECT question, answer FROM cards WHERE set_key = ?'
+  const params = [setName]
+
+  if (domainId) {
+    sql += ' AND domain_id = ?'
+    params.push(domainId)
+  }
+
+  sql += ' ORDER BY question'
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
+  return c.json((results || []).map((r: any) => ({
+    question: r.question,
+    answer: r.answer
+  })))
+})
+
+// Drawing cards by set (Chinese characters only)
+app.get('/api/drawing/:set', async (c) => {
+  const setName = c.req.param('set')
+  const domainId = c.req.query('domain_id') || ''
+
+  if (!setName) return c.json([], 200)
+
+  let sql = 'SELECT question, answer FROM cards WHERE set_key = ? AND question REGEXP ?'
+  const params = [setName, '[\u4e00-\u9fff]']
+
+  if (domainId) {
+    sql += ' AND domain_id = ?'
+    params.push(domainId)
+  }
+
+  sql += ' ORDER BY question'
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
+  return c.json((results || []).map((r: any) => ({
+    question: r.question,
+    answer: r.answer
+  })))
+})
+
 
 // SRS: by set
 app.get('/api/srs/set', async (c) => {
@@ -354,7 +420,24 @@ app.get('/api/sessions/:id', async (c) => {
 
 // Asset serving and SPA fallback
 app.all('*', async (c) => {
-  return c.env.ASSETS.fetch(c.req.raw)
+  const url = new URL(c.req.url)
+
+  // Try to serve the actual file first
+  const assetResponse = await c.env.ASSETS.fetch(c.req.raw)
+
+  // If file exists, serve it
+  if (assetResponse.status !== 404) {
+    return assetResponse
+  }
+
+  // For non-existent routes (except API routes), serve index.html for SPA routing
+  if (!url.pathname.startsWith('/api/')) {
+    const indexRequest = new Request(new URL('/', url.origin))
+    return c.env.ASSETS.fetch(indexRequest)
+  }
+
+  // Return the original 404 for API routes
+  return assetResponse
 })
 
 export default app
