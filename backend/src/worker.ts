@@ -38,24 +38,55 @@ app.get('/api/domains', async (c) => {
 
 // Sets
 app.get('/api/sets', async (c) => {
-  const { sql } = buildCardQuery({ fields: 'distinct_sets', orderBy: 'set_key' })
-  const { results } = await c.env.DB.prepare(sql).all()
+  const domainId = c.req.query('domain_id') || ''
+
+  let sql = 'SELECT DISTINCT set_key FROM cards'
+  const params = []
+
+  if (domainId) {
+    sql += ' WHERE domain_id = ?'
+    params.push(domainId)
+  }
+
+  sql += ' ORDER BY set_key'
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
   return c.json((results || []).map((r: any) => r.set_key))
 })
 
 // Categories
 app.get('/api/categories', async (c) => {
-  const { sql } = buildCardQuery({ fields: 'distinct_categories', orderBy: 'category_key' })
-  const { results } = await c.env.DB.prepare(sql).all()
+  const domainId = c.req.query('domain_id') || ''
+
+  let sql = 'SELECT DISTINCT category_key FROM cards'
+  const params = []
+
+  if (domainId) {
+    sql += ' WHERE domain_id = ?'
+    params.push(domainId)
+  }
+
+  sql += ' ORDER BY category_key'
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
   return c.json((results || []).map((r: any) => r.category_key))
 })
 
 // SRS: by set
 app.get('/api/srs/set', async (c) => {
   const setName = c.req.query('set_name') || ''
+  const domainId = c.req.query('domain_id') || ''
   if (!setName) return c.json([], 200)
-  const { sql } = buildCardQuery({ fields: 'srs', where: 'set' })
-  const { results } = await c.env.DB.prepare(sql).bind(setName).all()
+
+  let sql = 'SELECT question, answer, easiness_factor, interval_hours, repetitions, next_review_date FROM cards WHERE set_key = ?'
+  const params = [setName]
+
+  if (domainId) {
+    sql += ' AND domain_id = ?'
+    params.push(domainId)
+  }
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
   const rows = (results || []).map((r: any) => mapToSrsRow(r, setName))
   return c.json(rows)
 })
@@ -63,9 +94,18 @@ app.get('/api/srs/set', async (c) => {
 // SRS: by category
 app.get('/api/srs/category', async (c) => {
   const category = c.req.query('category') || ''
+  const domainId = c.req.query('domain_id') || ''
   if (!category) return c.json([], 200)
-  const { sql } = buildCardQuery({ fields: 'srs_with_set', where: 'category' })
-  const { results } = await c.env.DB.prepare(sql).bind(category).all()
+
+  let sql = 'SELECT set_key, question, answer, easiness_factor, interval_hours, repetitions, next_review_date FROM cards WHERE category_key = ?'
+  const params = [category]
+
+  if (domainId) {
+    sql += ' AND domain_id = ?'
+    params.push(domainId)
+  }
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
   const rows = (results || []).map((r: any) => mapToSrsRow(r))
   return c.json(rows)
 })
@@ -74,11 +114,18 @@ app.get('/api/srs/category', async (c) => {
 // Stats: by set
 app.get('/api/stats/set', async (c) => {
   const setName = c.req.query('set_name') || ''
+  const domainId = c.req.query('domain_id') || ''
   if (!setName) return c.json({ set_name: '', summary: createEmptyStatsSummary(), rows: [] })
-  const { results } = await c.env.DB.prepare(
-    `SELECT question, answer, correct_count AS correct, incorrect_count AS incorrect, reviewed_count AS reviewed
-     FROM cards WHERE set_key = ?`
-  ).bind(setName).all()
+
+  let sql = 'SELECT question, answer, correct_count AS correct, incorrect_count AS incorrect, reviewed_count AS reviewed FROM cards WHERE set_key = ?'
+  const params = [setName]
+
+  if (domainId) {
+    sql += ' AND domain_id = ?'
+    params.push(domainId)
+  }
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
   const rows = (results || []).map((r: any) => ({
     question: r.question,
     answer: r.answer,
@@ -95,15 +142,24 @@ app.get('/api/stats/set', async (c) => {
 // Stats: by category (merge by question+answer)
 app.get('/api/stats/category', async (c) => {
   const category = c.req.query('category') || ''
+  const domainId = c.req.query('domain_id') || ''
   if (!category) return c.json({ category: '', summary: createEmptyStatsSummary(), rows: [] })
-  const { results } = await c.env.DB.prepare(
-    `SELECT question, answer,
+
+  let sql = `SELECT question, answer,
             SUM(correct_count)   AS correct,
             SUM(incorrect_count) AS incorrect,
             SUM(CASE WHEN reviewed_count > 0 THEN reviewed_count ELSE correct_count + incorrect_count END) AS reviewed
-     FROM cards WHERE category_key = ?
-     GROUP BY question, answer`
-  ).bind(category).all()
+     FROM cards WHERE category_key = ?`
+  const params = [category]
+
+  if (domainId) {
+    sql += ' AND domain_id = ?'
+    params.push(domainId)
+  }
+
+  sql += ' GROUP BY question, answer'
+
+  const { results } = await c.env.DB.prepare(sql).bind(...params).all()
   const rows = (results || []).map((r: any) => ({
     question: r.question,
     answer: r.answer,

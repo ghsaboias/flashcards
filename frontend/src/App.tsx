@@ -17,9 +17,9 @@ import { countByDifficulty, isSessionComplete } from './utils/session-utils'
 import type { Domain } from './types/api-types'
 
 function App() {
-  const [sessionState, actions] = useSessionManager()
-  const { speak } = useAudioControls()
   const [selectedDomain, setSelectedDomain] = useState<Domain | null>(null)
+  const [sessionState, actions] = useSessionManager(selectedDomain)
+  const { speak } = useAudioControls()
   const summaryRef = useRef<HTMLDivElement | null>(null)
   const previousResultsLengthRef = useRef<number>(0)
 

@@ -245,6 +245,15 @@ The build process:
   - Response: `[{ id: string, name: string, icon: string, has_audio: boolean }]`
   - Domains: Chinese (HSK), World Geography, and extensible for more
 
+### **Domain-Aware Data Endpoints**
+- `GET /api/sets?domain_id=<domain>` - List sets filtered by domain
+  - Response: `[string]` - Array of set names for the specified domain
+- `GET /api/categories?domain_id=<domain>` - List categories filtered by domain
+  - Response: `[string]` - Array of category names for the specified domain
+- `GET /api/stats/set?set_name=<set>&domain_id=<domain>` - Domain-filtered stats
+- `GET /api/srs/set?set_name=<set>&domain_id=<domain>` - Domain-filtered SRS data
+- All stats and SRS endpoints support optional `domain_id` parameter for filtering
+
 ### **High-Intensity Learning**
 - `POST /api/sessions/auto-start` - Intelligent session creation with content auto-detection
   - Body: `{ user_level: 'beginner'|'intermediate'|'advanced', focus_mode: 'review'|'challenge', domain_id?: string }`
@@ -428,6 +437,7 @@ cd backend && bun update
 - ✅ **Content Filtering**: Session creation respects domain selection for targeted practice
 - ✅ **Domain Independence**: Each domain maintains separate progress and statistics
 - ✅ **Extensible Design**: Easy addition of new domains (sports, history, etc.)
+- ✅ **Stats & SRS Tables Filtering**: Complete domain-aware filtering for stats and SRS tables with auto-set selection
 
 ### **Major Architecture Refactor (September 2025)**
 - ✅ **Frontend Restructure**: Extracted 3,200+ lines into modular hooks, contexts, and utilities

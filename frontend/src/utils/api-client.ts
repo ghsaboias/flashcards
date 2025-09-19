@@ -63,12 +63,14 @@ export class ApiClient {
 
   // === DATA LISTING METHODS ===
 
-  async listSets(): Promise<string[]> {
-    return this.get<string[]>('/sets')
+  async listSets(domainId?: string): Promise<string[]> {
+    const params = domainId ? { domain_id: domainId } : undefined
+    return this.get<string[]>('/sets', params)
   }
 
-  async listCategories(): Promise<string[]> {
-    return this.get<string[]>('/categories')
+  async listCategories(domainId?: string): Promise<string[]> {
+    const params = domainId ? { domain_id: domainId } : undefined
+    return this.get<string[]>('/categories', params)
   }
 
   async listDomains(): Promise<Domain[]> {
@@ -77,34 +79,42 @@ export class ApiClient {
 
   // === STATISTICS METHODS ===
 
-  async getStats(scope: 'set' | 'category', identifier: string): Promise<StatsPayload> {
-    return this.get<StatsPayload>(`/stats/${scope}`, {
+  async getStats(scope: 'set' | 'category', identifier: string, domainId?: string): Promise<StatsPayload> {
+    const params: Record<string, string> = {
       [scope === 'set' ? 'set_name' : 'category']: identifier
-    })
+    }
+    if (domainId) {
+      params.domain_id = domainId
+    }
+    return this.get<StatsPayload>(`/stats/${scope}`, params)
   }
 
-  async getStatsForSet(setName: string): Promise<StatsPayload> {
-    return this.getStats('set', setName)
+  async getStatsForSet(setName: string, domainId?: string): Promise<StatsPayload> {
+    return this.getStats('set', setName, domainId)
   }
 
-  async getStatsForCategory(category: string): Promise<StatsPayload> {
-    return this.getStats('category', category)
+  async getStatsForCategory(category: string, domainId?: string): Promise<StatsPayload> {
+    return this.getStats('category', category, domainId)
   }
 
   // === SRS METHODS ===
 
-  async getSrs(scope: 'set' | 'category', identifier: string): Promise<SrsRow[]> {
-    return this.get<SrsRow[]>(`/srs/${scope}`, {
+  async getSrs(scope: 'set' | 'category', identifier: string, domainId?: string): Promise<SrsRow[]> {
+    const params: Record<string, string> = {
       [scope === 'set' ? 'set_name' : 'category']: identifier
-    })
+    }
+    if (domainId) {
+      params.domain_id = domainId
+    }
+    return this.get<SrsRow[]>(`/srs/${scope}`, params)
   }
 
-  async getSrsForSet(setName: string): Promise<SrsRow[]> {
-    return this.getSrs('set', setName)
+  async getSrsForSet(setName: string, domainId?: string): Promise<SrsRow[]> {
+    return this.getSrs('set', setName, domainId)
   }
 
-  async getSrsForCategory(category: string): Promise<SrsRow[]> {
-    return this.getSrs('category', category)
+  async getSrsForCategory(category: string, domainId?: string): Promise<SrsRow[]> {
+    return this.getSrs('category', category, domainId)
   }
 
   // === PERFORMANCE ANALYTICS ===
@@ -150,15 +160,15 @@ export class ApiClient {
 
   // === BATCH OPERATIONS ===
 
-  async getMultiSetStats(setNames: string[]): Promise<StatsPayload[]> {
-    return Promise.all(setNames.map(setName => this.getStatsForSet(setName)))
+  async getMultiSetStats(setNames: string[], domainId?: string): Promise<StatsPayload[]> {
+    return Promise.all(setNames.map(setName => this.getStatsForSet(setName, domainId)))
   }
 
-  async getMultiSetSrs(setNames: string[]): Promise<SrsRow[]> {
+  async getMultiSetSrs(setNames: string[], domainId?: string): Promise<SrsRow[]> {
     const allSrsData = await Promise.all(
       setNames.map(async (setName) => {
         try {
-          return await this.getSrsForSet(setName)
+          return await this.getSrsForSet(setName, domainId)
         } catch (error) {
           console.warn(`Failed to load SRS data for set ${setName}:`, error)
           return []

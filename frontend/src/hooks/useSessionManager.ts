@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import type { SessionState, SessionActions } from '../types/session-types'
-import type { SessionResponse } from '../types/api-types'
+import type { SessionResponse, Domain } from '../types/api-types'
 import { apiClient } from '../utils/api-client'
 import { aggregateMultiSetStats, createEmptyStatsSummary } from '../utils/stats-aggregation'
 import { getPinyinForText, hasChinese } from '../utils/pinyin'
@@ -17,17 +17,17 @@ import {
   removeSetFromSelection
 } from '../utils/session-utils'
 
-export function useSessionManager(): [SessionState, SessionActions] {
+export function useSessionManager(selectedDomain?: Domain | null): [SessionState, SessionActions] {
   // Single state object instead of 40+ useState calls
   const [state, setState] = useState<SessionState>(createEmptySessionState)
 
-  // Load initial data
+  // Load sets and categories (domain-aware)
   useEffect(() => {
     (async () => {
       try {
         const [sets, categories] = await Promise.all([
-          apiClient.listSets(),
-          apiClient.listCategories()
+          apiClient.listSets(selectedDomain?.id),
+          apiClient.listCategories(selectedDomain?.id)
         ])
 
         setState(prev => ({
@@ -42,11 +42,13 @@ export function useSessionManager(): [SessionState, SessionActions] {
         setState(prev => ({
           ...prev,
           sets: [],
-          categories: []
+          categories: [],
+          selectedSet: "",
+          selectedCategory: ""
         }))
       }
     })()
-  }, [])
+  }, [selectedDomain?.id])
 
   // Keep Stats & SRS view in sync when mode or selection changes
   useEffect(() => {
@@ -56,8 +58,8 @@ export function useSessionManager(): [SessionState, SessionActions] {
       try {
         if (state.mode === 'set' && state.selectedSet) {
           const [statsRes, srsRes] = await Promise.all([
-            state.showStats ? apiClient.getStatsForSet(state.selectedSet) : Promise.resolve(null),
-            state.showSrs ? apiClient.getSrsForSet(state.selectedSet) : Promise.resolve([])
+            state.showStats ? apiClient.getStatsForSet(state.selectedSet, selectedDomain?.id) : Promise.resolve(null),
+            state.showSrs ? apiClient.getSrsForSet(state.selectedSet, selectedDomain?.id) : Promise.resolve([])
           ])
 
           setState(prev => ({
@@ -67,8 +69,8 @@ export function useSessionManager(): [SessionState, SessionActions] {
           }))
         } else if (state.mode === 'category' && state.selectedCategory) {
           const [statsRes, srsRes] = await Promise.all([
-            state.showStats ? apiClient.getStatsForCategory(state.selectedCategory) : Promise.resolve(null),
-            state.showSrs ? apiClient.getSrsForCategory(state.selectedCategory) : Promise.resolve([])
+            state.showStats ? apiClient.getStatsForCategory(state.selectedCategory, selectedDomain?.id) : Promise.resolve(null),
+            state.showSrs ? apiClient.getSrsForCategory(state.selectedCategory, selectedDomain?.id) : Promise.resolve([])
           ])
 
           setState(prev => ({
@@ -78,12 +80,12 @@ export function useSessionManager(): [SessionState, SessionActions] {
           }))
         } else if (state.mode === 'multi-set' && state.selectedSets.length > 0) {
           if (state.showStats) {
-            const statsResult = await aggregateMultiSetStats(state.selectedSets)
+            const statsResult = await aggregateMultiSetStats(state.selectedSets, selectedDomain?.id)
             setState(prev => ({ ...prev, stats: statsResult }))
           }
 
           if (state.showSrs) {
-            const allSrsRows = await apiClient.getMultiSetSrs(state.selectedSets)
+            const allSrsRows = await apiClient.getMultiSetSrs(state.selectedSets, selectedDomain?.id)
             setState(prev => ({ ...prev, srsRows: allSrsRows }))
           }
         }
@@ -97,7 +99,7 @@ export function useSessionManager(): [SessionState, SessionActions] {
         }))
       }
     })()
-  }, [state.showStats, state.showSrs, state.mode, state.selectedSet, state.selectedCategory, state.selectedSets])
+  }, [state.showStats, state.showSrs, state.mode, state.selectedSet, state.selectedCategory, state.selectedSets, selectedDomain?.id])
 
   // Consolidated reset function
   const resetSessionUI = useCallback(() => {

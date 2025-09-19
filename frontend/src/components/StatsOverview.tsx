@@ -17,10 +17,10 @@ interface StatsOverviewProps {
   onDrawingComplete: (nextPos: number, total: number) => void
 }
 
-export default function StatsOverview({ 
-  sessionState, 
-  humanizeSetLabel, 
-  humanizeCategoryLabel, 
+export default function StatsOverview({
+  sessionState,
+  humanizeSetLabel,
+  humanizeCategoryLabel,
   getMultiSetLabel,
   speak,
   exitBrowse,

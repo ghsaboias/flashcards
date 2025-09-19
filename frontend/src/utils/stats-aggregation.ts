@@ -57,15 +57,19 @@ export function aggregateStatsSummaries(summaries: StatsSummary[]): StatsSummary
   }
 }
 
-export async function aggregateMultiSetStats(setNames: string[]): Promise<StatsResponse> {
+export async function aggregateMultiSetStats(setNames: string[], domainId?: string): Promise<StatsResponse> {
   if (setNames.length === 0) {
     return { summary: createEmptyStatsSummary(), rows: [] }
   }
 
   try {
-    const statsPromises = setNames.map(setName =>
-      axios.get(`${API_BASE}/stats/set?set_name=${encodeURIComponent(setName)}`)
-    )
+    const statsPromises = setNames.map(setName => {
+      const params = new URLSearchParams({ set_name: setName })
+      if (domainId) {
+        params.append('domain_id', domainId)
+      }
+      return axios.get(`${API_BASE}/stats/set?${params.toString()}`)
+    })
 
     const statsResponses = await Promise.all(statsPromises)
     const allStatsRows: StatsRow[] = []
