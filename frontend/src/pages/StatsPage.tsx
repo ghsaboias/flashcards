@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react'
-import { useSessionManager } from '../hooks/useSessionManager'
-import { useAppContext } from '../hooks/useAppContext'
+import { useState, useEffect, memo } from 'react'
+import { useSessionStateAndActions } from '../hooks/useSessionContext'
 import UnifiedTable from '../components/UnifiedTable'
 import MainLayout from '../layouts/MainLayout'
+import LoadingSkeleton from '../components/LoadingSkeleton'
 
-export default function StatsPage() {
-  const { selectedDomain } = useAppContext()
-  const [sessionState, actions] = useSessionManager(selectedDomain)
+const StatsPage = memo(function StatsPage() {
+  const [sessionState, actions] = useSessionStateAndActions()
   const [currentView, setCurrentView] = useState<'performance' | 'srs' | 'accuracy'>('performance')
 
   const {
@@ -27,48 +26,57 @@ export default function StatsPage() {
         {performance && <div className="muted">{performance.summary.overall_accuracy}% overall accuracy</div>}
       </div>
 
-      {performance && (
-        <div className="stats-summary">
-          <div className="summary-row">
-            Sessions: <strong>{performance.summary.total_sessions}</strong> ·
-            Questions: <strong>{performance.summary.total_questions}</strong> ·
-            Study Days: <strong>{performance.summary.study_days}</strong>
-          </div>
-          <div className="summary-row">
-            Avg Questions/Session: <strong>{performance.summary.avg_questions_per_session}</strong> ·
-            Overall Accuracy: <strong>{performance.summary.overall_accuracy}%</strong>
+      {!performance ? (
+        <div>
+          <LoadingSkeleton variant="stats" />
+          <div style={{ marginTop: '24px' }}>
+            <LoadingSkeleton variant="table" rows={5} />
           </div>
         </div>
-      )}
+      ) : (
+        <>
+          <div className="stats-summary">
+            <div className="summary-row">
+              Sessions: <strong>{performance.summary.total_sessions}</strong> ·
+              Questions: <strong>{performance.summary.total_questions}</strong> ·
+              Study Days: <strong>{performance.summary.study_days}</strong>
+            </div>
+            <div className="summary-row">
+              Avg Questions/Session: <strong>{performance.summary.avg_questions_per_session}</strong> ·
+              Overall Accuracy: <strong>{performance.summary.overall_accuracy}%</strong>
+            </div>
+          </div>
 
-      {performance && performance.daily.length > 0 && (
-        <div className="daily-performance">
-          <h3>Daily Performance</h3>
-          <div className="table-container">
-            <table className="statsTable">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Sessions</th>
-                  <th>Questions</th>
-                  <th>Accuracy</th>
-                </tr>
-              </thead>
-              <tbody>
-                {performance.daily.slice(-20).map((day, i) => (
-                  <tr key={i}>
-                    <td>{day.date}</td>
-                    <td>{day.sessions}</td>
-                    <td>{day.questions}</td>
-                    <td className={day.accuracy >= 90 ? 'ok' : day.accuracy >= 80 ? '' : 'bad'}>
-                      {day.accuracy.toFixed(1)}%
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+          {performance.daily.length > 0 && (
+            <div className="daily-performance">
+              <h3>Daily Performance</h3>
+              <div className="table-container">
+                <table className="statsTable">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Sessions</th>
+                      <th>Questions</th>
+                      <th>Accuracy</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {performance.daily.slice(-20).map((day, i) => (
+                      <tr key={i}>
+                        <td>{day.date}</td>
+                        <td>{day.sessions}</td>
+                        <td>{day.questions}</td>
+                        <td className={day.accuracy >= 90 ? 'ok' : day.accuracy >= 80 ? '' : 'bad'}>
+                          {day.accuracy.toFixed(1)}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   )
@@ -127,4 +135,6 @@ export default function StatsPage() {
       </div>
     </MainLayout>
   )
-}
+})
+
+export default StatsPage

@@ -1,14 +1,20 @@
-import { useMemo } from 'react'
+import { useMemo, memo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSessionManager } from '../hooks/useSessionManager'
-import { useAppContext } from '../hooks/useAppContext'
+import { useSessionStateAndActions } from '../hooks/useSessionContext'
 import { countByDifficulty } from '../utils/session-utils'
 import { formatMultiSetLabel } from '../utils/hsk-label-utils'
 import MainLayout from '../layouts/MainLayout'
 
-export default function PracticePage() {
-  const { selectedDomain } = useAppContext()
-  const [sessionState, actions] = useSessionManager(selectedDomain)
+// Prefetch session flow components since practice leads to sessions
+const prefetchSessionFlow = () => {
+  return Promise.all([
+    import('./SessionPage'),
+    import('./CompletePage')
+  ])
+}
+
+const PracticePage = memo(function PracticePage() {
+  const [sessionState, actions] = useSessionStateAndActions()
   const navigate = useNavigate()
 
   const {
@@ -27,6 +33,15 @@ export default function PracticePage() {
     addSetToSelection,
     removeSetFromSelection
   } = actions
+
+  // Prefetch session flow since this page leads to sessions
+  useEffect(() => {
+    const prefetchTimer = setTimeout(() => {
+      prefetchSessionFlow().catch(console.error)
+    }, 1000) // Delay to avoid blocking page render
+
+    return () => clearTimeout(prefetchTimer)
+  }, [])
 
   const selectedDifficulties = useMemo(() => {
     const vals: Array<'easy' | 'medium' | 'hard'> = []
@@ -188,4 +203,6 @@ export default function PracticePage() {
       </div>
     </MainLayout>
   )
-}
+})
+
+export default PracticePage

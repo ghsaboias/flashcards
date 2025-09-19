@@ -1,16 +1,18 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState, memo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useSessionManager } from '../hooks/useSessionManager'
-import { useAppContext } from '../hooks/useAppContext'
+import { useSessionStateAndActions } from '../hooks/useSessionContext'
 import { isSessionComplete } from '../utils/session-utils'
+import { apiClient } from '../utils/api-client'
 import PracticeSession from '../components/PracticeSession'
 import SessionLayout from '../layouts/SessionLayout'
+import LoadingSpinner from '../components/LoadingSpinner'
 
-export default function SessionPage() {
+const SessionPage = memo(function SessionPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { selectedDomain } = useAppContext()
-  const [sessionState, actions] = useSessionManager(selectedDomain)
+  const [sessionState, actions] = useSessionStateAndActions()
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   // Computed values
   const canAnswer = useMemo(() => (
@@ -30,15 +32,88 @@ export default function SessionPage() {
 
   // Load session if ID doesn't match current session
   useEffect(() => {
-    if (id && id !== sessionState.sessionId) {
-      // TODO: Implement session loading by ID from backend
-      // For now, redirect to home if no active session
-      console.warn('Session loading by ID not yet implemented')
-      navigate('/')
-    }
-  }, [id, sessionState.sessionId, navigate])
+    const loadSession = async () => {
+      if (!id) {
+        setError('No session ID provided')
+        setLoading(false)
+        return
+      }
 
-  // Redirect if no session ID
+      // If we already have the correct session loaded, don't reload
+      if (id === sessionState.sessionId && sessionState.question) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        setLoading(true)
+        setError(null)
+
+        // Load session state from backend
+        const sessionData = await apiClient.getSession(id)
+
+        if (sessionData.done) {
+          // Session is complete, redirect to completion page
+          navigate(`/complete/${id}`)
+          return
+        }
+
+        // Restore session state using the session manager
+        await actions.restoreSessionFromBackend(id, sessionData)
+        setLoading(false)
+      } catch (error) {
+        console.error('Failed to load session:', error)
+        setError('Session not found or expired')
+        setLoading(false)
+        // Don't auto-redirect on error, let user decide
+      }
+    }
+
+    loadSession()
+  }, [id, sessionState.sessionId, sessionState.question, navigate, actions])
+
+  // Show loading state
+  if (loading) {
+    return (
+      <SessionLayout>
+        <LoadingSpinner
+          size="large"
+          text="Loading session..."
+        >
+          <p>Preparing your practice session...</p>
+        </LoadingSpinner>
+      </SessionLayout>
+    )
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <SessionLayout>
+        <div style={{
+          padding: '40px',
+          textAlign: 'center',
+          background: 'var(--panel)',
+          borderRadius: '8px',
+          border: '1px solid var(--bad)'
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
+          <h2 style={{ color: 'var(--bad)', marginBottom: '16px' }}>Session Error</h2>
+          <p style={{ color: 'var(--muted)', marginBottom: '24px' }}>{error}</p>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+            <button onClick={() => window.location.reload()} className="btn-secondary">
+              🔄 Retry
+            </button>
+            <button onClick={() => navigate('/')} className="btn-primary">
+              🏠 Start New Session
+            </button>
+          </div>
+        </div>
+      </SessionLayout>
+    )
+  }
+
+  // Redirect if no session ID after loading
   if (!sessionState.sessionId) {
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
@@ -52,8 +127,6 @@ export default function SessionPage() {
 
   return (
     <SessionLayout
-      sessionState={sessionState}
-      actions={actions}
       className={sessionState.isHighIntensityMode ? 'high-intensity' : ''}
     >
       <div className="session-content">
@@ -66,4 +139,6 @@ export default function SessionPage() {
       </div>
     </SessionLayout>
   )
-}
+})
+
+export default SessionPage

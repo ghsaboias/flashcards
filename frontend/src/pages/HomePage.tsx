@@ -1,17 +1,49 @@
+import { memo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSessionManager } from '../hooks/useSessionManager'
+import { useSessionStateAndActions } from '../hooks/useSessionContext'
 import { useAppContext } from '../hooks/useAppContext'
+import { useNavigationGuardContext } from '../hooks/useNavigationGuardContext'
 import MainLayout from '../layouts/MainLayout'
 
-export default function HomePage() {
+// Prefetch functions for likely next routes
+const prefetchPracticePage = () => import('./PracticePage')
+const prefetchSessionFlow = () => {
+  // Prefetch session and complete pages together since they're part of the same flow
+  return Promise.all([
+    import('./SessionPage'),
+    import('./CompletePage')
+  ])
+}
+
+const HomePage = memo(function HomePage() {
   const { selectedDomain } = useAppContext()
-  const [sessionState, actions] = useSessionManager(selectedDomain)
+  const [sessionState, actions] = useSessionStateAndActions()
   const navigate = useNavigate()
+  const { navigateWithGuard } = useNavigationGuardContext()
+
+  // Prefetch likely next pages after component mounts
+  useEffect(() => {
+    // Prefetch PracticePage immediately as it's the most likely next destination
+    const prefetchTimer = setTimeout(() => {
+      prefetchPracticePage().catch(console.error)
+    }, 500) // Delay slightly to avoid blocking initial render
+
+    // Prefetch session flow after a longer delay
+    const sessionPrefetchTimer = setTimeout(() => {
+      prefetchSessionFlow().catch(console.error)
+    }, 2000)
+
+    return () => {
+      clearTimeout(prefetchTimer)
+      clearTimeout(sessionPrefetchTimer)
+    }
+  }, [])
 
   const handleStartSession = async () => {
     try {
       await actions.beginAutoSession(selectedDomain?.id)
       if (sessionState.sessionId) {
+        // Force navigation for new sessions - no need to guard since it's intentional
         navigate(`/session/${sessionState.sessionId}`)
       }
     } catch (error) {
@@ -19,8 +51,13 @@ export default function HomePage() {
     }
   }
 
-  const handleAdvancedOptions = () => {
-    navigate('/practice')
+  const handleAdvancedOptions = async () => {
+    await navigateWithGuard('/practice')
+  }
+
+  // Prefetch on hover/focus for Advanced Options button
+  const handleAdvancedOptionsHover = () => {
+    prefetchPracticePage().catch(console.error)
   }
 
   return (
@@ -31,11 +68,18 @@ export default function HomePage() {
             Start
           </button>
 
-          <button className="btn-tertiary" onClick={handleAdvancedOptions}>
+          <button
+            className="btn-tertiary"
+            onClick={handleAdvancedOptions}
+            onMouseEnter={handleAdvancedOptionsHover}
+            onFocus={handleAdvancedOptionsHover}
+          >
             Advanced Options
           </button>
         </div>
       </div>
     </MainLayout>
   )
-}
+})
+
+export default HomePage

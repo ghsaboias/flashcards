@@ -1,14 +1,14 @@
-import { useMemo } from 'react'
+import { useMemo, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSessionManager } from '../hooks/useSessionManager'
+import { useSessionStateAndActions } from '../hooks/useSessionContext'
 import { useAppContext } from '../hooks/useAppContext'
 import { formatMultiSetLabel } from '../utils/hsk-label-utils'
 import MainLayout from '../layouts/MainLayout'
 
-export default function CompletePage() {
+const CompletePage = memo(function CompletePage() {
   const navigate = useNavigate()
   const { selectedDomain } = useAppContext()
-  const [sessionState, actions] = useSessionManager(selectedDomain)
+  const [sessionState, actions] = useSessionStateAndActions()
 
   const {
     results,
@@ -163,4 +163,6 @@ export default function CompletePage() {
       </div>
     </MainLayout>
   )
-}
+})
+
+export default CompletePage

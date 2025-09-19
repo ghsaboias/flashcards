@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import MainLayout from '../layouts/MainLayout'
 
-export default function ErrorPage() {
+const ErrorPage = memo(function ErrorPage() {
   return (
     <MainLayout>
       <div style={{ padding: '40px', textAlign: 'center' }}>
@@ -22,4 +23,6 @@ export default function ErrorPage() {
       </div>
     </MainLayout>
   )
-}
+})
+
+export default ErrorPage

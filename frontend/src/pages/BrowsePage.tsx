@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAudioControls } from '../hooks/useAudioControls'
 import { hasChinese } from '../utils/pinyin'
 import { useAppContext } from '../hooks/useAppContext'
+import { apiClient } from '../utils/api-client'
 import MainLayout from '../layouts/MainLayout'
 import type { BrowseCard } from '../types/api-types'
 
-export default function BrowsePage() {
+const BrowsePage = memo(function BrowsePage() {
   const { set } = useParams<{ set: string }>()
   const navigate = useNavigate()
   const { selectedDomain } = useAppContext()
@@ -25,16 +26,12 @@ export default function BrowsePage() {
       try {
         setLoading(true)
         setError(null)
-        // TODO: Implement browse data loading from API
-        // For now, use placeholder data
-        const sampleData: BrowseCard[] = [
-          { question: 'hello', answer: 'world' },
-          { question: 'test', answer: 'data' }
-        ]
-        setBrowseRows(sampleData)
+
+        const browseData = await apiClient.getBrowseCards(set, selectedDomain?.id)
+        setBrowseRows(browseData)
         setBrowseIndex(0)
       } catch (err) {
-        setError('Failed to load browse data')
+        setError(err instanceof Error ? err.message : 'Failed to load browse data')
         console.error('Failed to load browse data:', err)
       } finally {
         setLoading(false)
@@ -150,4 +147,6 @@ export default function BrowsePage() {
       </div>
     </MainLayout>
   )
-}
+})
+
+export default BrowsePage

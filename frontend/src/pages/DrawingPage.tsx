@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo, lazy, Suspense } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../hooks/useAppContext'
-import DrawingCanvas from '../components/DrawingCanvas'
+import { apiClient } from '../utils/api-client'
 import MainLayout from '../layouts/MainLayout'
 import { formatMultiSetLabel } from '../utils/hsk-label-utils'
 import type { DrawingCard } from '../types/api-types'
 
-export default function DrawingPage() {
+// Lazy load the heavy DrawingCanvas component
+const DrawingCanvas = lazy(() => import('../components/DrawingCanvas'))
+
+const DrawingPage = memo(function DrawingPage() {
   const { set } = useParams<{ set: string }>()
   const navigate = useNavigate()
   const { selectedDomain } = useAppContext()
@@ -25,18 +28,13 @@ export default function DrawingPage() {
       try {
         setLoading(true)
         setError(null)
-        // TODO: Implement drawing data loading from API
-        // For now, use placeholder data with Chinese characters
-        const sampleData: DrawingCard[] = [
-          { question: '我', answer: 'I, me' },
-          { question: '你', answer: 'you' },
-          { question: '他', answer: 'he, him' }
-        ]
-        setDrawingCards(sampleData)
+
+        const drawingData = await apiClient.getDrawingCards(set, selectedDomain?.id)
+        setDrawingCards(drawingData)
         setDrawingPosition(0)
-        setDrawingProgress({ current: 0, total: sampleData.length })
+        setDrawingProgress({ current: 0, total: drawingData.length })
       } catch (err) {
-        setError('Failed to load drawing data')
+        setError(err instanceof Error ? err.message : 'Failed to load drawing data')
         console.error('Failed to load drawing data:', err)
       } finally {
         setLoading(false)
@@ -128,11 +126,24 @@ export default function DrawingPage() {
               </div>
             </div>
 
-            <DrawingCanvas
-              character={current.question}
-              onProgressUpdate={handleProgressUpdate}
-              onComplete={handleComplete}
-            />
+            <Suspense fallback={
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '400px',
+                fontSize: '16px',
+                color: '#666'
+              }}>
+                Loading drawing canvas...
+              </div>
+            }>
+              <DrawingCanvas
+                character={current.question}
+                onProgressUpdate={handleProgressUpdate}
+                onComplete={handleComplete}
+              />
+            </Suspense>
           </div>
         ) : (
           <div className="drawing-content" style={{ textAlign: 'center' }}>
@@ -156,4 +167,6 @@ export default function DrawingPage() {
       </div>
     </MainLayout>
   )
-}
+})
+
+export default DrawingPage

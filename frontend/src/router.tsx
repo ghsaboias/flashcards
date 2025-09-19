@@ -1,12 +1,81 @@
 import { createBrowserRouter } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import PracticePage from './pages/PracticePage'
-import SessionPage from './pages/SessionPage'
-import CompletePage from './pages/CompletePage'
-import StatsPage from './pages/StatsPage'
-import BrowsePage from './pages/BrowsePage'
-import DrawingPage from './pages/DrawingPage'
+import { lazy, Suspense } from 'react'
 import ErrorPage from './pages/ErrorPage'
+import RouteLoadingFallback from './components/RouteLoadingFallback'
+
+import { performanceMonitor } from './utils/performance-monitor'
+
+// Performance monitoring for route transitions
+const markRouteStart = (routeName: string) => {
+  performance.mark(`route-${routeName}-start`)
+}
+
+const markRouteEnd = (routeName: string) => {
+  performance.mark(`route-${routeName}-end`)
+  performance.measure(`route-${routeName}-transition`, `route-${routeName}-start`, `route-${routeName}-end`)
+
+  // Record in our performance monitor
+  const measure = performance.getEntriesByName(`route-${routeName}-transition`)[0]
+  if (measure) {
+    performanceMonitor.recordRouteTransition(routeName, measure.duration)
+  }
+}
+
+// Lazy load page components with priority-based loading
+// HomePage: Immediate load (main entry point) - keep as regular import for fastest initial load
+import HomePage from './pages/HomePage'
+
+// High priority: Primary navigation flow
+const PracticePage = lazy(() => {
+  markRouteStart('practice')
+  return import('./pages/PracticePage').then(module => {
+    markRouteEnd('practice')
+    return module
+  })
+})
+
+// Medium priority: Session flow components (practice → session → complete)
+const SessionPage = lazy(() => {
+  markRouteStart('session')
+  return import('./pages/SessionPage').then(module => {
+    markRouteEnd('session')
+    return module
+  })
+})
+
+const CompletePage = lazy(() => {
+  markRouteStart('complete')
+  return import('./pages/CompletePage').then(module => {
+    markRouteEnd('complete')
+    return module
+  })
+})
+
+// Low priority: Secondary features
+const StatsPage = lazy(() => {
+  markRouteStart('stats')
+  return import('./pages/StatsPage').then(module => {
+    markRouteEnd('stats')
+    return module
+  })
+})
+
+const BrowsePage = lazy(() => {
+  markRouteStart('browse')
+  return import('./pages/BrowsePage').then(module => {
+    markRouteEnd('browse')
+    return module
+  })
+})
+
+const DrawingPage = lazy(() => {
+  markRouteStart('drawing')
+  return import('./pages/DrawingPage').then(module => {
+    markRouteEnd('drawing')
+    return module
+  })
+})
+
 
 export const router = createBrowserRouter([
   {
@@ -16,32 +85,56 @@ export const router = createBrowserRouter([
   },
   {
     path: '/practice',
-    element: <PracticePage />,
+    element: (
+      <Suspense fallback={<RouteLoadingFallback routeName="Practice" />}>
+        <PracticePage />
+      </Suspense>
+    ),
     errorElement: <ErrorPage />
   },
   {
     path: '/session/:id',
-    element: <SessionPage />,
+    element: (
+      <Suspense fallback={<RouteLoadingFallback routeName="Session" />}>
+        <SessionPage />
+      </Suspense>
+    ),
     errorElement: <ErrorPage />
   },
   {
     path: '/complete/:id',
-    element: <CompletePage />,
+    element: (
+      <Suspense fallback={<RouteLoadingFallback routeName="Complete" />}>
+        <CompletePage />
+      </Suspense>
+    ),
     errorElement: <ErrorPage />
   },
   {
     path: '/stats',
-    element: <StatsPage />,
+    element: (
+      <Suspense fallback={<RouteLoadingFallback routeName="Stats" />}>
+        <StatsPage />
+      </Suspense>
+    ),
     errorElement: <ErrorPage />
   },
   {
     path: '/browse/:set',
-    element: <BrowsePage />,
+    element: (
+      <Suspense fallback={<RouteLoadingFallback routeName="Browse" />}>
+        <BrowsePage />
+      </Suspense>
+    ),
     errorElement: <ErrorPage />
   },
   {
     path: '/drawing/:set',
-    element: <DrawingPage />,
+    element: (
+      <Suspense fallback={<RouteLoadingFallback routeName="Drawing" />}>
+        <DrawingPage />
+      </Suspense>
+    ),
     errorElement: <ErrorPage />
   },
   {
