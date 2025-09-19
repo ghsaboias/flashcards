@@ -6,6 +6,7 @@ import { apiClient } from '../utils/api-client'
 import PracticeSession from '../components/PracticeSession'
 import SessionLayout from '../layouts/SessionLayout'
 import LoadingSpinner from '../components/LoadingSpinner'
+import { useAudioControls } from '../hooks/useAudioControls'
 
 const SessionPage = memo(function SessionPage() {
   const { id } = useParams<{ id: string }>()
@@ -13,6 +14,7 @@ const SessionPage = memo(function SessionPage() {
   const [sessionState, actions] = useSessionStateAndActions()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { speak } = useAudioControls()
 
   // Computed values
   const canAnswer = useMemo(() => (
@@ -134,7 +136,7 @@ const SessionPage = memo(function SessionPage() {
           sessionState={sessionState}
           actions={actions}
           canAnswer={canAnswer}
-          speak={() => {}} // Will be provided by SessionLayout
+          speak={speak}
         />
       </div>
     </SessionLayout>

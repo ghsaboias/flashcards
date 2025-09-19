@@ -46,29 +46,49 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
 
     ;(async () => {
       try {
-        if (state.selectedSets.length > 0) {
-          switch (state.statsMode) {
-            case 'accuracy': {
-              const statsResult = await aggregateMultiSetStats(state.selectedSets, selectedDomain?.id)
-              setState(prev => ({ ...prev, stats: statsResult }))
-              // Also load SRS data for unified view
-              const allSrsRows = await apiClient.getMultiSetSrs(state.selectedSets, selectedDomain?.id)
-              setState(prev => ({ ...prev, srsRows: allSrsRows }))
-              break
-            }
-            case 'srs': {
-              const srsRows = await apiClient.getMultiSetSrs(state.selectedSets, selectedDomain?.id)
-              setState(prev => ({ ...prev, srsRows: srsRows }))
-              break
-            }
-            case 'performance': {
-              const performanceData = await apiClient.getPerformanceData()
-              setState(prev => ({ ...prev, performance: performanceData }))
-              break
-            }
+        if (state.statsMode === 'performance') {
+          const performanceData = await apiClient.getPerformanceData()
+          setState(prev => ({ ...prev, performance: performanceData }))
+          return
+        }
+
+        if (state.selectedSets.length === 0) {
+          if (state.statsMode === 'accuracy') {
+            setState(prev => ({
+              ...prev,
+              stats: {
+                summary: createEmptyStatsSummary(),
+                rows: [],
+              }
+            }))
+          }
+
+          if (state.statsMode === 'srs') {
+            setState(prev => ({
+              ...prev,
+              srsRows: []
+            }))
+          }
+          return
+        }
+
+        switch (state.statsMode) {
+          case 'accuracy': {
+            const statsResult = await aggregateMultiSetStats(state.selectedSets, selectedDomain?.id)
+            setState(prev => ({ ...prev, stats: statsResult }))
+            // Also load SRS data for unified view
+            const allSrsRows = await apiClient.getMultiSetSrs(state.selectedSets, selectedDomain?.id)
+            setState(prev => ({ ...prev, srsRows: allSrsRows }))
+            break
+          }
+          case 'srs': {
+            const srsRows = await apiClient.getMultiSetSrs(state.selectedSets, selectedDomain?.id)
+            setState(prev => ({ ...prev, srsRows }))
+            break
           }
         }
-      } catch {
+      } catch (error) {
+        console.error('Failed to load stats data:', error)
         setState(prev => ({
           ...prev,
           stats: {
@@ -140,7 +160,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
 
   // Session start methods
   const beginAutoSession = useCallback(async (domainId?: string) => {
-    await initializeSession(
+    return initializeSession(
       () => apiClient.startAutoSession({ domain_id: domainId }),
       { setHighIntensity: true, trackStartTime: true }
     )
@@ -149,7 +169,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
 
 
   const beginMultiSetSession = useCallback(async () => {
-    await initializeSession(
+    return initializeSession(
       () => apiClient.startSession({ mode: 'multi_set_all', selected_sets: state.selectedSets }),
       { trackStartTime: true }
     )
@@ -168,8 +188,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     try {
       const res = await apiClient.startSession({ mode: 'review_incorrect', review_items: reviewItems })
       if (!res.done) {
-        await initializeSession(() => Promise.resolve(res), { trackStartTime: true })
-        return
+        return initializeSession(() => Promise.resolve(res), { trackStartTime: true })
       }
     } catch (error) {
       console.error('Failed to start review session:', error)
@@ -273,14 +292,22 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     beginAutoSession,
     beginMultiSetSession,
     beginMultiSetDifficult: async () => {
-      await apiClient.startSession({ mode: 'multi_set_difficult', selected_sets: state.selectedSets })
-        .then(res => initializeSession(() => Promise.resolve(res)))
-        .catch(() => beginMultiSetSession()) // Fallback
+      try {
+        const res = await apiClient.startSession({ mode: 'multi_set_difficult', selected_sets: state.selectedSets })
+        return initializeSession(() => Promise.resolve(res))
+      } catch (error) {
+        console.error('Failed to start difficult session, falling back to multi-set:', error)
+        return beginMultiSetSession()
+      }
     },
     beginMultiSetSrs: async () => {
-      await apiClient.startSession({ mode: 'multi_set_srs', selected_sets: state.selectedSets })
-        .then(res => initializeSession(() => Promise.resolve(res)))
-        .catch(() => beginMultiSetSession()) // Fallback
+      try {
+        const res = await apiClient.startSession({ mode: 'multi_set_srs', selected_sets: state.selectedSets })
+        return initializeSession(() => Promise.resolve(res))
+      } catch (error) {
+        console.error('Failed to start SRS session, falling back to multi-set:', error)
+        return beginMultiSetSession()
+      }
     },
     submitAnswer,
     beginReviewIncorrect,

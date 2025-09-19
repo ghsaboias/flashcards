@@ -58,13 +58,23 @@ export function useNavigationGuard(config: NavigationGuardConfig = {}): Navigati
       route: location.pathname
     }
 
-    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessionBackup))
+    try {
+      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessionBackup))
+    } catch (error) {
+      console.warn('Failed to persist session backup:', error)
+    }
   }, [hasActiveSession, sessionState, location.pathname])
 
   // Restore session state from localStorage
   const restoreSessionState = useCallback(async () => {
     try {
-      const saved = localStorage.getItem(SESSION_STORAGE_KEY)
+      let saved: string | null = null
+      try {
+        saved = localStorage.getItem(SESSION_STORAGE_KEY)
+      } catch (error) {
+        console.warn('Failed to access session backup:', error)
+        return
+      }
       if (!saved) return
 
       const sessionBackup = JSON.parse(saved)
@@ -72,7 +82,11 @@ export function useNavigationGuard(config: NavigationGuardConfig = {}): Navigati
 
       // Don't restore sessions older than 1 hour
       if (savedAge > 60 * 60 * 1000) {
-        localStorage.removeItem(SESSION_STORAGE_KEY)
+        try {
+          localStorage.removeItem(SESSION_STORAGE_KEY)
+        } catch (removeError) {
+          console.warn('Failed to clear expired session backup:', removeError)
+        }
         return
       }
 
@@ -80,7 +94,11 @@ export function useNavigationGuard(config: NavigationGuardConfig = {}): Navigati
       const backendSession = await apiClient.getSession(sessionBackup.sessionId)
       if (backendSession.done) {
         // Session was completed elsewhere, navigate to completion
-        localStorage.removeItem(SESSION_STORAGE_KEY)
+        try {
+          localStorage.removeItem(SESSION_STORAGE_KEY)
+        } catch (removeError) {
+          console.warn('Failed to clear completed session backup:', removeError)
+        }
         navigate(`/complete/${sessionBackup.sessionId}`)
         return
       }
@@ -98,16 +116,28 @@ export function useNavigationGuard(config: NavigationGuardConfig = {}): Navigati
         navigate(`/session/${sessionBackup.sessionId}`)
       }
 
-      localStorage.removeItem(SESSION_STORAGE_KEY)
+      try {
+        localStorage.removeItem(SESSION_STORAGE_KEY)
+      } catch (removeError) {
+        console.warn('Failed to clear restored session backup:', removeError)
+      }
     } catch (error) {
       console.error('Failed to restore session state:', error)
-      localStorage.removeItem(SESSION_STORAGE_KEY)
+      try {
+        localStorage.removeItem(SESSION_STORAGE_KEY)
+      } catch (removeError) {
+        console.warn('Failed to clear session backup after error:', removeError)
+      }
     }
   }, [actions, navigate, location.pathname])
 
   // Clear saved session state
   const clearSessionState = useCallback(() => {
-    localStorage.removeItem(SESSION_STORAGE_KEY)
+    try {
+      localStorage.removeItem(SESSION_STORAGE_KEY)
+    } catch (error) {
+      console.warn('Failed to clear session backup:', error)
+    }
   }, [])
 
   // Controlled navigation with confirmation and auto-save
@@ -116,6 +146,9 @@ export function useNavigationGuard(config: NavigationGuardConfig = {}): Navigati
 
     if (!enabled || !hasActiveSession || force || isNavigatingRef.current) {
       navigate(to)
+      Promise.resolve().then(() => {
+        isNavigatingRef.current = false
+      })
       return true
     }
 
@@ -130,6 +163,9 @@ export function useNavigationGuard(config: NavigationGuardConfig = {}): Navigati
     if (shouldNavigate) {
       isNavigatingRef.current = true
       navigate(to)
+      Promise.resolve().then(() => {
+        isNavigatingRef.current = false
+      })
       return true
     }
 
@@ -187,6 +223,10 @@ export function useNavigationGuard(config: NavigationGuardConfig = {}): Navigati
       restoreSessionState()
     }
   }, [location.key, restoreSessionState])
+
+  useEffect(() => {
+    isNavigatingRef.current = false
+  }, [location.pathname])
 
   return {
     promptNavigation,

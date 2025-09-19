@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 
 interface PageTransitionProps {
@@ -15,6 +15,7 @@ export default function PageTransition({
   const location = useLocation()
   const [isVisible, setIsVisible] = useState(false)
   const [currentPath, setCurrentPath] = useState(location.pathname)
+  const timeoutRef = useRef<number | null>(null)
 
   useEffect(() => {
     // Handle route changes
@@ -23,15 +24,26 @@ export default function PageTransition({
       setIsVisible(false)
 
       // After fade out, update path and fade in
-      setTimeout(() => {
+      if (timeoutRef.current !== null) {
+        window.clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = window.setTimeout(() => {
         setCurrentPath(location.pathname)
         setIsVisible(true)
+        timeoutRef.current = null
       }, duration)
     } else {
       // Initial load
       setIsVisible(true)
     }
   }, [location.pathname, currentPath, duration])
+
+  useEffect(() => () => {
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   return (
     <>

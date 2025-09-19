@@ -14,9 +14,18 @@ class PerformanceMonitor {
   private enabled: boolean
 
   constructor() {
+    let persistentSetting = false
+
+    if (typeof window !== 'undefined') {
+      try {
+        persistentSetting = localStorage.getItem('performance-monitoring') === 'true'
+      } catch (error) {
+        console.warn('Performance monitor localStorage unavailable:', error)
+      }
+    }
+
     this.enabled = typeof window !== 'undefined' &&
-                  (import.meta.env.DEV ||
-                   localStorage.getItem('performance-monitoring') === 'true')
+                  (import.meta.env.DEV || persistentSetting)
 
     if (this.enabled) {
       this.initializeObservers()

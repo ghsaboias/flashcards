@@ -17,7 +17,7 @@ const prefetchSessionFlow = () => {
 
 const HomePage = memo(function HomePage() {
   const { selectedDomain } = useAppContext()
-  const [sessionState, actions] = useSessionStateAndActions()
+  const [, actions] = useSessionStateAndActions()
   const navigate = useNavigate()
   const { navigateWithGuard } = useNavigationGuardContext()
 
@@ -41,10 +41,9 @@ const HomePage = memo(function HomePage() {
 
   const handleStartSession = async () => {
     try {
-      await actions.beginAutoSession(selectedDomain?.id)
-      if (sessionState.sessionId) {
-        // Force navigation for new sessions - no need to guard since it's intentional
-        navigate(`/session/${sessionState.sessionId}`)
+      const response = await actions.beginAutoSession(selectedDomain?.id)
+      if (response?.session_id) {
+        navigate(`/session/${response.session_id}`)
       }
     } catch (error) {
       console.error('Failed to start session:', error)

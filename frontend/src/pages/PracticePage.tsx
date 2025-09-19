@@ -64,6 +64,7 @@ const PracticePage = memo(function PracticePage() {
 
   const handleStartSession = async (mode: string) => {
     try {
+      let response: Awaited<ReturnType<typeof actions.beginMultiSetSession>> | undefined
       switch (mode) {
         case 'browse':
           navigate(`/browse/${selectedSets[0] || ''}`)
@@ -75,20 +76,20 @@ const PracticePage = memo(function PracticePage() {
           navigate('/stats')
           return
         case 'practice':
-          await actions.beginMultiSetSession()
+          response = await actions.beginMultiSetSession()
           break
         case 'difficult':
-          await actions.beginMultiSetDifficult()
+          response = await actions.beginMultiSetDifficult()
           break
         case 'srs':
-          await actions.beginMultiSetSrs()
+          response = await actions.beginMultiSetSrs()
           break
         default:
           return
       }
 
-      if (sessionState.sessionId) {
-        navigate(`/session/${sessionState.sessionId}`)
+      if (response?.session_id) {
+        navigate(`/session/${response.session_id}`)
       }
     } catch (error) {
       console.error('Failed to start session:', error)

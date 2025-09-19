@@ -1,9 +1,10 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Outlet } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import ErrorPage from './pages/ErrorPage'
 import RouteLoadingFallback from './components/RouteLoadingFallback'
 
 import { performanceMonitor } from './utils/performance-monitor'
+import { NavigationGuardProvider } from './components/NavigationGuard'
 
 // Performance monitoring for route transitions
 const markRouteStart = (routeName: string) => {
@@ -76,69 +77,72 @@ const DrawingPage = lazy(() => {
   })
 })
 
-
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
-    errorElement: <ErrorPage />
-  },
-  {
-    path: '/practice',
     element: (
-      <Suspense fallback={<RouteLoadingFallback routeName="Practice" />}>
-        <PracticePage />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />
-  },
-  {
-    path: '/session/:id',
-    element: (
-      <Suspense fallback={<RouteLoadingFallback routeName="Session" />}>
-        <SessionPage />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />
-  },
-  {
-    path: '/complete/:id',
-    element: (
-      <Suspense fallback={<RouteLoadingFallback routeName="Complete" />}>
-        <CompletePage />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />
-  },
-  {
-    path: '/stats',
-    element: (
-      <Suspense fallback={<RouteLoadingFallback routeName="Stats" />}>
-        <StatsPage />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />
-  },
-  {
-    path: '/browse/:set',
-    element: (
-      <Suspense fallback={<RouteLoadingFallback routeName="Browse" />}>
-        <BrowsePage />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />
-  },
-  {
-    path: '/drawing/:set',
-    element: (
-      <Suspense fallback={<RouteLoadingFallback routeName="Drawing" />}>
-        <DrawingPage />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />
-  },
-  {
-    path: '*',
-    element: <ErrorPage />
+      <NavigationGuardProvider>
+        <Outlet />
+      </NavigationGuardProvider>
+    ), 
+    errorElement: <ErrorPage />, 
+    children: [
+      {
+        index: true,
+        element: <HomePage />
+      },
+      {
+        path: 'practice',
+        element: (
+          <Suspense fallback={<RouteLoadingFallback routeName="Practice" />}>
+            <PracticePage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'session/:id',
+        element: (
+          <Suspense fallback={<RouteLoadingFallback routeName="Session" />}>
+            <SessionPage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'complete/:id',
+        element: (
+          <Suspense fallback={<RouteLoadingFallback routeName="Complete" />}>
+            <CompletePage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'stats',
+        element: (
+          <Suspense fallback={<RouteLoadingFallback routeName="Stats" />}>
+            <StatsPage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'browse/:set',
+        element: (
+          <Suspense fallback={<RouteLoadingFallback routeName="Browse" />}>
+            <BrowsePage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'drawing/:set',
+        element: (
+          <Suspense fallback={<RouteLoadingFallback routeName="Drawing" />}>
+            <DrawingPage />
+          </Suspense>
+        )
+      },
+      {
+        path: '*',
+        element: <ErrorPage />
+      }
+    ]
   }
 ])

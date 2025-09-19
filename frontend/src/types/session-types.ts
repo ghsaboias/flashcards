@@ -6,7 +6,8 @@ import type {
   SrsRow,
   StatsPayload,
   PerformancePayload,
-  StatRow
+  StatRow,
+  SessionResponse
 } from './api-types'
 
 // Core session data
@@ -68,23 +69,23 @@ export interface SessionState extends
 // Session action categories
 export interface CoreSessionActions {
   resetSessionUI: () => void
-  beginAutoSession: (domainId?: string) => Promise<void>
-  beginMultiSetSession: () => Promise<void>
+  beginAutoSession: (domainId?: string) => Promise<SessionResponse | undefined>
+  beginMultiSetSession: () => Promise<SessionResponse | undefined>
   submitAnswer: () => Promise<void>
   restoreSessionFromBackend: (sessionId: string, sessionData: import('./api-types').SessionResponse) => Promise<void>
 }
 
 export interface DifficultyActions {
-  beginMultiSetDifficult: () => Promise<void>
+  beginMultiSetDifficult: () => Promise<SessionResponse | undefined>
 }
 
 export interface SrsActions {
-  beginMultiSetSrs: () => Promise<void>
+  beginMultiSetSrs: () => Promise<SessionResponse | undefined>
 }
 
 export interface SpecialModeActions {
   // Review mode
-  beginReviewIncorrect: () => Promise<void>
+  beginReviewIncorrect: () => Promise<SessionResponse | undefined>
 }
 
 export interface ViewActions {

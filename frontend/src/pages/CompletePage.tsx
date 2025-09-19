@@ -36,23 +36,23 @@ const CompletePage = memo(function CompletePage() {
   const getMultiSetLabel = () => formatMultiSetLabel(selectedSets)
 
   const handleNewSession = async () => {
-    await beginAutoSession(selectedDomain?.id)
-    if (sessionState.sessionId) {
-      navigate(`/session/${sessionState.sessionId}`)
+    const response = await beginAutoSession(selectedDomain?.id)
+    if (response?.session_id) {
+      navigate(`/session/${response.session_id}`)
     }
   }
 
   const handleReviewIncorrect = async () => {
-    await beginReviewIncorrect()
-    if (sessionState.sessionId) {
-      navigate(`/session/${sessionState.sessionId}`)
+    const response = await beginReviewIncorrect()
+    if (response?.session_id) {
+      navigate(`/session/${response.session_id}`)
     }
   }
 
   const handleRestartPractice = async () => {
-    await beginMultiSetSession()
-    if (sessionState.sessionId) {
-      navigate(`/session/${sessionState.sessionId}`)
+    const response = await beginMultiSetSession()
+    if (response?.session_id) {
+      navigate(`/session/${response.session_id}`)
     }
   }
 

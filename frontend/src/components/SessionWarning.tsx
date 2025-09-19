@@ -11,6 +11,7 @@ export function SessionWarningBanner() {
   const location = useLocation()
   const [isVisible, setIsVisible] = useState(false)
   const [isDismissed, setIsDismissed] = useState(false)
+  const { navigateWithGuard } = useNavigationGuardContext()
 
   // Show banner when there's an active session and user is not on session page
   const hasActiveSession = !!(
@@ -50,12 +51,26 @@ export function SessionWarningBanner() {
         <span>
           Active session in progress ({sessionState.progress?.current}/{sessionState.progress?.total}) -
           {' '}
-          <a
-            href={`/session/${sessionState.sessionId}`}
-            style={{ color: 'white', textDecoration: 'underline' }}
+          <button
+            type="button"
+            onClick={() => {
+              void navigateWithGuard(`/session/${sessionState.sessionId}`, { force: true })
+            }}
+            style={{
+              color: 'white',
+              textDecoration: 'underline',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              fontSize: 'inherit',
+              fontWeight: 'inherit',
+              fontFamily: 'inherit',
+              lineHeight: 'inherit'
+            }}
           >
             Return to session
-          </a>
+          </button>
         </span>
       </div>
       <button
@@ -254,4 +269,3 @@ export function SessionRecoveryNotification({
     </div>
   )
 }
-
