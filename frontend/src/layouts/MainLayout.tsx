@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom'
 import DomainSelector from '../components/DomainSelector'
 import Breadcrumbs from '../components/Breadcrumbs'
 import MobileNavDrawer from '../components/MobileNavDrawer'
-import PageTransition from '../components/PageTransition'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { SessionWarningBanner, SessionRecoveryNotification } from '../components/SessionWarning'
 import { useSessionWarnings } from '../hooks/useSessionWarnings'
@@ -244,12 +243,10 @@ const MainLayout = memo(function MainLayout({
             {/* Breadcrumbs */}
             {showBreadcrumbs && <Breadcrumbs />}
 
-            {/* Page Content with Transitions */}
-            <PageTransition>
-              <main>
-                {children}
-              </main>
-            </PageTransition>
+            {/* Page Content */}
+            <main>
+              {children}
+            </main>
           </div>
         </div>
       </ErrorBoundary>

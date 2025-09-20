@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import { createPortal } from 'react-dom'
 import type { NewCardsDetectionResponse } from '../types/api-types'
 
 interface NewCardsPromptProps {
@@ -18,7 +19,7 @@ const NewCardsPrompt = memo(function NewCardsPrompt({
 }: NewCardsPromptProps) {
   const { analysis, options } = detection
 
-  return (
+  return createPortal(
     <div className="new-cards-prompt-overlay">
       <div className="new-cards-prompt">
         <div className="new-cards-header">
@@ -78,7 +79,8 @@ const NewCardsPrompt = memo(function NewCardsPrompt({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 })
 
