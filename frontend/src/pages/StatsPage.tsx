@@ -289,42 +289,50 @@ const StatsPage = memo(function StatsPage() {
               <div className="muted" style={{ fontSize: 12 }}>Domain</div>
               <div style={{ fontWeight: 600 }}>{selectedDomain.icon} {selectedDomain.name}</div>
             </div>
-            <div>
-              <div className="muted" style={{ fontSize: 12 }}>Scope</div>
-              <div>{scopeLabel}</div>
-            </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button className="btn-tertiary" onClick={clearSelection} disabled={selectedSets.length === 0}>Clear</button>
-              <button className="btn-tertiary" onClick={applyAllSets} disabled={availableSets.length === 0}>Select All</button>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '16px' }}>
-            {loadingSets ? (
-              <LoadingSkeleton variant="table" rows={3} />
-            ) : (
-              <div className="set-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-                {availableSets.map(set => (
-                  <label key={set} className="checkbox" style={{ minWidth: '220px' }}>
-                    <input
-                      type="checkbox"
-                      checked={selectedSets.includes(set)}
-                      onChange={() => toggleSet(set)}
-                    />
-                    <span>{humanizeSetLabel(set)}</span>
-                  </label>
-                ))}
-                {availableSets.length === 0 && (
-                  <div className="muted">No sets available for this domain.</div>
-                )}
-              </div>
+            {currentView !== 'performance' && (
+              <>
+                <div>
+                  <div className="muted" style={{ fontSize: 12 }}>Scope</div>
+                  <div>{scopeLabel}</div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button className="btn-tertiary" onClick={clearSelection} disabled={selectedSets.length === 0}>Clear</button>
+                  <button className="btn-tertiary" onClick={applyAllSets} disabled={availableSets.length === 0}>Select All</button>
+                </div>
+              </>
             )}
           </div>
 
-          {selectedSets.length === 0 && (
-            <div className="muted" style={{ marginTop: '12px', fontSize: 12 }}>
-              Showing aggregated statistics for every set in this domain.
-            </div>
+          {currentView !== 'performance' && (
+            <>
+              <div style={{ marginTop: '16px' }}>
+                {loadingSets ? (
+                  <LoadingSkeleton variant="table" rows={3} />
+                ) : (
+                  <div className="set-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                    {availableSets.map(set => (
+                      <label key={set} className="checkbox" style={{ minWidth: '220px' }}>
+                        <input
+                          type="checkbox"
+                          checked={selectedSets.includes(set)}
+                          onChange={() => toggleSet(set)}
+                        />
+                        <span>{humanizeSetLabel(set)}</span>
+                      </label>
+                    ))}
+                    {availableSets.length === 0 && (
+                      <div className="muted">No sets available for this domain.</div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {selectedSets.length === 0 && (
+                <div className="muted" style={{ marginTop: '12px', fontSize: 12 }}>
+                  Showing aggregated statistics for every set in this domain.
+                </div>
+              )}
+            </>
           )}
         </div>
 
