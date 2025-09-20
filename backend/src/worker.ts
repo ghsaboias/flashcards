@@ -505,8 +505,13 @@ async function analyzeSessionCards(db: D1Database, selectedSets: string[], domai
     `SELECT
       question, answer, set_key,
       correct_count, incorrect_count, reviewed_count,
-      CASE WHEN reviewed_count = 0 AND correct_count = 0 AND incorrect_count = 0
-           THEN 1 ELSE 0 END as is_new
+      CASE WHEN
+        -- Truly new cards
+        (reviewed_count = 0 AND correct_count = 0 AND incorrect_count = 0) OR
+        -- Struggling cards: < 10 attempts AND <= 50% accuracy
+        (reviewed_count < 10 AND reviewed_count > 0 AND
+         (correct_count * 100.0 / reviewed_count) <= 50)
+        THEN 1 ELSE 0 END as is_new
      FROM cards
      WHERE set_key IN (${placeholders}) AND domain_id = ?
      ORDER BY set_key, question`
@@ -575,11 +580,11 @@ app.post('/api/sessions/auto-start', async (c) => {
         type: 'new_cards_detected',
         analysis: {
           ...analysis,
-          message: `This session includes ${analysis.newCards} new card${analysis.newCards > 1 ? 's' : ''} you haven't practiced yet.`
+          message: `This session includes ${analysis.newCards} learning card${analysis.newCards > 1 ? 's' : ''} that need extra attention.`
         },
         options: {
           continue_with_new: {
-            description: 'Start session with new cards included',
+            description: 'Start session with learning cards included',
             payload: { ...body, skip_new_card_check: true }
           },
           practice_only: {

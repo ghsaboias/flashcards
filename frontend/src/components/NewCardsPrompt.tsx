@@ -22,7 +22,7 @@ const NewCardsPrompt = memo(function NewCardsPrompt({
     <div className="new-cards-prompt-overlay">
       <div className="new-cards-prompt">
         <div className="new-cards-header">
-          <h3>New Cards Detected</h3>
+          <h3>Learning Cards Detected</h3>
           <button className="close-btn" onClick={onCancel}>×</button>
         </div>
 
@@ -32,7 +32,7 @@ const NewCardsPrompt = memo(function NewCardsPrompt({
           <div className="cards-breakdown">
             <div className="breakdown-item">
               <span className="count">{analysis.newCards}</span>
-              <span className="label">New cards</span>
+              <span className="label">Learning cards</span>
             </div>
             <div className="breakdown-item">
               <span className="count">{analysis.practicedCards}</span>
@@ -42,7 +42,7 @@ const NewCardsPrompt = memo(function NewCardsPrompt({
 
           {analysis.newCardExamples.length > 0 && (
             <div className="card-examples">
-              <p className="examples-label">Examples of new cards:</p>
+              <p className="examples-label">Examples of learning cards:</p>
               <div className="examples-list">
                 {analysis.newCardExamples.map((card, index) => (
                   <div key={index} className="example-card">
