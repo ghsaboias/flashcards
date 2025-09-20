@@ -618,31 +618,11 @@ app.post('/api/sessions/auto-start', async (c) => {
     return c.json({ error: 'No available sets for practice' }, 400)
   }
 
-  // Check if we have SRS due cards (priority score 100)
-  const dueSets = (optimalSets as any[]).filter(s => s.priority_score === 100)
-
-  if (dueSets.length > 0) {
-    // SRS review mode - use sets with due cards
-    const sessionPayload = {
-      mode: 'multi_set_srs',
-      selected_sets: dueSets.slice(0, 2).map(r => r.set_key) // Limit to 2 sets
-    }
-
-    const id = c.env.SESSIONS.idFromName(crypto.randomUUID())
-    const stub = c.env.SESSIONS.get(id)
-    const res = await stub.fetch(new Request(new URL(`https://do/sessions/${id.toString()}/start`), {
-      method: 'POST',
-      body: JSON.stringify(sessionPayload),
-      headers: { 'content-type': 'application/json' }
-    }))
-    return c.newResponse(res.body, res)
-  }
-
-  // Priority 2: Smart set selection based on learning state (non-SRS sets)
+  // Get sets for analysis - use all optimal sets for comprehensive new card detection
   const selected_sets = (optimalSets as any[]).slice(0, 2).map(s => s.set_key) // Top 2 sets
   const difficulty_levels = ['hard', 'medium'] as Array<'easy' | 'medium' | 'hard'>
 
-  // Check for new cards before starting session
+  // Check for new cards FIRST - before any mode selection
   if (!skipNewCardCheck) {
     const analysis = await analyzeSessionCards(c.env.DB, selected_sets, domainId, difficulty_levels)
 
@@ -675,6 +655,26 @@ app.post('/api/sessions/auto-start', async (c) => {
         }
       })
     }
+  }
+
+  // Check if we have SRS due cards (priority score 100)
+  const dueSets = (optimalSets as any[]).filter(s => s.priority_score === 100)
+
+  if (dueSets.length > 0) {
+    // SRS review mode - use sets with due cards
+    const sessionPayload = {
+      mode: 'multi_set_srs',
+      selected_sets: dueSets.slice(0, 2).map(r => r.set_key) // Limit to 2 sets
+    }
+
+    const id = c.env.SESSIONS.idFromName(crypto.randomUUID())
+    const stub = c.env.SESSIONS.get(id)
+    const res = await stub.fetch(new Request(new URL(`https://do/sessions/${id.toString()}/start`), {
+      method: 'POST',
+      body: JSON.stringify(sessionPayload),
+      headers: { 'content-type': 'application/json' }
+    }))
+    return c.newResponse(res.body, res)
   }
 
   // If no new cards or user chose to continue, start the session
