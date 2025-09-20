@@ -1,10 +1,10 @@
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSessionStateAndActions } from '../hooks/useSessionContext'
 import { useAppContext } from '../hooks/useAppContext'
 import { useNavigationGuardContext } from '../hooks/useNavigationGuardContext'
 import MainLayout from '../layouts/MainLayout'
-import NewCardsPrompt from '../components/NewCardsPrompt'
+import NewCardsPromptManager from '../components/NewCardsPromptManager'
 
 // Prefetch functions for likely next routes
 const prefetchPracticePage = () => import('./PracticePage')
@@ -21,6 +21,7 @@ const HomePage = memo(function HomePage() {
   const [state, actions] = useSessionStateAndActions()
   const navigate = useNavigate()
   const { navigateWithGuard } = useNavigationGuardContext()
+  const [isStarting, setIsStarting] = useState(false)
 
   // Prefetch likely next pages after component mounts
   useEffect(() => {
@@ -41,56 +42,18 @@ const HomePage = memo(function HomePage() {
   }, [])
 
   const handleStartSession = async () => {
+    setIsStarting(true)
     try {
       const response = await actions.beginAutoSession(selectedDomain?.id)
 
-      // Handle new cards detection response
-      if (response && 'type' in response && response.type === 'new_cards_detected') {
-        // NewCardsPrompt will be shown automatically via state.newCardsDetection
-        return
-      }
-
-      // Normal session response
       if (response && 'session_id' in response && response.session_id) {
         navigate(`/session/${response.session_id}`)
       }
     } catch (error) {
       console.error('Failed to start session:', error)
+    } finally {
+      setIsStarting(false)
     }
-  }
-
-  const handleContinueWithNew = async () => {
-    try {
-      const response = await actions.beginAutoSession(selectedDomain?.id, true, false)
-      if (response && 'session_id' in response && response.session_id) {
-        navigate(`/session/${response.session_id}`)
-      }
-    } catch (error) {
-      console.error('Failed to start session with new cards:', error)
-    }
-  }
-
-  const handlePracticeOnly = async () => {
-    try {
-      const response = await actions.beginAutoSession(selectedDomain?.id, true, true)
-      if (response && 'session_id' in response && response.session_id) {
-        navigate(`/session/${response.session_id}`)
-      }
-    } catch (error) {
-      console.error('Failed to start practice-only session:', error)
-    }
-  }
-
-  const handleBrowseFirst = () => {
-    if (state.newCardsDetection?.options.browse_first.sets_to_browse?.[0]) {
-      const setName = state.newCardsDetection.options.browse_first.sets_to_browse[0]
-      navigate(`/browse/${encodeURIComponent(setName)}`)
-    }
-  }
-
-  const handleClosePrompt = () => {
-    // Clear the new cards detection state
-    actions.resetSessionUI()
   }
 
   const handleAdvancedOptions = async () => {
@@ -106,31 +69,31 @@ const HomePage = memo(function HomePage() {
     <MainLayout>
       <div className="streamlined-start">
         <div className="single-button-hero" style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
-          <button className="btn-primary start-practice" onClick={handleStartSession}>
-            Start
-          </button>
+          {state.newCardsDetection ? (
+            <NewCardsPromptManager />
+          ) : (
+            <>
+              <button
+                className="btn-primary start-practice"
+                onClick={handleStartSession}
+                disabled={isStarting}
+                style={{ opacity: isStarting ? 0.7 : 1, cursor: isStarting ? 'not-allowed' : 'pointer' }}
+              >
+                {isStarting ? 'Starting...' : 'Start'}
+              </button>
 
-          <button
-            className="btn-tertiary"
-            onClick={handleAdvancedOptions}
-            onMouseEnter={handleAdvancedOptionsHover}
-            onFocus={handleAdvancedOptionsHover}
-          >
-            Advanced Options
-          </button>
+              <button
+                className="btn-tertiary"
+                onClick={handleAdvancedOptions}
+                onMouseEnter={handleAdvancedOptionsHover}
+                onFocus={handleAdvancedOptionsHover}
+              >
+                Advanced Options
+              </button>
+            </>
+          )}
         </div>
       </div>
-
-      {/* New Cards Detection Prompt */}
-      {state.newCardsDetection && (
-        <NewCardsPrompt
-          detection={state.newCardsDetection}
-          onContinueWithNew={handleContinueWithNew}
-          onPracticeOnly={handlePracticeOnly}
-          onBrowseFirst={handleBrowseFirst}
-          onCancel={handleClosePrompt}
-        />
-      )}
     </MainLayout>
   )
 })

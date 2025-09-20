@@ -71,6 +71,7 @@ export interface SessionState extends
 // Session action categories
 export interface CoreSessionActions {
   resetSessionUI: () => void
+  clearNewCardsDetection: () => void
   beginAutoSession: (domainId?: string, skipNewCardCheck?: boolean, excludeNewCards?: boolean) => Promise<SessionResponse | NewCardsDetectionResponse | undefined>
   beginMultiSetSession: () => Promise<SessionResponse | undefined>
   submitAnswer: () => Promise<void>

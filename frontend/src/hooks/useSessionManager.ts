@@ -110,6 +110,13 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     }))
   }, [])
 
+  const clearNewCardsDetection = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      newCardsDetection: null
+    }))
+  }, [])
+
   // Generic session initialization
   const initializeSession = useCallback(async (
     sessionStarter: () => Promise<SessionResponse>,
@@ -311,6 +318,7 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
   // Create actions object
   const actions: SessionActions = {
     resetSessionUI,
+    clearNewCardsDetection,
     beginAutoSession,
     beginMultiSetSession,
     beginMultiSetDifficult: async () => {
