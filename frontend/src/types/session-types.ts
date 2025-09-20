@@ -7,7 +7,8 @@ import type {
   StatsPayload,
   PerformancePayload,
   StatRow,
-  SessionResponse
+  SessionResponse,
+  NewCardsDetectionResponse
 } from './api-types'
 
 // Core session data
@@ -56,6 +57,7 @@ export interface ViewStates {
   stats: StatsPayload | null
   performance: PerformancePayload | null
   difficultyRows: StatRow[] | null
+  newCardsDetection: NewCardsDetectionResponse | null
 }
 
 // Consolidated session state
@@ -69,7 +71,7 @@ export interface SessionState extends
 // Session action categories
 export interface CoreSessionActions {
   resetSessionUI: () => void
-  beginAutoSession: (domainId?: string) => Promise<SessionResponse | undefined>
+  beginAutoSession: (domainId?: string, skipNewCardCheck?: boolean, excludeNewCards?: boolean) => Promise<SessionResponse | NewCardsDetectionResponse | undefined>
   beginMultiSetSession: () => Promise<SessionResponse | undefined>
   submitAnswer: () => Promise<void>
   restoreSessionFromBackend: (sessionId: string, sessionData: import('./api-types').SessionResponse) => Promise<void>

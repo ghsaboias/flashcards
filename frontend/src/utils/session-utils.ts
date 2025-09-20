@@ -40,7 +40,8 @@ export function createEmptySessionState(): SessionState {
     srsRows: [],
     stats: null,
     performance: null,
-    difficultyRows: null
+    difficultyRows: null,
+    newCardsDetection: null
   }
 }
 
@@ -73,7 +74,8 @@ export function createViewStatesReset(): Partial<SessionState> {
     statsMode: null,
     srsRows: [],
     stats: null,
-    performance: null
+    performance: null,
+    newCardsDetection: null
   }
 }
 

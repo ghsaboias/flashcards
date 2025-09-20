@@ -37,7 +37,7 @@ const CompletePage = memo(function CompletePage() {
 
   const handleNewSession = async () => {
     const response = await beginAutoSession(selectedDomain?.id)
-    if (response?.session_id) {
+    if (response && 'session_id' in response && response.session_id) {
       navigate(`/session/${response.session_id}`)
     }
   }

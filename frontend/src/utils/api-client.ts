@@ -12,7 +12,8 @@ import type {
   PerformancePayload,
   Domain,
   BrowseCard,
-  DrawingCard
+  DrawingCard,
+  NewCardsDetectionResponse
 } from '../types/api-types'
 
 export class ApiClient {
@@ -159,8 +160,10 @@ export class ApiClient {
     user_level?: 'beginner' | 'intermediate' | 'advanced'
     focus_mode?: 'review' | 'challenge'
     domain_id?: string
-  } = {}): Promise<SessionResponse> {
-    return this.post<SessionResponse>('/sessions/auto-start', config)
+    skip_new_card_check?: boolean
+    exclude_new_cards?: boolean
+  } = {}): Promise<SessionResponse | NewCardsDetectionResponse> {
+    return this.post<SessionResponse | NewCardsDetectionResponse>('/sessions/auto-start', config)
   }
 
   async answerQuestion(sessionId: string, answer: string): Promise<SessionResponse> {

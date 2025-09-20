@@ -64,6 +64,39 @@ export interface RetryQueueItem {
   correct_answer: string
 }
 
+// New cards detection response from auto-start
+export interface NewCardsAnalysis {
+  totalCards: number
+  newCards: number
+  practicedCards: number
+  selectedSets: string[]
+  newCardExamples: Array<{
+    question: string
+    answer: string
+    set: string
+  }>
+  message: string
+}
+
+export interface NewCardsDetectionResponse {
+  type: 'new_cards_detected'
+  analysis: NewCardsAnalysis
+  options: {
+    continue_with_new: {
+      description: string
+      payload: Record<string, unknown>
+    }
+    practice_only: {
+      description: string
+      payload: Record<string, unknown>
+    }
+    browse_first: {
+      description: string
+      sets_to_browse: string[]
+    }
+  }
+}
+
 // Unified session response covering all API endpoints
 export interface SessionResponse {
   session_id?: string

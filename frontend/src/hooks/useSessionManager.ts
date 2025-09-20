@@ -159,12 +159,34 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
   }, [])
 
   // Session start methods
-  const beginAutoSession = useCallback(async (domainId?: string) => {
-    return initializeSession(
-      () => apiClient.startAutoSession({ domain_id: domainId }),
-      { setHighIntensity: true, trackStartTime: true }
-    )
-  }, [initializeSession])
+  const beginAutoSession = useCallback(async (domainId?: string, skipNewCardCheck?: boolean, excludeNewCards?: boolean) => {
+    try {
+      const response = await apiClient.startAutoSession({
+        domain_id: domainId,
+        skip_new_card_check: skipNewCardCheck,
+        exclude_new_cards: excludeNewCards
+      })
+
+      // Check if this is a new cards detection response
+      if ('type' in response && response.type === 'new_cards_detected') {
+        // Store the detection response in state for UI to handle
+        setState(prev => ({
+          ...prev,
+          newCardsDetection: response
+        }))
+        return response
+      }
+
+      // Normal session response - initialize as usual
+      return initializeSession(
+        () => Promise.resolve(response as SessionResponse),
+        { setHighIntensity: true, trackStartTime: true }
+      )
+    } catch (error) {
+      console.error('Failed to start auto session:', error)
+      throw error
+    }
+  }, [initializeSession, setState])
 
 
 

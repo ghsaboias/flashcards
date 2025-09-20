@@ -4,6 +4,7 @@ import { useSessionStateAndActions } from '../hooks/useSessionContext'
 import { useAppContext } from '../hooks/useAppContext'
 import { useNavigationGuardContext } from '../hooks/useNavigationGuardContext'
 import MainLayout from '../layouts/MainLayout'
+import NewCardsPrompt from '../components/NewCardsPrompt'
 
 // Prefetch functions for likely next routes
 const prefetchPracticePage = () => import('./PracticePage')
@@ -17,7 +18,7 @@ const prefetchSessionFlow = () => {
 
 const HomePage = memo(function HomePage() {
   const { selectedDomain } = useAppContext()
-  const [, actions] = useSessionStateAndActions()
+  const [state, actions] = useSessionStateAndActions()
   const navigate = useNavigate()
   const { navigateWithGuard } = useNavigationGuardContext()
 
@@ -42,12 +43,54 @@ const HomePage = memo(function HomePage() {
   const handleStartSession = async () => {
     try {
       const response = await actions.beginAutoSession(selectedDomain?.id)
-      if (response?.session_id) {
+
+      // Handle new cards detection response
+      if (response && 'type' in response && response.type === 'new_cards_detected') {
+        // NewCardsPrompt will be shown automatically via state.newCardsDetection
+        return
+      }
+
+      // Normal session response
+      if (response && 'session_id' in response && response.session_id) {
         navigate(`/session/${response.session_id}`)
       }
     } catch (error) {
       console.error('Failed to start session:', error)
     }
+  }
+
+  const handleContinueWithNew = async () => {
+    try {
+      const response = await actions.beginAutoSession(selectedDomain?.id, true, false)
+      if (response && 'session_id' in response && response.session_id) {
+        navigate(`/session/${response.session_id}`)
+      }
+    } catch (error) {
+      console.error('Failed to start session with new cards:', error)
+    }
+  }
+
+  const handlePracticeOnly = async () => {
+    try {
+      const response = await actions.beginAutoSession(selectedDomain?.id, true, true)
+      if (response && 'session_id' in response && response.session_id) {
+        navigate(`/session/${response.session_id}`)
+      }
+    } catch (error) {
+      console.error('Failed to start practice-only session:', error)
+    }
+  }
+
+  const handleBrowseFirst = () => {
+    if (state.newCardsDetection?.options.browse_first.sets_to_browse?.[0]) {
+      const setName = state.newCardsDetection.options.browse_first.sets_to_browse[0]
+      navigate(`/browse/${encodeURIComponent(setName)}`)
+    }
+  }
+
+  const handleClosePrompt = () => {
+    // Clear the new cards detection state
+    actions.resetSessionUI()
   }
 
   const handleAdvancedOptions = async () => {
@@ -77,6 +120,17 @@ const HomePage = memo(function HomePage() {
           </button>
         </div>
       </div>
+
+      {/* New Cards Detection Prompt */}
+      {state.newCardsDetection && (
+        <NewCardsPrompt
+          detection={state.newCardsDetection}
+          onContinueWithNew={handleContinueWithNew}
+          onPracticeOnly={handlePracticeOnly}
+          onBrowseFirst={handleBrowseFirst}
+          onCancel={handleClosePrompt}
+        />
+      )}
     </MainLayout>
   )
 })
