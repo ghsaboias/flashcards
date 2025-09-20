@@ -415,25 +415,43 @@ async function checkUnlockStatus(db: D1Database, setName: string): Promise<boole
 }
 
 async function getUnlockedSets(db: D1Database, domainId?: string): Promise<string[]> {
-  const query = domainId
-    ? 'SELECT DISTINCT set_key FROM cards WHERE domain_id = ? ORDER BY set_key'
-    : 'SELECT DISTINCT set_key FROM cards ORDER BY set_key'
+  // Optimized single-query approach for getting all unlocked sets
+  const optimizedQuery = `
+    WITH set_stats AS (
+      SELECT
+        set_key,
+        SUM(correct_count) as total_correct,
+        SUM(CASE WHEN reviewed_count > 0 THEN reviewed_count ELSE correct_count + incorrect_count END) as total_attempts
+      FROM cards
+      WHERE domain_id = ?
+      GROUP BY set_key
+    )
+    SELECT
+      s.set_key,
+      s.total_correct,
+      s.total_attempts,
+      CASE WHEN s.total_attempts > 0 THEN (s.total_correct * 100.0 / s.total_attempts) ELSE 0 END as accuracy,
+      -- Check unlock status based on HSK progression rules
+      CASE
+        WHEN s.set_key = 'HSK1_Set_01' OR s.set_key = 'Recognition_Practice/HSK_Level_1/HSK1_Set_01' THEN 1  -- First set always unlocked
+        WHEN s.set_key LIKE '%HSK1_Set_%' THEN
+          CASE WHEN (
+            SELECT total_attempts >= 10 AND
+                   (total_correct * 100.0 / total_attempts) >= 70
+            FROM set_stats
+            WHERE set_key = SUBSTR(s.set_key, 1, LENGTH(s.set_key) - 2) || PRINTF('%02d', CAST(SUBSTR(s.set_key, -2) AS INTEGER) - 1)
+          ) THEN 1 ELSE 0 END
+        ELSE 1  -- Non-HSK sets default to unlocked
+      END as is_unlocked
+    FROM set_stats s
+    WHERE is_unlocked = 1
+    ORDER BY s.set_key
+  `
 
-  const { results: allSets } = domainId
-    ? await db.prepare(query).bind(domainId).all()
-    : await db.prepare(query).all()
-  if (!allSets) return []
-  
-  const unlockedSets: string[] = []
-  for (const row of allSets as any[]) {
-    const setName = row.set_key
-    const isUnlocked = await checkUnlockStatus(db, setName)
-    if (isUnlocked) {
-      unlockedSets.push(setName)
-    }
-  }
-  
-  return unlockedSets
+  const { results } = await db.prepare(optimizedQuery).bind(domainId || 'chinese').all()
+  if (!results) return []
+
+  return (results as any[]).map(row => row.set_key)
 }
 
 // Smart set selection based on learning state
@@ -540,20 +558,74 @@ app.post('/api/sessions/auto-start', async (c) => {
   const domainId = body.domain_id || 'chinese' // Default to chinese for backward compatibility
   const skipNewCardCheck = body.skip_new_card_check || false // Allow bypassing the check
 
-  // Get unlocked sets first (filtered by domain)
-  const unlockedSets = await getUnlockedSets(c.env.DB, domainId)
+  // Optimized: Get unlocked sets and their priorities in a single query
+  const optimalSetsQuery = `
+    WITH set_stats AS (
+      SELECT
+        set_key,
+        SUM(correct_count) as total_correct,
+        SUM(incorrect_count) as total_incorrect,
+        SUM(CASE WHEN reviewed_count > 0 THEN reviewed_count ELSE correct_count + incorrect_count END) as total_attempts,
+        COUNT(*) as total_cards,
+        SUM(CASE WHEN datetime(next_review_date) <= CURRENT_TIMESTAMP THEN 1 ELSE 0 END) as due_cards
+      FROM cards
+      WHERE domain_id = ?
+      GROUP BY set_key
+    ),
+    unlock_status AS (
+      SELECT
+        s.set_key,
+        s.total_correct,
+        s.total_attempts,
+        s.due_cards,
+        CASE WHEN s.total_attempts > 0 THEN (s.total_correct * 100.0 / s.total_attempts) ELSE 0 END as accuracy,
+        -- Check unlock status
+        CASE
+          WHEN s.set_key = 'HSK1_Set_01' OR s.set_key = 'Recognition_Practice/HSK_Level_1/HSK1_Set_01' THEN 1
+          WHEN s.set_key LIKE '%HSK1_Set_%' THEN
+            CASE WHEN EXISTS (
+              SELECT 1 FROM set_stats prev
+              WHERE prev.set_key = SUBSTR(s.set_key, 1, LENGTH(s.set_key) - 2) || PRINTF('%02d', CAST(SUBSTR(s.set_key, -2) AS INTEGER) - 1)
+                AND prev.total_attempts >= 10
+                AND (prev.total_correct * 100.0 / prev.total_attempts) >= 70
+            ) THEN 1 ELSE 0 END
+          ELSE 1
+        END as is_unlocked,
+        -- Calculate priority score
+        CASE
+          WHEN due_cards > 0 THEN 100
+          WHEN total_attempts > 10 AND (total_correct * 100.0 / total_attempts) < 80 THEN 80
+          WHEN total_attempts >= 10 AND total_attempts <= 100 AND
+               (total_correct * 100.0 / total_attempts) >= 80 AND
+               (total_correct * 100.0 / total_attempts) < 90 THEN 60
+          WHEN total_attempts > 0 AND total_attempts <= 10 THEN 40
+          WHEN total_attempts > 100 AND (total_correct * 100.0 / total_attempts) > 90 THEN -50
+          ELSE 0
+        END as priority_score
+      FROM set_stats s
+    )
+    SELECT set_key, due_cards, priority_score
+    FROM unlock_status
+    WHERE is_unlocked = 1 AND priority_score > 0
+    ORDER BY priority_score DESC, set_key
+    LIMIT 5
+  `
 
-  // Priority 1: SRS due cards (spaced repetition takes precedence)
-  const placeholders = unlockedSets.map(() => '?').join(',')
-  const { results: dueCards } = await c.env.DB.prepare(
-    `SELECT DISTINCT set_key FROM cards WHERE set_key IN (${placeholders}) AND domain_id = ? AND datetime(next_review_date) <= CURRENT_TIMESTAMP LIMIT 5`
-  ).bind(...unlockedSets, domainId).all()
+  const { results: optimalSets } = await c.env.DB.prepare(optimalSetsQuery).bind(domainId).all()
 
-  if (dueCards && dueCards.length > 0) {
-    // SRS review mode - mix of difficulties based on what's due
+  if (!optimalSets || optimalSets.length === 0) {
+    // No sets available - return empty session
+    return c.json({ error: 'No available sets for practice' }, 400)
+  }
+
+  // Check if we have SRS due cards (priority score 100)
+  const dueSets = (optimalSets as any[]).filter(s => s.priority_score === 100)
+
+  if (dueSets.length > 0) {
+    // SRS review mode - use sets with due cards
     const sessionPayload = {
       mode: 'multi_set_srs',
-      selected_sets: (dueCards as any[]).map(r => r.set_key)
+      selected_sets: dueSets.slice(0, 2).map(r => r.set_key) // Limit to 2 sets
     }
 
     const id = c.env.SESSIONS.idFromName(crypto.randomUUID())
@@ -566,8 +638,8 @@ app.post('/api/sessions/auto-start', async (c) => {
     return c.newResponse(res.body, res)
   }
 
-  // Priority 2: Smart set selection based on learning state
-  const selected_sets = await selectOptimalSets(c.env.DB, unlockedSets, domainId)
+  // Priority 2: Smart set selection based on learning state (non-SRS sets)
+  const selected_sets = (optimalSets as any[]).slice(0, 2).map(s => s.set_key) // Top 2 sets
   const difficulty_levels = ['hard', 'medium'] as Array<'easy' | 'medium' | 'hard'>
 
   // Check for new cards before starting session
