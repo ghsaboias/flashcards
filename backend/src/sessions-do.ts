@@ -38,6 +38,7 @@ export class SessionsDO {
       difficulty_levels?: Array<'easy' | 'medium' | 'hard'>
       selected_sets: string[]
       review_items?: Array<{ question: string; answer: string; set_name?: string }>
+      exclude_new_cards?: boolean
     }
     const session_id = this.state.id.toString()
     const started_at = new Date().toISOString()
@@ -66,12 +67,18 @@ export class SessionsDO {
       if (allCards.length < TARGET_SESSION_SIZE) {
         const remaining = TARGET_SESSION_SIZE - allCards.length
         const diffResult = await fetchMultiSetCards(this.env.DB, { fields: 'full' }, payload.selected_sets)
-        const difficultCards = diffResult.metadata
+        let difficultCards = diffResult.metadata
           .filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
           .filter(r => !allCards.some(existing => existing.id === r.id)) // Avoid duplicates
-          .slice(0, remaining)
 
-        allCards = [...allCards, ...difficultCards]
+        // Filter out new cards if requested
+        if (payload.exclude_new_cards) {
+          difficultCards = difficultCards.filter(r =>
+            (r.reviewed_count || 0) > 0 || (r.correct_count || 0) > 0 || (r.incorrect_count || 0) > 0
+          )
+        }
+
+        allCards = [...allCards, ...difficultCards.slice(0, remaining)]
       }
 
       cardsWithMetadata = allCards

@@ -496,10 +496,44 @@ async function selectOptimalSets(db: D1Database, unlockedSets: string[], domainI
   return sortedSets.length > 0 ? sortedSets : [unlockedSets[0]]
 }
 
+// Helper function to analyze cards and detect new vs practiced
+async function analyzeSessionCards(db: D1Database, selectedSets: string[], domainId: string, difficultyLevels: string[]) {
+  const placeholders = selectedSets.map(() => '?').join(',')
+
+  // Get all relevant cards with their practice status
+  const { results } = await db.prepare(
+    `SELECT
+      question, answer, set_key,
+      correct_count, incorrect_count, reviewed_count,
+      CASE WHEN reviewed_count = 0 AND correct_count = 0 AND incorrect_count = 0
+           THEN 1 ELSE 0 END as is_new
+     FROM cards
+     WHERE set_key IN (${placeholders}) AND domain_id = ?
+     ORDER BY set_key, question`
+  ).bind(...selectedSets, domainId).all()
+
+  const allCards = results || []
+  const newCards = allCards.filter((card: any) => card.is_new === 1)
+  const practicedCards = allCards.filter((card: any) => card.is_new === 0)
+
+  return {
+    totalCards: allCards.length,
+    newCards: newCards.length,
+    practicedCards: practicedCards.length,
+    selectedSets,
+    newCardExamples: newCards.slice(0, 3).map((card: any) => ({
+      question: card.question,
+      answer: card.answer,
+      set: card.set_key
+    }))
+  }
+}
+
 // Intelligent auto-start session - with optional domain filtering
 app.post('/api/sessions/auto-start', async (c) => {
   const body = await c.req.json().catch(() => ({}))
   const domainId = body.domain_id || 'chinese' // Default to chinese for backward compatibility
+  const skipNewCardCheck = body.skip_new_card_check || false // Allow bypassing the check
 
   // Get unlocked sets first (filtered by domain)
   const unlockedSets = await getUnlockedSets(c.env.DB, domainId)
@@ -529,12 +563,49 @@ app.post('/api/sessions/auto-start', async (c) => {
 
   // Priority 2: Smart set selection based on learning state
   const selected_sets = await selectOptimalSets(c.env.DB, unlockedSets, domainId)
+  const difficulty_levels = ['hard', 'medium'] as Array<'easy' | 'medium' | 'hard'>
 
-  // Focus on learning: hard + medium difficulties
+  // Check for new cards before starting session
+  if (!skipNewCardCheck) {
+    const analysis = await analyzeSessionCards(c.env.DB, selected_sets, domainId, difficulty_levels)
+
+    if (analysis.newCards > 0) {
+      // Return preview instead of starting session
+      return c.json({
+        type: 'new_cards_detected',
+        analysis: {
+          ...analysis,
+          message: `This session includes ${analysis.newCards} new card${analysis.newCards > 1 ? 's' : ''} you haven't practiced yet.`
+        },
+        options: {
+          continue_with_new: {
+            description: 'Start session with new cards included',
+            payload: { ...body, skip_new_card_check: true }
+          },
+          practice_only: {
+            description: 'Practice only cards you\'ve seen before',
+            payload: {
+              mode: 'multi_set_difficulty',
+              selected_sets,
+              difficulty_levels,
+              exclude_new_cards: true
+            }
+          },
+          browse_first: {
+            description: 'Browse new cards first, then practice',
+            sets_to_browse: selected_sets
+          }
+        }
+      })
+    }
+  }
+
+  // If no new cards or user chose to continue, start the session
   const sessionPayload = {
     mode: 'multi_set_difficulty',
     selected_sets,
-    difficulty_levels: ['hard', 'medium'] as Array<'easy' | 'medium' | 'hard'>
+    difficulty_levels,
+    exclude_new_cards: body.exclude_new_cards || false
   }
 
   const id = c.env.SESSIONS.idFromName(crypto.randomUUID())
