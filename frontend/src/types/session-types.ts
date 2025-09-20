@@ -89,6 +89,7 @@ export interface SrsActions {
 export interface SpecialModeActions {
   // Review mode
   beginReviewIncorrect: () => Promise<SessionResponse | undefined>
+  playAgain: (sessionId: string) => Promise<SessionResponse | undefined>
 }
 
 export interface ViewActions {

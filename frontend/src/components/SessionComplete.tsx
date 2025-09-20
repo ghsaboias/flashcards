@@ -11,7 +11,8 @@ export default function SessionComplete({
     results,
     progress,
     selectedSets,
-    isHighIntensityMode
+    isHighIntensityMode,
+    sessionId
   } = sessionState
 
   const {
@@ -20,7 +21,8 @@ export default function SessionComplete({
     beginReviewIncorrect,
     beginMultiSetDifficult,
     setIsHighIntensityMode,
-    setStatsMode
+    setStatsMode,
+    playAgain
   } = actions
 
   const summaryStats = useMemo(() => {
@@ -39,6 +41,10 @@ export default function SessionComplete({
 
   const practiceDifficultNow = () => {
     return beginMultiSetDifficult()
+  }
+
+  const handlePlayAgain = () => {
+    return playAgain(sessionId)
   }
 
   if (isHighIntensityMode) {
@@ -75,6 +81,7 @@ export default function SessionComplete({
         )}
         
         <div className="next-actions">
+          <button className="btn-primary" onClick={handlePlayAgain}>Play Again</button>
           <button className="btn-primary" onClick={() => beginAutoSession()}>Continue Practice</button>
           <button className="btn-secondary" onClick={() => setIsHighIntensityMode(false)}>View Details</button>
         </div>
@@ -150,9 +157,12 @@ export default function SessionComplete({
         <button className="btn-primary" onClick={restartPractice}>
           Restart
         </button>
-        <button 
-          className="btn-secondary" 
-          onClick={beginReviewIncorrect} 
+        <button className="btn-primary" onClick={handlePlayAgain}>
+          Play Again
+        </button>
+        <button
+          className="btn-secondary"
+          onClick={beginReviewIncorrect}
           disabled={!results.some(r => !r.correct)}
         >
           Review Incorrect

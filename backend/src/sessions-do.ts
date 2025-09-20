@@ -26,6 +26,9 @@ export class SessionsDO {
     if (request.method === 'POST' && url.pathname.endsWith('/cancel')) {
       return this.cancel()
     }
+    if (request.method === 'POST' && url.pathname.endsWith('/play-again')) {
+      return this.playAgain()
+    }
     if (request.method === 'GET') {
       return this.get()
     }
@@ -447,6 +450,77 @@ export class SessionsDO {
   // Fast SRS data lookup
   private getSRSDataFast(state: SessionState, question: string): { easiness_factor: number; interval_hours: number; repetitions: number } {
     return state.srsMap?.get(question) || { easiness_factor: 2.5, interval_hours: 0, repetitions: 0 }
+  }
+
+  private async playAgain(): Promise<Response> {
+    const currentState = await this.state.storage.get<SessionState>('state')
+    if (!currentState) {
+      return Response.json({ error: 'Session not found' }, { status: 404 })
+    }
+
+    // Create a new session ID (this DO will handle the new session)
+    const newSessionId = this.state.id.toString()
+    const started_at = new Date().toISOString()
+
+    // Use the same cards from the original session
+    const cards = currentState.cards
+
+    // Create a new shuffled order
+    const order = cards.map((_, i) => i)
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[order[i], order[j]] = [order[j], order[i]]
+    }
+
+    // Build fast lookup maps for the same cards
+    const answerMap = this.buildAnswerMap(cards)
+    const cardMetaMap = this.buildCardMetaMap(cards)
+    const difficultyMap = currentState.difficultyMap || new Map()
+    const srsMap = currentState.srsMap || new Map()
+
+    // Create new session state with same mode and practice name
+    const newState: SessionState = {
+      session_id: newSessionId,
+      mode: currentState.mode,
+      started_at,
+      session_type: currentState.session_type,
+      practice_name: currentState.practice_name ? `${currentState.practice_name} (Play Again)` : 'Play Again',
+      position: 0,
+      order,
+      cards,
+      answerMap,
+      cardMetaMap,
+      difficultyMap,
+      srsMap,
+      correct_count: 0,
+      results: [],
+    }
+
+    // Store the new session state
+    await this.state.storage.put('state', newState)
+
+    // Write session header to D1
+    await this.env.DB.prepare(
+      `INSERT OR REPLACE INTO sessions (id, practice_name, session_type, started_at)
+       VALUES (?, ?, ?, ?)`
+    ).bind(newSessionId, newState.practice_name ?? null, newState.session_type, this.nowUtc()).run()
+
+    if (order.length === 0) {
+      return Response.json({ session_id: newSessionId, done: true, progress: { current: 0, total: 0 } })
+    }
+
+    // Return the first question
+    const firstIdx = order[0]
+    const firstCard = cards[firstIdx]
+    const result = {
+      session_id: newSessionId,
+      done: false,
+      card: { index: firstIdx, question: firstCard?.question || '' },
+      progress: { current: 0, total: order.length }
+    }
+
+    await this.state.storage.put('question_start', Date.now())
+    return Response.json(result)
   }
 }
 

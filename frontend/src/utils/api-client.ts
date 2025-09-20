@@ -191,6 +191,10 @@ export class ApiClient {
     return this.get<SessionResponse>(`/sessions/${sessionId}`)
   }
 
+  async playAgain(sessionId: string): Promise<SessionResponse> {
+    return this.post<SessionResponse>(`/sessions/${sessionId}/play-again`)
+  }
+
   async cancelSession(sessionId: string): Promise<void> {
     await this.post(`/sessions/${sessionId}/cancel`)
   }

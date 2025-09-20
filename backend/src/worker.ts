@@ -723,6 +723,13 @@ app.get('/api/sessions/:id', async (c) => {
   const res = await stub.fetch(new Request(new URL(`https://do/sessions/${idParam}`)))
   return c.newResponse(res.body, res)
 })
+app.post('/api/sessions/:id/play-again', async (c) => {
+  const idParam = c.req.param('id')
+  const id = c.env.SESSIONS.idFromString(idParam)
+  const stub = c.env.SESSIONS.get(id)
+  const res = await stub.fetch(new Request(new URL(`https://do/sessions/${idParam}/play-again`), { method: 'POST' }))
+  return c.newResponse(res.body, res)
+})
 
 // Asset serving and SPA fallback
 app.all('*', async (c) => {

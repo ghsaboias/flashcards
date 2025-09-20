@@ -341,6 +341,15 @@ export function useSessionManager(selectedDomain?: Domain | null): [SessionState
     },
     submitAnswer,
     beginReviewIncorrect,
+    playAgain: async (sessionId: string) => {
+      try {
+        const res = await apiClient.playAgain(sessionId)
+        return initializeSession(() => Promise.resolve(res))
+      } catch (error) {
+        console.error('Failed to start play again session:', error)
+        return undefined
+      }
+    },
     setStatsMode,
     setInput,
     setSelectedSets,
