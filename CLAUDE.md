@@ -524,6 +524,59 @@ cd backend && bun update
 - Backend: Check port 8787 (Wrangler default)
 - CORS issues: Verify API endpoints
 
+### Puppeteer Testing (MCP)
+When testing the app with Puppeteer MCP tools, use these patterns for reliable element interaction:
+
+**Button Clicking:**
+```javascript
+// ✅ RECOMMENDED: Find by text content using evaluate
+const button = [...document.querySelectorAll('button')].find(btn => btn.textContent.includes('Start'));
+if (button) {
+  button.click();
+  'Clicked Start button';
+} else {
+  'Button not found. Available: ' + [...document.querySelectorAll('button')].map(btn => btn.textContent).join(', ');
+}
+```
+
+**Element Selection Patterns:**
+```javascript
+// ✅ Class-based selection
+document.querySelector('.btn-primary')
+
+// ✅ Attribute-based selection
+document.querySelector('button[type="submit"]')
+
+// ✅ Text content search
+[...document.querySelectorAll('button')].find(btn => btn.textContent.includes('Exit'))
+
+// ❌ AVOID: CSS4 selectors (not supported)
+button:has-text("Start")     // SyntaxError
+button:contains("Exit")      // SyntaxError
+```
+
+**Navigation Testing:**
+```javascript
+// ✅ Direct URL navigation for testing different pages
+// puppeteer_navigate: http://localhost:8787/practice
+// puppeteer_navigate: http://localhost:8787/session/123
+
+// ✅ Check current URL
+window.location.pathname  // Returns "/practice", "/session/123", etc.
+```
+
+**Form Interaction:**
+```javascript
+// ✅ Checkbox selection
+document.querySelectorAll('input[type="checkbox"]')[0].click()
+
+// ✅ Text input
+document.querySelector('input[type="text"]').value = 'answer'
+
+// ✅ Select dropdown
+document.querySelector('select').value = 'option'
+```
+
 
 ## Important Notes
 
