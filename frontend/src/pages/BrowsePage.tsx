@@ -1,8 +1,9 @@
 import { useState, useEffect, memo } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAudioControls } from '../hooks/useAudioControls'
 import { hasChinese } from '../utils/pinyin'
 import { useAppContext } from '../hooks/useAppContext'
+import { useSessionContext } from '../hooks/useSessionContext'
 import { apiClient } from '../utils/api-client'
 import MainLayout from '../layouts/MainLayout'
 import type { BrowseCard } from '../types/api-types'
@@ -10,13 +11,21 @@ import type { BrowseCard } from '../types/api-types'
 const BrowsePage = memo(function BrowsePage() {
   const { set } = useParams<{ set: string }>()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { selectedDomain } = useAppContext()
+  const { actions } = useSessionContext()
   const { speak } = useAudioControls()
 
   const [browseRows, setBrowseRows] = useState<BrowseCard[]>([])
   const [browseIndex, setBrowseIndex] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [startingSession, setStartingSession] = useState(false)
+
+  // Check if we came from new cards prompt
+  const autoStart = searchParams.get('autoStart')
+  const domainIdParam = searchParams.get('domainId')
+  const shouldAutoStart = autoStart === 'withNew'
 
   // Load browse data for the specified set
   useEffect(() => {
@@ -53,8 +62,26 @@ const BrowsePage = memo(function BrowsePage() {
     setBrowseIndex(Math.min(browseIndex + 1, total - 1))
   }
 
-  const handleExit = () => {
-    navigate('/practice')
+  const handleExit = async () => {
+    if (shouldAutoStart && !startingSession) {
+      setStartingSession(true)
+      try {
+        const targetDomainId = domainIdParam || selectedDomain?.id
+        const response = await actions.beginAutoSession(targetDomainId, true, false)
+        if (response && 'session_id' in response && response.session_id) {
+          navigate(`/session/${response.session_id}`)
+        } else {
+          navigate('/practice')
+        }
+      } catch (error) {
+        console.error('Failed to start session after browsing:', error)
+        navigate('/practice')
+      } finally {
+        setStartingSession(false)
+      }
+    } else {
+      navigate('/practice')
+    }
   }
 
   if (loading) {
@@ -140,8 +167,9 @@ const BrowsePage = memo(function BrowsePage() {
           <button
             className="btn-tertiary"
             onClick={handleExit}
+            disabled={startingSession}
           >
-            Exit Review
+            {startingSession ? 'Starting Session...' : shouldAutoStart ? 'Start Practice' : 'Exit Review'}
           </button>
         </div>
       </div>

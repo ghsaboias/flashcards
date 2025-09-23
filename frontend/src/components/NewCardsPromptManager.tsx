@@ -46,9 +46,9 @@ const NewCardsPromptManager = memo(function NewCardsPromptManager() {
     const firstSet = detection?.options.browse_first.sets_to_browse?.[0]
     if (firstSet) {
       actions.clearNewCardsDetection()
-      navigate(`/browse/${encodeURIComponent(firstSet)}`)
+      navigate(`/browse/${encodeURIComponent(firstSet)}?autoStart=withNew&domainId=${domainId}`)
     }
-  }, [actions, detection, navigate])
+  }, [actions, detection, navigate, domainId])
 
   const handleCancel = useCallback(() => {
     actions.clearNewCardsDetection()
