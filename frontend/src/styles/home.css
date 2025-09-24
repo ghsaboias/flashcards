@@ -1,0 +1,281 @@
+
+.home-section-header {
+  margin-bottom: 16px;
+}
+
+.home-section-title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.home-section-description {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.learning-mode-toggle {
+  margin: 16px 0;
+  text-align: center;
+}
+
+
+.cluster-selection-section {
+  margin-top: 24px;
+}
+
+.cluster-selection-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.cluster-selection-title {
+  margin: 0;
+}
+
+.cluster-selection-description {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.cluster-selection-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.cluster-selection-meta {
+  margin-top: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.home-practice-modes {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.advanced-back-button {
+  margin-bottom: 16px;
+}
+
+
+.learning-mode-summary {
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.difficulty-summary {
+  margin-top: 4px;
+}
+
+/* Quick Start Section Styles */
+.quick-start-section {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: var(--panel);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.quick-start-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  color: var(--text);
+}
+
+.quick-start-header p {
+  margin: 0 0 24px 0;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.learning-mode-selector {
+  margin-bottom: 24px;
+}
+
+.mode-group {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mode-group legend {
+  font-weight: 600;
+  padding: 0 8px;
+  color: var(--text);
+}
+
+.mode-options {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mode-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.02);
+  min-width: 140px;
+}
+
+.mode-option:hover {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mode-option input[type="radio"] {
+  margin-bottom: 8px;
+}
+
+.mode-option input[type="radio"]:checked + .mode-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.mode-label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.mode-description {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.primary-action {
+  margin-bottom: 16px;
+}
+
+.btn-primary-large {
+  background: linear-gradient(135deg, var(--accent) 0%, #4fd1c7 100%);
+  color: #06131f;
+  border: none;
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary-large:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
+}
+
+.btn-primary-large:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.loading-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.semantic-info {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  text-align: left;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.semantic-info strong {
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.semantic-info p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Knowledge Graph CTA */
+.knowledge-graph-cta {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.knowledge-graph-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.knowledge-graph-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Advanced Options Section */
+.advanced-options-section {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.advanced-toggle {
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .quick-start-section {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .quick-start-header h2 {
+    font-size: 20px;
+  }
+
+  .mode-options {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mode-option {
+    min-width: 200px;
+  }
+
+  .btn-primary-large {
+    padding: 14px 24px;
+    font-size: 16px;
+  }
+}

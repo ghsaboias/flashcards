@@ -3,28 +3,21 @@ import { lazy, Suspense } from 'react'
 import ErrorPage from './pages/ErrorPage'
 import RouteLoadingFallback from './components/RouteLoadingFallback'
 
-import { performanceMonitor } from './utils/performance-monitor'
-import { NavigationGuardProvider } from './components/NavigationGuard'
+import { performanceMonitor } from './utils/performance-simple'
 
 // Performance monitoring for route transitions
 const markRouteStart = (routeName: string) => {
-  performance.mark(`route-${routeName}-start`)
+  performanceMonitor.markRouteStart(routeName)
 }
 
 const markRouteEnd = (routeName: string) => {
-  performance.mark(`route-${routeName}-end`)
-  performance.measure(`route-${routeName}-transition`, `route-${routeName}-start`, `route-${routeName}-end`)
-
-  // Record in our performance monitor
-  const measure = performance.getEntriesByName(`route-${routeName}-transition`)[0]
-  if (measure) {
-    performanceMonitor.recordRouteTransition(routeName, measure.duration)
-  }
+  performanceMonitor.markRouteEnd(routeName)
 }
 
 // Lazy load page components with priority-based loading
 // HomePage: Immediate load (main entry point) - keep as regular import for fastest initial load
 import HomePage from './pages/HomePage'
+
 
 // High priority: Primary navigation flow
 const PracticePage = lazy(() => {
@@ -77,14 +70,20 @@ const DrawingPage = lazy(() => {
   })
 })
 
+const NetworkPage = lazy(() => {
+  markRouteStart('network')
+  return import('./pages/NetworkPage').then(module => {
+    markRouteEnd('network')
+    return module
+  })
+})
+
+// Remove lazy loading for ConnectionAwarePage since it's imported above
+
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <NavigationGuardProvider>
-        <Outlet />
-      </NavigationGuardProvider>
-    ), 
+    element: <Outlet />, 
     errorElement: <ErrorPage />, 
     children: [
       {
@@ -136,6 +135,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<RouteLoadingFallback routeName="Drawing" />}>
             <DrawingPage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'network',
+        element: (
+          <Suspense fallback={<RouteLoadingFallback routeName="Network" />}>
+            <NetworkPage />
           </Suspense>
         )
       },

@@ -1,0 +1,9 @@
+/* Connection-Aware Learning Styles - Modular Imports */
+
+/* Page-level styles and layout */
+@import './pages/ConnectionAware.css';
+
+/* Component-specific styles */
+@import './components/ClusterSelector.css';
+@import './components/NetworkViewer.css';
+@import './components/PhaseProgress.css';

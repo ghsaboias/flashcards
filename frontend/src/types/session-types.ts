@@ -11,6 +11,20 @@ import type {
   NewCardsDetectionResponse
 } from './api-types'
 
+// Connection data for network visualization
+export interface ConnectionData {
+  source: string
+  target: string
+  type: 'semantic' | 'compound' | 'radical'
+  strength: number
+}
+
+export interface ConnectionSession {
+  phase: string
+  cluster_id: string
+  connections: ConnectionData[]
+}
+
 // Core session data
 export interface CoreSessionData {
   sessionId: string
@@ -24,6 +38,7 @@ export interface CoreSessionData {
   bestStreak: number
   sessionStartTime: number | null
   currentCardSet: string
+  connection_session?: ConnectionSession
 }
 
 // High-intensity mode settings
@@ -58,7 +73,26 @@ export interface ViewStates {
   performance: PerformancePayload | null
   difficultyRows: StatRow[] | null
   newCardsDetection: NewCardsDetectionResponse | null
+  // Connection-aware learning state
+  availableClusters: Cluster[]
 }
+
+export interface Cluster {
+  id: string
+  name: string
+  description?: string
+  anchors: string[]
+  size: number
+  unlocked: boolean
+  completion: number
+  recommended: boolean
+  difficulty_estimate?: number
+  current_phase?: string
+  anchors_mastered?: number
+}
+
+export type LearningMode = 'random' | 'connected'
+export type ConnectionPhase = 'discovery' | 'anchor' | 'expansion' | 'integration' | 'mastery'
 
 // Consolidated session state
 export interface SessionState extends
@@ -66,13 +100,17 @@ export interface SessionState extends
   HighIntensitySettings,
   UIPreferences,
   DataSettings,
-  ViewStates {}
+  ViewStates {
+  learningMode: LearningMode
+  selectedCluster: string | null
+}
 
 // Session action categories
 export interface CoreSessionActions {
   resetSessionUI: () => void
   clearNewCardsDetection: () => void
-  beginAutoSession: (domainId?: string, skipNewCardCheck?: boolean, excludeNewCards?: boolean) => Promise<SessionResponse | NewCardsDetectionResponse | undefined>
+  beginAutoSession: (domainId?: string, skipNewCardCheck?: boolean, excludeNewCards?: boolean, connectionAware?: boolean) => Promise<SessionResponse | NewCardsDetectionResponse | undefined>
+  beginConnectionAwareSession: (clusterId?: string, phase?: string) => Promise<SessionResponse | undefined>
   beginMultiSetSession: () => Promise<SessionResponse | undefined>
   submitAnswer: () => Promise<void>
   restoreSessionFromBackend: (sessionId: string, sessionData: import('./api-types').SessionResponse) => Promise<void>
@@ -104,6 +142,9 @@ export interface SetterActions {
   setDiffEasy: (enabled: boolean) => void
   setDiffMedium: (enabled: boolean) => void
   setDiffHard: (enabled: boolean) => void
+  // Connection-aware learning setters
+  setLearningMode: (mode: LearningMode) => void
+  setSelectedCluster: (clusterId: string | null) => void
 }
 
 export interface MultiSetActions {

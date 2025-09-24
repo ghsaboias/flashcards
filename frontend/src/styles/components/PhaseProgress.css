@@ -1,0 +1,295 @@
+/* Learning Phase Progress Component Styles */
+
+.phase-progress-bar {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e2e8f0;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.progress-title {
+  font-size: 1.4rem;
+  color: #2d3748;
+  margin: 0;
+}
+
+.cluster-name {
+  color: #4299e1;
+  font-weight: normal;
+}
+
+.anchor-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.anchor-count {
+  font-size: 0.9rem;
+  color: #718096;
+  white-space: nowrap;
+}
+
+.anchor-bar {
+  width: 100px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.anchor-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #48bb78, #38a169);
+  transition: width 0.3s ease;
+}
+
+.phases-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.phases-container::before {
+  content: '';
+  position: absolute;
+  top: 30px;
+  left: 60px;
+  right: 60px;
+  height: 2px;
+  background: #e2e8f0;
+  z-index: 1;
+}
+
+.phase-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  max-width: 200px;
+  position: relative;
+  z-index: 2;
+}
+
+.phase-icon {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background: white;
+  border: 3px solid #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.phase-step.completed .phase-icon {
+  border-color: #48bb78;
+  background: #f0fff4;
+}
+
+.phase-step.active .phase-icon {
+  border-color: #4299e1;
+  background: #ebf8ff;
+}
+
+.phase-emoji {
+  font-size: 1.5rem;
+}
+
+.check-mark {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 20px;
+  height: 20px;
+  background: #48bb78;
+  border-radius: 50%;
+  color: white;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+}
+
+.circular-chart {
+  width: 100%;
+  height: 100%;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #e2e8f0;
+  stroke-width: 2;
+}
+
+.circle {
+  fill: none;
+  stroke: #4299e1;
+  stroke-width: 2;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.phase-content {
+  min-height: 80px;
+}
+
+.phase-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 0.5rem 0;
+}
+
+.phase-description {
+  font-size: 0.85rem;
+  color: #718096;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.progress-text {
+  font-size: 0.8rem;
+  color: #4299e1;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.progress-footer {
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.current-phase-details {
+  font-size: 1rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.phase-completion {
+  color: #4299e1;
+}
+
+.progress-tips .tip {
+  background: #f7fafc;
+  border-left: 4px solid #4299e1;
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+/* Phase Animation Effects */
+@keyframes phase-celebration {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.phase-step.celebrating .phase-icon {
+  animation: phase-celebration 0.6s ease-in-out 3;
+}
+
+.mastery-celebration {
+  animation: phase-celebration 1s ease-in-out infinite;
+}
+
+/* Progress Indicator Animations */
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+}
+
+.progress-fill.animated {
+  animation: progress-fill 1s ease-out;
+}
+
+.anchor-fill.animated {
+  animation: progress-fill 1.5s ease-out;
+}
+
+/* Phase State Colors */
+.phase-step.upcoming .phase-icon {
+  border-color: #e2e8f0;
+  background: #f7fafc;
+}
+
+.phase-step.upcoming .phase-label {
+  color: #a0aec0;
+}
+
+.phase-step.upcoming .phase-description {
+  color: #cbd5e0;
+}
+
+/* Circular Progress Calculations */
+.progress-circle {
+  stroke-dasharray: 251.2; /* 2 * π * 40 (radius) */
+  stroke-dashoffset: 251.2;
+  transition: stroke-dashoffset 0.5s ease-in-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .phases-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .phases-container::before {
+    display: none;
+  }
+
+  .phase-step {
+    flex-direction: row;
+    text-align: left;
+    max-width: none;
+  }
+
+  .phase-icon {
+    margin-bottom: 0;
+    margin-right: 1rem;
+    flex-shrink: 0;
+  }
+
+  .anchor-progress {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

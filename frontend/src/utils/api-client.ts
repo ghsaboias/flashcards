@@ -162,6 +162,7 @@ export class ApiClient {
     domain_id?: string
     skip_new_card_check?: boolean
     exclude_new_cards?: boolean
+    connection_aware?: boolean
   } = {}): Promise<SessionResponse | NewCardsDetectionResponse> {
     return this.post<SessionResponse | NewCardsDetectionResponse>('/sessions/auto-start', config)
   }

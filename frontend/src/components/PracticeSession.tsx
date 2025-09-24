@@ -3,6 +3,7 @@ import type { PracticeSessionProps } from '../types/component-props'
 import { hasChinese } from '../utils/pinyin'
 import { formatSessionDuration } from '../utils/timer-utils'
 import { humanizeSetLabel } from '../utils/hsk-label-utils'
+import MiniNetworkViewer from './MiniNetworkViewer'
 
 export default function PracticeSession({ sessionState, actions, canAnswer, speak }: PracticeSessionProps) {
   const {
@@ -111,6 +112,16 @@ export default function PracticeSession({ sessionState, actions, canAnswer, spea
           </div>
           {pinyin && showPinyin && hasChinese(question) && (
             <div className="pinyin" style={{ color: '#9da7b3', marginTop: 8 }}>{pinyin}</div>
+          )}
+
+          {/* Mini-network viewer for connection-aware sessions */}
+          {sessionState.connection_session && question && hasChinese(question) && (
+            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center' }}>
+              <MiniNetworkViewer
+                currentCharacter={question}
+                connections={sessionState.connection_session.connections || []}
+              />
+            </div>
           )}
         </div>
         

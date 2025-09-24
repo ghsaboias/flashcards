@@ -41,7 +41,12 @@ export function createEmptySessionState(): SessionState {
     stats: null,
     performance: null,
     difficultyRows: null,
-    newCardsDetection: null
+    newCardsDetection: null,
+
+    // Connection-aware defaults
+    availableClusters: [],
+    learningMode: 'random',
+    selectedCluster: null
   }
 }
 
@@ -75,7 +80,8 @@ export function createViewStatesReset(): Partial<SessionState> {
     srsRows: [],
     stats: null,
     performance: null,
-    newCardsDetection: null
+    newCardsDetection: null,
+    availableClusters: []
   }
 }
 

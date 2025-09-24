@@ -58,6 +58,7 @@ export default function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProp
   const navigationItems = [
     { path: '/', label: 'Home', icon: '🏠' },
     { path: '/practice', label: 'Practice', icon: '📚' },
+    { path: '/network', label: 'Network', icon: '🕸️' },
     { path: '/stats', label: 'Statistics', icon: '📊' }
   ]
 

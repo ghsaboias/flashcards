@@ -4,8 +4,7 @@ import DomainSelector from '../components/DomainSelector'
 import Breadcrumbs from '../components/Breadcrumbs'
 import MobileNavDrawer from '../components/MobileNavDrawer'
 import ErrorBoundary from '../components/ErrorBoundary'
-import { SessionWarningBanner, SessionRecoveryNotification } from '../components/SessionWarning'
-import { useSessionWarnings } from '../hooks/useSessionWarnings'
+import { SessionRecoveryPrompt } from '../components/SessionRecovery'
 import { useAppContext } from '../hooks/useAppContext'
 
 interface MainLayoutProps {
@@ -24,32 +23,18 @@ const MainLayout = memo(function MainLayout({
   const { selectedDomain, setSelectedDomain } = useAppContext()
   const location = useLocation()
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
-  const {
-    showRecoveryNotification,
-    savedSessionId,
-    handleRestoreSession,
-    handleDismissRecovery
-  } = useSessionWarnings()
 
   const navigationItems = [
     { path: '/', label: 'Home', icon: '🏠' },
     { path: '/practice', label: 'Practice', icon: '📚' },
+    { path: '/network', label: 'Network', icon: '🕸️' },
     { path: '/stats', label: 'Stats', icon: '📊' }
   ]
 
   return (
     <>
-      {/* Session Warning Banner */}
-      <SessionWarningBanner />
-
-      {/* Session Recovery Notification */}
-      {showRecoveryNotification && savedSessionId && (
-        <SessionRecoveryNotification
-          sessionId={savedSessionId}
-          onRestore={handleRestoreSession}
-          onDismiss={handleDismissRecovery}
-        />
-      )}
+      {/* Simple Session Recovery */}
+      <SessionRecoveryPrompt />
 
       <style>{`
         .main-layout {
@@ -193,7 +178,7 @@ const MainLayout = memo(function MainLayout({
             <nav className="main-nav">
               <div className="nav-content">
                 <Link to="/" className="nav-brand">
-                  🎯 HSK Flashcards
+                  HSK Flashcards
                 </Link>
 
                 {/* Desktop Navigation */}

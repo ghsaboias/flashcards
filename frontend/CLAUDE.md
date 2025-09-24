@@ -38,17 +38,18 @@ bun run preview   # Preview built app locally
 
 ## Component Architecture
 
-### Page-Based Router Architecture ✅ COMPLETE
+### Page-Based Router Architecture - COMPLETE
 The app has migrated from conditional rendering to React Router with dedicated page components:
 
 ### Page Components (`src/pages/`)
 - **`HomePage.tsx`**: High-intensity quick start landing page (41 lines)
 - **`PracticePage.tsx`**: Traditional practice modes selection (191 lines)
-- **`SessionPage.tsx`**: Active practice sessions interface (69 lines)
+- **`SessionPage.tsx`**: Active practice sessions interface with mini-network integration (189 lines)
 - **`CompletePage.tsx`**: Session results and analytics (168 lines)
 - **`StatsPage.tsx`**: Domain-scoped analytics dashboard with set filters (200+ lines)
 - **`BrowsePage.tsx`**: Card browsing by set (154 lines)
 - **`DrawingPage.tsx`**: Character drawing practice (159 lines)
+- **`NetworkPage.tsx`**: **Interactive Network Visualization** - Full D3.js character network with exact physics matching standalone HTML version (450+ lines)
 - **`ErrorPage.tsx`**: 404 and error handling (24 lines)
 
 ### Layout Components (`src/layouts/`)
@@ -57,8 +58,14 @@ The app has migrated from conditional rendering to React Router with dedicated p
 
 ### Core Components (`src/components/`)
 - **`DomainSelector.tsx`**: Multi-domain selection dropdown (Chinese/Geography)
-- **`HighIntensityMode.tsx`**: Streamlined practice interface with auto-start
+- **`HighIntensityMode.tsx`**: Streamlined practice interface with auto-start and semantic learning selection
 - **`TraditionalModes.tsx`**: Classic practice modes (review all, SRS, difficulty-based)
+
+### Knowledge Graph Components
+- **`ClusterSelector.tsx`**: Beautiful cluster cards with progress bars and network exploration (138+ lines)
+- **`PhaseProgressBar.tsx`**: 5-phase learning system visualization with completion tracking
+- **`MiniNetworkViewer.tsx`**: Compact SVG network showing character relationships during practice (150+ lines)
+- **`LiveProgressNetwork.tsx`**: Advanced real-time progress visualization with animated celebrations (250+ lines)
 
 ### Practice Session Components
 - **`PracticeSession.tsx`**: Main practice interface with adaptive timing and pinyin controls
@@ -68,9 +75,7 @@ The app has migrated from conditional rendering to React Router with dedicated p
 ### Data Visualization
 - **`StatsOverview.tsx`**: Performance dashboard with domain-filtered analytics
 - **`StatsPage.tsx`**: Domain performance/SRS/accuracy views backed by aggregated endpoints
-- **`SrsTable.tsx`**: SRS schedule table with due card prioritization
-- **`StatsTable.tsx`**: Per-card accuracy statistics with filtering
-- **`UnifiedTable.tsx`**: Combined SRS/stats view
+- **`UnifiedTable.tsx`**: Combined SRS/stats view with sorting and filtering
 
 ### Specialized Components
 - **`DrawingCanvas.tsx`**: Character drawing for Chinese practice (289 lines)
@@ -81,7 +86,7 @@ The app has migrated from conditional rendering to React Router with dedicated p
 - **`AppContextDefinition.ts`**: App context type definition (9 lines)
 - **`useAppContext.ts`**: Global app context hook (9 lines)
 - **`SessionContext.tsx`**: Session state context provider (49 lines)
-- **`useSessionManager.ts`**: Centralized session logic with auto-start integration (474 lines)
+- **`useSessionManager.ts`**: Centralized session logic with auto-start integration and semantic learning support (474 lines)
 - **`useSessionContext.ts`**: Session state hook with performance tracking (125 lines)
 
 ### Utility Modules
@@ -90,7 +95,7 @@ The app has migrated from conditional rendering to React Router with dedicated p
 - **`session-utils.ts`**: Session management utilities (270 lines)
 - **`hsk-label-utils.ts`**: HSK set labeling and progressive unlock logic (154 lines)
 
-## Performance Optimization ✅ ADVANCED
+## Performance Optimization - ADVANCED
 
 ### Dramatic Bundle Size Reduction
 **Performance Achievement: 95% Initial Bundle Size Reduction**
@@ -99,6 +104,7 @@ The app has migrated from conditional rendering to React Router with dedicated p
 - **Pinyin library**: 302KB (138KB gzipped) - Lazy loaded for Chinese content
 - **Page components**: 0.65KB - 25KB each - Individually chunked with React.lazy()
 - **Drawing canvas**: 3.4KB (1.6KB gzipped) - Separate lazy chunk
+- **Network visualization**: 9.35KB (3.56KB gzipped) - D3.js physics simulation chunk
 - **Build time**: <700ms with advanced chunking and TypeScript compilation
 
 ### Advanced React Performance Patterns
@@ -270,6 +276,11 @@ bun run build && bun run preview
 - **Audio TTS**: Text-to-speech for character pronunciation
 - **Character Drawing**: Canvas component for stroke practice
 - **HSK Progression**: Levels 1-30 with accuracy-based unlocks
+- **Connection-Aware Learning**: Semantic relationship-based character selection (default mode)
+  - **Semantic Toggle**: Radio button selection between random drilling and semantic learning
+  - **Educational Messaging**: Research-based explanation of plateau prevention benefits
+  - **Intelligent Selection**: Backend queries `character_connections` table for related characters
+  - **Struggling Character Focus**: Prioritizes characters with <80% accuracy plus their connections
 
 ### Geography Domain Features
 - **Country/Capital Practice**: World geography flashcards
@@ -295,25 +306,25 @@ bun run build && bun run preview
 - **Knowledge Gap Analysis**: Identifies struggling concepts on completion
 - **Progress Visualization**: Real-time accuracy and timing feedback
 
-## Recent Architecture Updates ✅ COMPLETE
+## Recent Architecture Updates - COMPLETE
 
 ### Router & Performance Migration (Complete)
-- ✅ **React Router Migration**: Migrated from conditional rendering to page-based architecture
-- ✅ **URL-Based Navigation**: Added proper routing with bookmarkable URLs and browser history
-- ✅ **Layout System**: Created MainLayout and SessionLayout for consistent page structure
-- ✅ **Component Separation**: Extracted page components from monolithic App.tsx (archived as App.tsx.legacy)
-- ✅ **Global Context**: Added AppContext for domain state separate from session state
-- ✅ **Multi-Domain Support**: Added domain selection and filtering throughout
+- **React Router Migration**: Migrated from conditional rendering to page-based architecture
+- **URL-Based Navigation**: Added proper routing with bookmarkable URLs and browser history
+- **Layout System**: Created MainLayout and SessionLayout for consistent page structure
+- **Component Separation**: Extracted page components from monolithic App.tsx (archived as App.tsx.legacy)
+- **Global Context**: Added AppContext for domain state separate from session state
+- **Multi-Domain Support**: Added domain selection and filtering throughout
 
 ### Advanced Performance Optimization (Complete)
-- ✅ **Route-Based Code Splitting**: React.lazy() for all page components except HomePage
-- ✅ **Component Memoization**: React.memo() wrapping prevents unnecessary re-renders
-- ✅ **Context Optimization**: useMemo() in all providers eliminates cascading re-renders
-- ✅ **Strategic Prefetching**: User journey-based prefetching for instant navigation
-- ✅ **Performance Monitoring**: Real-time Web Performance API tracking for all routes
-- ✅ **Advanced Vite Config**: Page-based chunking, performance budgets, ES2020 target
-- ✅ **Bundle Size Reduction**: 95% initial bundle reduction (222KB → 11.5KB)
-- ✅ **Performance Budgets**: 500KB chunk warnings with build-time analysis
+- **Route-Based Code Splitting**: React.lazy() for all page components except HomePage
+- **Component Memoization**: React.memo() wrapping prevents unnecessary re-renders
+- **Context Optimization**: useMemo() in all providers eliminates cascading re-renders
+- **Strategic Prefetching**: User journey-based prefetching for instant navigation
+- **Performance Monitoring**: Real-time Web Performance API tracking for all routes
+- **Advanced Vite Config**: Page-based chunking, performance budgets, ES2020 target
+- **Bundle Size Reduction**: 95% initial bundle reduction (222KB → 11.5KB)
+- **Performance Budgets**: 500KB chunk warnings with build-time analysis
 
 ## Quality Standards
 - **Zero TypeScript errors** on build (`bun run build`)

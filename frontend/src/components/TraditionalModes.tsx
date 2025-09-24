@@ -1,12 +1,15 @@
 import { useNavigate } from 'react-router-dom'
 import type { TraditionalModesProps } from '../types/component-props'
+import '../styles/home.css'
 
 export default function TraditionalModes({
   sessionState,
   actions,
   canStartByDifficulty,
   difficultyCounts,
-  getMultiSetLabel
+  getMultiSetLabel,
+  onBackToSimple,
+  backLabel = '← Back to Simple'
 }: TraditionalModesProps) {
   const navigate = useNavigate()
   const {
@@ -25,9 +28,7 @@ export default function TraditionalModes({
     removeSetFromSelection,
     beginMultiSetSession,
     beginMultiSetDifficult,
-    beginMultiSetSrs,
-    setStatsMode,
-    setIsHighIntensityMode
+    beginMultiSetSrs
   } = actions
 
   // Navigate to Browse/Drawing pages instead of legacy mode switching
@@ -46,11 +47,10 @@ export default function TraditionalModes({
   return (
     <div className="section">
       <button
-        className="btn-tertiary"
-        onClick={() => setIsHighIntensityMode(true)}
-        style={{ marginBottom: '16px' }}
+        className="btn-tertiary advanced-back-button"
+        onClick={onBackToSimple}
       >
-        ← Back to Simple
+        {backLabel}
       </button>
       <div className="group">
         <div className="multi-set-selection">
@@ -90,7 +90,7 @@ export default function TraditionalModes({
             <span className="statusPill easy"><span className="dot" />Easy</span>
           </label>
         </div>
-        <div className="muted" style={{ marginTop: 4 }}>
+        <div className="muted difficulty-summary">
           {(() => {
             const parts: string[] = []
             if (diffHard) parts.push(`${difficultyCounts.hard} hard`)
@@ -139,13 +139,6 @@ export default function TraditionalModes({
           disabled={selectedSets.length === 0}
         >
           Practice Drawing
-        </button>
-        <button
-          className="btn-tertiary"
-          title="View performance analytics"
-          onClick={() => setStatsMode('performance')}
-        >
-          View Performance
         </button>
       </div>
     </div>

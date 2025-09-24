@@ -1,0 +1,287 @@
+/* Connection-Aware Learning Page Styles */
+
+/* Demo Page with Gradient Background */
+.connection-aware-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #333;
+}
+
+.connection-aware-page .page-header,
+.connection-aware-page .demo-explanation,
+.connection-aware-page .connection-benefits {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  font-size: 1.2rem;
+  color: #718096;
+  margin-bottom: 1.5rem;
+}
+
+.mode-indicator {
+  display: flex;
+  justify-content: center;
+}
+
+.mode-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.mode-badge.connected {
+  background: #e6fffa;
+  color: #234e52;
+  border: 2px solid #4fd1c7;
+}
+
+.demo-explanation {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 3rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.demo-explanation h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.demo-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.demo-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.step-content h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.step-content p {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.demo-toggle {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.demo-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.session-actions {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.selected-cluster-info {
+  margin-bottom: 2rem;
+}
+
+.selected-cluster-info h3 {
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.selected-cluster-info p {
+  color: #718096;
+  text-transform: capitalize;
+}
+
+.start-session-btn {
+  background: linear-gradient(135deg, #4299e1, #3182ce);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-right: 1rem;
+  transition: all 0.2s ease;
+}
+
+.start-session-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+}
+
+.change-cluster-btn {
+  background: #edf2f7;
+  color: #4a5568;
+  border: 1px solid #cbd5e0;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.change-cluster-btn:hover {
+  background: #e2e8f0;
+}
+
+.demo-footer {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.back-to-demo {
+  background: none;
+  border: 1px solid #cbd5e0;
+  color: #4a5568;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-to-demo:hover {
+  background: #f7fafc;
+}
+
+.connection-benefits {
+  background: #f7fafc;
+  border-radius: 12px;
+  padding: 3rem;
+  margin-top: 3rem;
+}
+
+.connection-benefits h2 {
+  text-align: center;
+  color: #2d3748;
+  margin-bottom: 2rem;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.benefit {
+  text-align: center;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.benefit-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.benefit h3 {
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.benefit p {
+  color: #718096;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #2196f3;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #1976d2;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+}
+
+.btn-secondary:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #718096;
+}

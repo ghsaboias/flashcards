@@ -7,7 +7,7 @@ import PracticeSession from '../components/PracticeSession'
 import SessionLayout from '../layouts/SessionLayout'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { useAudioControls } from '../hooks/useAudioControls'
-import { useNavigationGuardContext } from '../hooks/useNavigationGuardContext'
+import { useSessionPersistence } from '../hooks/useSessionPersistence'
 
 const SessionPage = memo(function SessionPage() {
   const { id } = useParams<{ id: string }>()
@@ -17,7 +17,7 @@ const SessionPage = memo(function SessionPage() {
   const [error, setError] = useState<string | null>(null)
   const [isEndingSession, setIsEndingSession] = useState(false)
   const { speak } = useAudioControls()
-  const { clearSession } = useNavigationGuardContext()
+  const { clearSavedSession } = useSessionPersistence()
 
   // Computed values
   const canAnswer = useMemo(() => (
@@ -46,7 +46,7 @@ const SessionPage = memo(function SessionPage() {
     } catch (cancelError) {
       console.error('Failed to cancel session:', cancelError)
     } finally {
-      clearSession()
+      clearSavedSession()
       actions.resetSessionUI()
       setIsEndingSession(false)
       navigate('/')

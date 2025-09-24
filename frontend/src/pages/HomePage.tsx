@@ -1,10 +1,14 @@
-import { memo, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { memo, useEffect, useMemo, useState } from 'react'
 import { useSessionStateAndActions } from '../hooks/useSessionContext'
 import { useAppContext } from '../hooks/useAppContext'
-import { useNavigationGuardContext } from '../hooks/useNavigationGuardContext'
+import { useNavigate } from 'react-router-dom'
+import { formatMultiSetLabel } from '../utils/hsk-label-utils'
+import { countByDifficulty } from '../utils/session-utils'
 import MainLayout from '../layouts/MainLayout'
 import NewCardsPromptManager from '../components/NewCardsPromptManager'
+import QuickStartSection from '../components/QuickStartSection'
+import { PracticeModesSection } from '../components/home/PracticeModesSection'
+import '../styles/home.css'
 
 // Prefetch functions for likely next routes
 const prefetchPracticePage = () => import('./PracticePage')
@@ -20,8 +24,7 @@ const HomePage = memo(function HomePage() {
   const { selectedDomain } = useAppContext()
   const [state, actions] = useSessionStateAndActions()
   const navigate = useNavigate()
-  const { navigateWithGuard } = useNavigationGuardContext()
-  const [isStarting, setIsStarting] = useState(false)
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)
 
   // Prefetch likely next pages after component mounts
   useEffect(() => {
@@ -41,59 +44,88 @@ const HomePage = memo(function HomePage() {
     }
   }, [])
 
-  const handleStartSession = async () => {
-    setIsStarting(true)
-    try {
-      const response = await actions.beginAutoSession(selectedDomain?.id)
 
-      if (response && 'session_id' in response && response.session_id) {
-        navigate(`/session/${response.session_id}`)
-      }
-    } catch (error) {
-      console.error('Failed to start session:', error)
-    } finally {
-      setIsStarting(false)
+  const handleNetworkExploration = async () => {
+    navigate('/network')
+  }
+
+  const selectedDifficulties = useMemo(() => {
+    const values: Array<'easy' | 'medium' | 'hard'> = []
+    if (state.diffEasy) values.push('easy')
+    if (state.diffMedium) values.push('medium')
+    if (state.diffHard) values.push('hard')
+    return values
+  }, [state.diffEasy, state.diffMedium, state.diffHard])
+
+  const canStartByDifficulty = selectedDifficulties.length > 0
+
+  const difficultyCounts = useMemo(() => {
+    if (!state.difficultyRows || state.difficultyRows.length === 0) {
+      return { easy: 0, medium: 0, hard: 0 }
     }
-  }
+    return countByDifficulty(state.difficultyRows)
+  }, [state.difficultyRows])
 
-  const handleAdvancedOptions = async () => {
-    await navigateWithGuard('/practice')
-  }
 
-  // Prefetch on hover/focus for Advanced Options button
-  const handleAdvancedOptionsHover = () => {
-    prefetchPracticePage().catch(console.error)
+  const knowledgeGraphAvailable = selectedDomain?.id === 'chinese'
+
+  const renderContent = () => {
+    // Special flows that override the main page
+    if (state.newCardsDetection) {
+      return <NewCardsPromptManager />
+    }
+
+
+    // Main page structure - always show quick start first
+    return (
+      <>
+        {/* Primary Action - Always Visible */}
+        <QuickStartSection
+          sessionState={state}
+          actions={actions}
+          selectedDomain={selectedDomain}
+        />
+
+        {/* Network Exploration for Chinese domain */}
+        {knowledgeGraphAvailable && (
+          <div className="knowledge-graph-cta">
+            <button
+              className="btn-secondary knowledge-graph-btn"
+              onClick={handleNetworkExploration}
+            >
+              Explore Character Network
+            </button>
+          </div>
+        )}
+
+        {/* Advanced Options Toggle */}
+        <div className="advanced-options-section">
+          <button
+            className="btn-tertiary advanced-toggle"
+            onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
+          >
+            {showAdvancedOptions ? 'Hide' : 'Show'} Advanced Options
+          </button>
+
+          {showAdvancedOptions && (
+            <PracticeModesSection
+              sessionState={state}
+              actions={actions}
+              canStartByDifficulty={canStartByDifficulty}
+              difficultyCounts={difficultyCounts}
+              getMultiSetLabel={() => formatMultiSetLabel(state.selectedSets)}
+              onBackToSimple={() => setShowAdvancedOptions(false)}
+              backLabel="← Hide Advanced Options"
+            />
+          )}
+        </div>
+      </>
+    )
   }
 
   return (
     <MainLayout>
-      <div className="streamlined-start">
-        <div className="single-button-hero" style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
-          {state.newCardsDetection ? (
-            <NewCardsPromptManager />
-          ) : (
-            <>
-              <button
-                className="btn-primary start-practice"
-                onClick={handleStartSession}
-                disabled={isStarting}
-                style={{ opacity: isStarting ? 0.7 : 1, cursor: isStarting ? 'not-allowed' : 'pointer' }}
-              >
-                {isStarting ? 'Starting...' : 'Start'}
-              </button>
-
-              <button
-                className="btn-tertiary"
-                onClick={handleAdvancedOptions}
-                onMouseEnter={handleAdvancedOptionsHover}
-                onFocus={handleAdvancedOptionsHover}
-              >
-                Advanced Options
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      {renderContent()}
     </MainLayout>
   )
 })

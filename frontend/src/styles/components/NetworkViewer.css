@@ -1,0 +1,270 @@
+/* Network Visualization Component Styles */
+
+/* Note: The original ConnectionAware.css file doesn't contain explicit network viewer styles.
+   These styles are likely defined elsewhere or need to be created for the NetworkPage,
+   MiniNetworkViewer, and LiveProgressNetwork components mentioned in the requirements.
+
+   Based on the requirements, here are placeholder styles for network visualization components: */
+
+.network-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #fafafa;
+  overflow: hidden;
+}
+
+.network-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.network-svg {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.network-svg:active {
+  cursor: grabbing;
+}
+
+.mini-network-viewer {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  max-height: 300px;
+  overflow: hidden;
+}
+
+.live-progress-network {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  max-width: 200px;
+}
+
+.filter-group {
+  margin-bottom: 1rem;
+}
+
+.filter-group label {
+  display: block;
+  font-size: 0.9rem;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.filter-group select,
+.filter-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.legend {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.legend h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: #2d3748;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.legend-item span {
+  font-size: 0.8rem;
+  color: #4a5568;
+}
+
+.info {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 200px;
+}
+
+.info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #2d3748;
+}
+
+.info p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  pointer-events: none;
+  z-index: 20;
+  max-width: 200px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1rem;
+  color: #718096;
+}
+
+.error-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1rem;
+  color: #e53e3e;
+  text-align: center;
+}
+
+/* Network SVG Elements */
+.network-node {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.network-node:hover {
+  stroke-width: 2;
+}
+
+.network-link {
+  stroke-opacity: 0.6;
+  transition: all 0.2s ease;
+}
+
+.network-text {
+  font-size: 10px;
+  font-family: Arial, sans-serif;
+  fill: #2d3748;
+  pointer-events: none;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+/* Connection Types */
+.connection-semantic {
+  stroke: #4299e1;
+}
+
+.connection-compound {
+  stroke: #48bb78;
+}
+
+.connection-radical {
+  stroke: #ed8936;
+}
+
+/* Node States */
+.node-mastered {
+  fill: #48bb78;
+  stroke: #38a169;
+}
+
+.node-learning {
+  fill: #ed8936;
+  stroke: #dd6b20;
+}
+
+.node-new {
+  fill: #e2e8f0;
+  stroke: #a0aec0;
+}
+
+.node-current {
+  fill: #4299e1;
+  stroke: #3182ce;
+  stroke-width: 3;
+}
+
+/* Animation Effects */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.network-node.animated {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.mastery-celebration {
+  stroke: #48bb78;
+  stroke-width: 4;
+  animation: pulse 2s ease-in-out 3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .controls,
+  .info {
+    position: relative;
+    margin-bottom: 1rem;
+    max-width: none;
+  }
+
+  .legend {
+    position: relative;
+    margin-top: 1rem;
+  }
+
+  .network-page {
+    height: calc(100vh - 200px);
+  }
+}

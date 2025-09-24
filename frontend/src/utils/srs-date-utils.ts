@@ -1,5 +1,5 @@
 // SRS Date Processing Utilities
-// Consolidates duplicated UTC date parsing logic from SrsTable.tsx and UnifiedTable.tsx
+// UTC date parsing logic for UnifiedTable.tsx SRS functionality
 
 /**
  * Parse SRS date string with UTC timezone handling

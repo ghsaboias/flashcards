@@ -52,14 +52,12 @@ export type PracticeSessionProps = BaseQuestionProps
 
 export type SessionCompleteProps = BaseCompletionProps & BaseLabelProps
 
-export interface HighIntensityModeProps extends BaseSessionProps {
-  humanizeSetLabel: (raw: string) => string
-  getMultiSetLabel: () => string
-}
 
 export interface TraditionalModesProps extends BaseSessionProps, BaseLabelProps {
   canStartByDifficulty: boolean
   difficultyCounts: Record<'easy' | 'medium' | 'hard', number>
+  onBackToSimple: () => void
+  backLabel?: string
 }
 
 export type StatsOverviewProps = BaseStatsProps
@@ -68,18 +66,7 @@ export interface KeyboardHandlerProps extends BaseSessionProps {
   speak: (text: string) => void
 }
 
-// For table components that display data
-export interface StatsTableProps {
-  stats: NonNullable<SessionState['stats']>
-  humanizeSetLabel: (raw: string) => string
-  getMultiSetLabel: () => string
-}
-
-export interface SrsTableProps {
-  srsRows: SessionState['srsRows']
-  humanizeSetLabel: (raw: string) => string
-  getMultiSetLabel: () => string
-}
+// For table components that display data - using UnifiedTable
 
 // For drawing canvas component (simplified after page migration)
 export interface DrawingCanvasProps {
