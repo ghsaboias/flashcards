@@ -241,6 +241,7 @@ flashcards/
         │   ├── 📄 StatsPage.tsx        # Analytics dashboard (lazy)
         │   ├── 📄 BrowsePage.tsx       # Card browsing by set (lazy)
         │   ├── 📄 DrawingPage.tsx      # Character drawing practice (lazy)
+        │   ├── 📄 NetworkPage.tsx      # Interactive D3.js network visualization (lazy)
         │   └── 📄 ErrorPage.tsx        # 404 and error handling (eager)
         ├── 📁 layouts/             # Layout components (React.memo optimized)
         │   ├── 📄 MainLayout.tsx       # Shared navigation & domain selector
@@ -248,7 +249,7 @@ flashcards/
         ├── 📁 components/          # React components (performance optimized)
         │   ├── 📄 AudioControls.tsx     # Audio controls component
         │   ├── 📄 DomainSelector.tsx    # Multi-domain selection dropdown
-        │   ├── 📄 HighIntensityMode.tsx # High-intensity practice mode
+        │   ├── 📄 QuickStartSection.tsx  # Streamlined practice interface
         │   ├── 📄 KeyboardHandler.tsx   # Keyboard shortcuts handler
         │   ├── 📄 PracticeSession.tsx   # Practice session component with mini-network
         │   ├── 📄 SessionComplete.tsx   # Session completion screen
@@ -260,7 +261,9 @@ flashcards/
         │   ├── 📄 PhaseProgressBar.tsx  # 5-phase learning system visualization
         │   ├── 📄 MiniNetworkViewer.tsx # Compact network during practice sessions
         │   ├── 📄 LiveProgressNetwork.tsx # Advanced real-time progress visualization
-        │   └── 📄 SessionRecovery.tsx   # Simple session recovery prompt
+        │   ├── 📄 SessionRecovery.tsx   # Simple session recovery prompt
+        │   └── 📁 home/                 # Home page components
+        │       └── 📄 PracticeModesSection.tsx # Traditional practice modes section
         ├── 📁 contexts/            # React Context providers (useMemo optimized)
         │   ├── 📄 SessionContext.tsx    # Session state context
         │   ├── 📄 AppContext.tsx        # Global app context provider
@@ -272,7 +275,15 @@ flashcards/
         │   ├── 📄 useSessionContext.ts  # Session context hook
         │   ├── 📄 useSessionManager.ts  # Session management hook
         │   ├── 📄 useAppContext.ts      # Global app context hook
-        │   └── 📄 useSessionPersistence.ts # Simple session persistence hook
+        │   ├── 📄 useSessionPersistence.ts # Simple session persistence hook
+        │   ├── 📄 useNetworkVisualization.ts # D3.js network rendering logic
+        │   ├── 📄 useNetworkFilters.ts   # Network filtering and search
+        │   ├── 📄 useConnectionAwareSession.ts # Connection-aware session logic
+        │   ├── 📄 useSessionData.ts      # Session data management
+        │   ├── 📄 useSessionLifecycle.ts # Session lifecycle management
+        │   └── 📄 useSessionStateStore.ts # Session state store
+        ├── 📁 constants/           # Application constants
+        │   └── 📄 network-colors.ts     # Network visualization color scheme
         ├── 📁 types/               # TypeScript type definitions
         │   ├── 📄 api-types.ts          # API response types
         │   ├── 📄 component-props.ts    # Component prop types
@@ -285,7 +296,15 @@ flashcards/
         │   ├── 📄 srs-date-utils.ts     # SRS date utilities
         │   ├── 📄 stats-aggregation.ts  # Statistics aggregation
         │   ├── 📄 text-utils.ts         # Text processing utilities
-        │   └── 📄 performance-simple.ts # Simple performance monitoring utility
+        │   ├── 📄 performance-simple.ts # Simple performance monitoring utility
+        │   ├── 📄 network-helpers.ts    # Network visualization utilities
+        │   └── 📄 knowledgeGraphSession.ts # Knowledge graph session utilities
+        ├── 📁 styles/              # CSS styling
+        │   ├── 📄 NetworkPage.css       # Network visualization styles
+        │   ├── 📄 ConnectionAware.css   # Connection-aware session styles
+        │   ├── 📄 home.css              # Home page layout
+        │   ├── 📁 components/           # Component-specific styles
+        │   └── 📁 pages/                # Page-specific styles
         ├── 📁 tests/               # Test utilities
         │   └── 📄 navigationFlow-simple.test.ts # Essential navigation tests
         └── 📁 assets/              # Static assets
