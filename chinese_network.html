@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HSK Level 1 Character Network - Knowledge Graph Quest</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    /* Network Page - Exact replica of React NetworkPage.css styling */
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      overflow: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+    }
+
+    .network-container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    .network-svg {
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+    }
+
+    /* Loading and Error States */
+    .loading, .error {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #0a0a0a;
+      color: #fff;
+    }
+
+    .loading-spinner {
+      font-size: 24px;
+      color: #4fc3f7;
+    }
+
+    .error-message {
+      text-align: center;
+      max-width: 400px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+
+    .error-message h3 {
+      color: #f44336;
+      margin-bottom: 10px;
+    }
+
+    /* Controls Panel */
+    .controls {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      z-index: 1000;
+      max-width: 250px;
+      backdrop-filter: blur(10px);
+    }
+
+    .controls h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .filter-group {
+      margin-bottom: 15px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 5px;
+      color: #ccc;
+    }
+
+    .controls select,
+    .controls input {
+      width: 100%;
+      padding: 5px;
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .controls select:focus,
+    .controls input:focus {
+      outline: none;
+      border-color: #4fc3f7;
+    }
+
+    .frequency-value {
+      font-size: 11px;
+      color: #4fc3f7;
+      margin-left: 5px;
+    }
+
+    .stats {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+
+    .stats div {
+      margin-bottom: 2px;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13px;
+      pointer-events: none;
+      z-index: 2000;
+      max-width: 200px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+    }
+
+    .tooltip .char {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4fc3f7;
+      margin-bottom: 5px;
+    }
+
+    .tooltip .pinyin {
+      color: #81c784;
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .tooltip .domain {
+      color: #ffb74d;
+      font-size: 11px;
+    }
+
+    /* Network Elements */
+    .node {
+      cursor: pointer;
+    }
+
+    .node.highlighted circle {
+      stroke-width: 3px !important;
+    }
+
+    .link {
+      stroke-opacity: 0.3;
+    }
+
+    .link.highlighted {
+      stroke-opacity: 0.8 !important;
+      stroke-width: 2px !important;
+    }
+
+    /* Legend */
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    .legend h3 {
+      margin: 0 0 10px 0;
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+      border: 1px solid #333;
+    }
+
+    /* Info Panel */
+    .info {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      z-index: 1000;
+      max-width: 300px;
+      font-size: 12px;
+      line-height: 1.4;
+      backdrop-filter: blur(10px);
+    }
+
+    .info h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      color: #4fc3f7;
+    }
+
+    .info p {
+      margin-bottom: 10px;
+      color: #ccc;
+    }
+
+    .info strong {
+      color: #fff;
+    }
+
+    /* Range Input Styling */
+    .controls input[type="range"] {
+      width: 100%;
+      height: 4px;
+      background: #333;
+      outline: none;
+      border-radius: 2px;
+      border: none;
+      padding: 0;
+    }
+
+    .controls input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      background: #4fc3f7;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .controls input[type="range"]::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      background: #4fc3f7;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .controls,
+      .legend,
+      .info {
+        max-width: 200px;
+        padding: 10px;
+        font-size: 11px;
+      }
+
+      .controls h3,
+      .legend h3,
+      .info h3 {
+        font-size: 12px;
+      }
+
+      .tooltip {
+        max-width: 150px;
+        font-size: 11px;
+      }
+
+      .tooltip .char {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .legend {
+        bottom: 10px;
+        left: 10px;
+      }
+
+      .controls {
+        top: 10px;
+        left: 10px;
+      }
+
+      .info {
+        top: 10px;
+        right: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading" class="loading">
+    <div class="loading-spinner">Loading HSK Network...</div>
+  </div>
+
+  <div id="error" class="error" style="display: none;">
+    <div class="error-message">
+      <h3>Failed to Load Network</h3>
+      <p id="error-text">Unknown error occurred</p>
+    </div>
+  </div>
+
+  <div id="app" style="display: none;">
+    <div class="network-container">
+      <svg class="network-svg" id="network-svg"></svg>
+    </div>
+
+    <!-- Controls Panel -->
+    <div class="controls">
+      <h3>Filters & Controls</h3>
+
+      <div class="filter-group">
+        <label for="domain-filter">Semantic Domain:</label>
+        <select id="domain-filter">
+          <option value="all">All Domains</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="radical-filter">Radical Family:</label>
+        <select id="radical-filter">
+          <option value="all">All Radicals</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="tone-filter">Tone:</label>
+        <select id="tone-filter">
+          <option value="all">All Tones</option>
+          <option value="1">Tone 1 (ā)</option>
+          <option value="2">Tone 2 (á)</option>
+          <option value="3">Tone 3 (ǎ)</option>
+          <option value="4">Tone 4 (à)</option>
+          <option value="0">Neutral</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="frequency-filter">Min Frequency:</label>
+        <input type="range" id="frequency-filter" min="1" max="10" value="1" />
+        <span class="frequency-value" id="frequency-value">1+</span>
+      </div>
+
+      <div class="stats" id="stats">
+        <div>Characters: <span id="chars-count">0</span></div>
+        <div>Links: <span id="links-count">0</span></div>
+        <div>Domains: <span id="domains-count">0</span></div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <h3>Semantic Domains</h3>
+      <div class="legend-content" id="legend-content">
+        <!-- Legend items will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="info">
+      <h3>HSK Level 1 Character Network</h3>
+      <p><strong>Hover</strong> over characters to see details<br/>
+      <strong>Click</strong> to highlight connections<br/>
+      <strong>Drag</strong> to explore the network<br/>
+      <strong>Zoom</strong> with mouse wheel</p>
+
+      <p style="color: #888; font-size: 11px; margin-top: 15px;">
+      This visualization reveals the hidden relationships between Chinese characters that traditional flashcard drilling obscures. Each cluster represents semantic domains or radical families.
+      </p>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip">
+      <div class="char" id="tooltip-char"></div>
+      <div class="pinyin" id="tooltip-pinyin"></div>
+      <div class="domain" id="tooltip-domain"></div>
+      <div id="tooltip-pos"></div>
+      <div id="tooltip-frequency"></div>
+    </div>
+  </div>
+
+  <script>
+    // Domain color mappings - exact match to React app
+    const domainColors = {
+      'emotions': '#e91e63',
+      'numbers': '#2196f3',
+      'time': '#ff9800',
+      'food': '#4caf50',
+      'transport': '#9c27b0',
+      'body': '#f44336',
+      'family': '#3f51b5',
+      'appearance': '#ff5722',
+      'places': '#009688',
+      'actions': '#795548',
+      'nouns': '#607d8b',
+      'qualities': '#ffc107',
+      'modifiers': '#cddc39',
+      'other': '#9e9e9e'
+    };
+
+    // Global state
+    let networkData = null;
+    let filteredData = null;
+    let simulation = null;
+    let nodes, links, svg, svgContainer;
+    let tooltip = null;
+
+    // Filter state
+    let filters = {
+      domainFilter: 'all',
+      radicalFilter: 'all',
+      toneFilter: 'all',
+      frequencyFilter: 1
+    };
+
+    // Utility functions matching React app exactly
+    function extractTone(pinyin, toneNumber) {
+      if (toneNumber !== undefined && toneNumber !== null) {
+        return toneNumber;
+      }
+
+      // Extract from pinyin tone marks
+      const toneMap = {
+        'ā': 1, 'á': 2, 'ǎ': 3, 'à': 4,
+        'ō': 1, 'ó': 2, 'ǒ': 3, 'ò': 4,
+        'ē': 1, 'é': 2, 'ě': 3, 'è': 4,
+        'ī': 1, 'í': 2, 'ǐ': 3, 'ì': 4,
+        'ū': 1, 'ú': 2, 'ǔ': 3, 'ù': 4,
+        'ü': 1, 'ǘ': 2, 'ǚ': 3, 'ǜ': 4,
+        'ń': 2, 'ň': 3, 'ǹ': 4
+      };
+
+      for (const char of pinyin) {
+        if (toneMap[char]) {
+          return toneMap[char];
+        }
+      }
+
+      // Check for trailing number
+      if (pinyin && /\d$/.test(pinyin)) {
+        return parseInt(pinyin.slice(-1));
+      }
+
+      return 0; // Neutral tone
+    }
+
+    function getToneArrow(tone) {
+      const arrows = { 1: '↗', 2: '↘↗', 3: '↘↗', 4: '↘', 0: '→' };
+      return arrows[tone] || '→';
+    }
+
+    function getPosDisplay(pos) {
+      const posMap = {
+        'N': 'Noun', 'V': 'Verb', 'Adj': 'Adjective', 'Adv': 'Adverb',
+        'Pr': 'Pronoun', 'Aux': 'Auxiliary', 'Num': 'Number', 'M': 'Measure'
+      };
+      return posMap[pos] || pos || 'Unknown';
+    }
+
+    // Filter functions
+    function applyFilters(data) {
+      if (!data) return null;
+
+      let filteredNodes = data.nodes.filter(node => {
+        // Domain filter
+        if (filters.domainFilter !== 'all' && node.semantic_domain !== filters.domainFilter) {
+          return false;
+        }
+
+        // Tone filter
+        if (filters.toneFilter !== 'all') {
+          const tone = extractTone(node.pinyin, node.tone);
+          if (tone.toString() !== filters.toneFilter) {
+            return false;
+          }
+        }
+
+        // Frequency filter
+        const frequency = node.frequency || Math.round(node.hub_score * 10);
+        if (frequency < filters.frequencyFilter) {
+          return false;
+        }
+
+        return true;
+      });
+
+      // Filter links to only include nodes that passed the filter
+      const nodeIds = new Set(filteredNodes.map(n => n.id));
+      let filteredLinks = data.links.filter(link => {
+        const sourceId = typeof link.source === 'string' ? link.source : link.source.id;
+        const targetId = typeof link.target === 'string' ? link.target : link.target.id;
+        return nodeIds.has(sourceId) && nodeIds.has(targetId);
+      });
+
+      return {
+        nodes: filteredNodes,
+        links: filteredLinks
+      };
+    }
+
+    function updateFilters() {
+      filteredData = applyFilters(networkData);
+      updateStats();
+      initializeVisualization();
+    }
+
+    function updateStats() {
+      if (!filteredData) return;
+
+      document.getElementById('chars-count').textContent = filteredData.nodes.length;
+      document.getElementById('links-count').textContent = filteredData.links.length;
+
+      const domains = new Set(filteredData.nodes.map(n => n.semantic_domain));
+      document.getElementById('domains-count').textContent = domains.size;
+    }
+
+    function populateFilterOptions(data) {
+      // Populate domain filter
+      const domainFilter = document.getElementById('domain-filter');
+      const domains = [...new Set(data.nodes.map(n => n.semantic_domain))].filter(Boolean).sort();
+
+      // Clear existing options except "All"
+      while (domainFilter.children.length > 1) {
+        domainFilter.removeChild(domainFilter.lastChild);
+      }
+
+      domains.forEach(domain => {
+        const option = document.createElement('option');
+        option.value = domain;
+        option.textContent = domain;
+        domainFilter.appendChild(option);
+      });
+
+      // Populate radical filter (simplified for standalone version)
+      const radicalFilter = document.getElementById('radical-filter');
+      const radicals = ['人', '口', '心', '手', '水', '木', '日', '月', '土', '女', '子', '车', '门', '走'];
+
+      radicals.forEach(radical => {
+        const option = document.createElement('option');
+        option.value = radical;
+        option.textContent = radical;
+        radicalFilter.appendChild(option);
+      });
+
+      // Populate legend
+      const legendContent = document.getElementById('legend-content');
+      legendContent.innerHTML = '';
+
+      domains.forEach(domain => {
+        if (domainColors[domain]) {
+          const item = document.createElement('div');
+          item.className = 'legend-item';
+          item.innerHTML = `
+            <div class="legend-color" style="background-color: ${domainColors[domain]}"></div>
+            <span>${domain}</span>
+          `;
+          legendContent.appendChild(item);
+        }
+      });
+    }
+
+    // Tooltip functions
+    function showTooltip(event, node) {
+      const tooltip = document.getElementById('tooltip');
+      const tone = extractTone(node.pinyin, node.tone);
+      const frequency = node.frequency || Math.round(node.hub_score * 10);
+
+      document.getElementById('tooltip-char').textContent = node.char;
+      document.getElementById('tooltip-pinyin').textContent = `${node.pinyin} ${getToneArrow(tone)}`;
+      document.getElementById('tooltip-domain').textContent = node.semantic_domain;
+      document.getElementById('tooltip-pos').textContent = getPosDisplay(node.pos);
+      document.getElementById('tooltip-frequency').textContent = `Frequency: ${frequency}`;
+
+      tooltip.style.left = (event.pageX + 10) + 'px';
+      tooltip.style.top = (event.pageY - 10) + 'px';
+      tooltip.classList.add('visible');
+    }
+
+    function hideTooltip() {
+      document.getElementById('tooltip').classList.remove('visible');
+    }
+
+    function updateTooltip(event) {
+      const tooltip = document.getElementById('tooltip');
+      if (tooltip.classList.contains('visible')) {
+        tooltip.style.left = (event.pageX + 10) + 'px';
+        tooltip.style.top = (event.pageY - 10) + 'px';
+      }
+    }
+
+    // Network highlighting
+    function highlightConnections(selectedNode) {
+      // Reset all highlighting
+      nodes.classed('highlighted', false);
+      links.classed('highlighted', false);
+
+      // Highlight selected node
+      nodes.filter(n => n.id === selectedNode.id).classed('highlighted', true);
+
+      // Get connected nodes and links
+      const connectedNodes = new Set([selectedNode.id]);
+      const connectedLinks = filteredData.links.filter(l => {
+        const sourceId = typeof l.source === 'string' ? l.source : l.source.id;
+        const targetId = typeof l.target === 'string' ? l.target : l.target.id;
+        return sourceId === selectedNode.id || targetId === selectedNode.id;
+      });
+
+      connectedLinks.forEach(l => {
+        const sourceId = typeof l.source === 'string' ? l.source : l.source.id;
+        const targetId = typeof l.target === 'string' ? l.target : l.target.id;
+        connectedNodes.add(sourceId);
+        connectedNodes.add(targetId);
+      });
+
+      // Highlight connected elements
+      nodes.classed('highlighted', n => connectedNodes.has(n.id));
+      links.classed('highlighted', l => {
+        const sourceId = typeof l.source === 'string' ? l.source : l.source.id;
+        const targetId = typeof l.target === 'string' ? l.target : l.target.id;
+        return sourceId === selectedNode.id || targetId === selectedNode.id;
+      });
+    }
+
+    // Main visualization initialization
+    function initializeVisualization() {
+      if (!filteredData) return;
+
+      const container = document.querySelector('.network-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      // Clear previous content
+      svg.selectAll('*').remove();
+
+      // Set up SVG
+      svg.attr('width', width).attr('height', height);
+
+      // Create container
+      svgContainer = svg.append('g');
+
+      // Create zoom behavior - exact match to React
+      const zoom = d3.zoom()
+        .scaleExtent([0.1, 10])
+        .on('zoom', function(event) {
+          svgContainer.attr('transform', event.transform);
+        });
+
+      svg.call(zoom);
+
+      // Create simulation - exact match to React parameters
+      simulation = d3.forceSimulation(filteredData.nodes)
+        .force('link', d3.forceLink(filteredData.links).id(d => d.id).distance(d => {
+          // Different distances for different link types - exact match to React
+          switch(d.type) {
+            case 'semantic': return 50;
+            case 'radical': return 40;
+            case 'compound': return 30;
+            default: return 50;
+          }
+        }).strength(d => d.strength))
+        .force('charge', d3.forceManyBody().strength(-100))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide().radius(15));
+
+      // Create links - exact match to React
+      links = svgContainer.append('g')
+        .selectAll('line')
+        .data(filteredData.links)
+        .enter().append('line')
+        .attr('class', 'link')
+        .attr('stroke', d => {
+          // Match React color scheme exactly
+          switch(d.type) {
+            case 'semantic': return '#4fc3f7';
+            case 'radical': return '#81c784';
+            case 'compound': return '#ffb74d';
+            default: return '#666';
+          }
+        })
+        .attr('stroke-opacity', 0.3)
+        .attr('stroke-width', d => Math.sqrt((d.strength || 1) * 3)); // Match React: strength * 3
+
+      // Create nodes - exact match to React
+      nodes = svgContainer.append('g')
+        .selectAll('g')
+        .data(filteredData.nodes)
+        .enter().append('g')
+        .attr('class', 'node')
+        .style('cursor', 'pointer');
+
+      // Add circles to nodes - exact match to React
+      nodes.append('circle')
+        .attr('r', d => Math.sqrt(d.frequency || d.hub_score * 10) * 3 + 5) // Match React: frequency-based sizing
+        .attr('fill', d => domainColors[d.semantic_domain] || '#666') // Use exact React colors
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 1);
+
+      // Add text to nodes
+      nodes.append('text')
+        .text(d => d.char)
+        .attr('text-anchor', 'middle')
+        .attr('dy', '0.35em')
+        .attr('font-size', '14px')
+        .attr('font-weight', 'bold')
+        .attr('fill', '#fff')
+        .attr('pointer-events', 'none');
+
+      // Add mouse events - match React behavior exactly
+      nodes
+        .on('mouseover', function(event, d) {
+          showTooltip(event, d);
+        })
+        .on('mousemove', function(event) {
+          updateTooltip(event);
+        })
+        .on('mouseout', function() {
+          hideTooltip();
+        })
+        .on('click', function(event, d) {
+          highlightConnections(d);
+        });
+
+      // Add drag behavior
+      const drag = d3.drag()
+        .on('start', (event, d) => {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        })
+        .on('drag', (event, d) => {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on('end', (event, d) => {
+          if (!event.active) simulation.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        });
+
+      nodes.call(drag);
+
+      // Update positions on each tick
+      simulation.on('tick', () => {
+        links
+          .attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y);
+
+        nodes
+          .attr('transform', d => `translate(${d.x},${d.y})`);
+      });
+    }
+
+    // Event listeners for filters
+    function setupEventListeners() {
+      document.getElementById('domain-filter').addEventListener('change', (e) => {
+        filters.domainFilter = e.target.value;
+        updateFilters();
+      });
+
+      document.getElementById('radical-filter').addEventListener('change', (e) => {
+        filters.radicalFilter = e.target.value;
+        updateFilters();
+      });
+
+      document.getElementById('tone-filter').addEventListener('change', (e) => {
+        filters.toneFilter = e.target.value;
+        updateFilters();
+      });
+
+      document.getElementById('frequency-filter').addEventListener('input', (e) => {
+        filters.frequencyFilter = parseInt(e.target.value);
+        document.getElementById('frequency-value').textContent = filters.frequencyFilter + '+';
+        updateFilters();
+      });
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        if (!simulation) return;
+
+        const container = document.querySelector('.network-container');
+        const newWidth = container.clientWidth;
+        const newHeight = container.clientHeight;
+
+        svg.attr('width', newWidth).attr('height', newHeight);
+        simulation.force('center', d3.forceCenter(newWidth / 2, newHeight / 2));
+        simulation.alpha(0.3).restart();
+      });
+    }
+
+    // Load network data and initialize
+    async function loadNetworkData() {
+      try {
+        // Use the proper original JSON file - same as React version
+        const response = await fetch('./hsk_network_data.json')
+        if (!response.ok) {
+          throw new Error(`Failed to load network data: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        networkData = {
+          nodes: data.nodes || [],
+          links: data.links || []
+        };
+
+        // Initialize the app
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+
+        svg = d3.select('#network-svg');
+
+        populateFilterOptions(networkData);
+        setupEventListeners();
+        updateFilters();
+
+        console.log(`📊 Loaded network: ${networkData.nodes.length} characters, ${networkData.links.length} connections`);
+
+      } catch (error) {
+        console.error('Failed to load network data:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'flex';
+        document.getElementById('error-text').textContent = error.message;
+      }
+    }
+
+    // Initialize the application
+    loadNetworkData();
+  </script>
+</body>
+</html>
