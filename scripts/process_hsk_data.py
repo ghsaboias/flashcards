@@ -9,7 +9,7 @@ Recreates the exact hsk_network_data.json structure with:
 - Exact hub scores, cluster roles, and semantic domains
 - Original POS tags, traditional forms, and tone information
 
-This script processes the hsk30-expanded.csv file and produces the exact
+This script processes the data/hsk30-expanded.csv file and produces the exact
 same output structure as the original frontend/public/hsk_network_data.json.
 """
 
@@ -17,6 +17,7 @@ import json
 import csv
 import re
 from collections import defaultdict
+from pathlib import Path
 from typing import Dict, List, Set
 
 class HSKNetworkProcessor:
@@ -245,7 +246,7 @@ class HSKNetworkProcessor:
 
         return roles
 
-    def process_to_exact_format(self, csv_file: str = 'hsk30-expanded.csv', output_file: str = 'hsk_network_data_recreated.json'):
+    def process_to_exact_format(self, csv_file: str = 'data/hsk30-expanded.csv', output_file: str = 'docs/knowledge-graph/datasets/hsk_network_data_recreated.json'):
         """Process HSK data to match exact original format."""
         print("🔄 Loading HSK Level 1 single characters...")
         characters = self.load_hsk_characters(csv_file)
@@ -309,7 +310,9 @@ class HSKNetworkProcessor:
         }
 
         print(f"💾 Saving to {output_file}...")
-        with open(output_file, 'w', encoding='utf-8') as f:
+        output_path = Path(output_file)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with output_path.open('w', encoding='utf-8') as f:
             json.dump(output_data, f, ensure_ascii=False, indent=2)
 
         print("✅ Processing complete!")

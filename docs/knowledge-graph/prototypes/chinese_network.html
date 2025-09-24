@@ -828,7 +828,7 @@
     async function loadNetworkData() {
       try {
         // Use the proper original JSON file - same as React version
-        const response = await fetch('./hsk_network_data.json')
+        const response = await fetch('../datasets/hsk_network_data.json')
         if (!response.ok) {
           throw new Error(`Failed to load network data: ${response.statusText}`);
         }
