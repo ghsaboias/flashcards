@@ -2,6 +2,32 @@ import { updateSrs } from './srs'
 import type { SessionCard, SessionState } from './types'
 import { validateAnswer } from './utils/validateAnswer'
 import { fetchCards, fetchMultiSetCards, fetchMultiSetSrsCards, extractSrsData } from './utils/db-queries'
+import {
+  applyConnectionAwareSelection,
+  getStruggleCharacters,
+  getConnectedCharacters,
+  clusterBySemantics
+} from './utils/connection-aware-session'
+import {
+  buildAnswerMap,
+  buildCardMetaMap,
+  buildDifficultyMap,
+  buildSRSMap,
+  validateAnswerFast,
+  getDifficultyFast,
+  getSRSDataFast
+} from './utils/session-maps'
+import {
+  assessResponseDifficulty,
+  calculateFeedbackDuration,
+  calculateAdaptiveFeedbackDuration
+} from './utils/difficulty-assessment'
+import { handlePlayAgain } from './utils/play-again'
+import {
+  matchesDifficulty,
+  nowUtc,
+  computeSessionType
+} from './utils/session-helpers'
 
 type Env = {
   DB: D1Database
@@ -42,6 +68,8 @@ export class SessionsDO {
       selected_sets: string[]
       review_items?: Array<{ question: string; answer: string; set_name?: string }>
       exclude_new_cards?: boolean
+      connection_aware?: boolean
+      domain_id?: string
     }
     const session_id = this.state.id.toString()
     const started_at = new Date().toISOString()
@@ -71,7 +99,7 @@ export class SessionsDO {
         const remaining = TARGET_SESSION_SIZE - allCards.length
         const diffResult = await fetchMultiSetCards(this.env.DB, { fields: 'full' }, payload.selected_sets)
         let difficultCards = diffResult.metadata
-          .filter(r => this.matchesDifficulty(r, new Set(payload.difficulty_levels!)))
+          .filter(r => matchesDifficulty(r, new Set(payload.difficulty_levels!)))
           .filter(r => !allCards.some(existing => existing.id === r.id)) // Avoid duplicates
 
         // Filter out new cards if requested
@@ -107,18 +135,25 @@ export class SessionsDO {
       cards = cardsWithMetadata.map(c => ({ id: c.id, category_key: c.category_key, set_key: c.set_key, question: c.question, answer: c.answer }))
     }
 
+    // Apply connection-aware filtering if enabled
+    if (payload.connection_aware && payload.domain_id === 'chinese' && cards.length > 0) {
+      cards = await applyConnectionAwareSelection(cards, payload.domain_id, this.env)
+    }
+
     const order = cards.map((_, i) => i)
-    // Shuffle
-    for (let i = order.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-        ;[order[i], order[j]] = [order[j], order[i]]
+    // Shuffle (unless connection-aware mode is enabled - preserve semantic ordering)
+    if (!payload.connection_aware) {
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+          ;[order[i], order[j]] = [order[j], order[i]]
+      }
     }
 
     // Build fast lookup maps for instant O(1) answer validation
-    const answerMap = this.buildAnswerMap(cards)
-    const cardMetaMap = this.buildCardMetaMap(cards)
-    const difficultyMap = this.buildDifficultyMap(cardsWithMetadata)
-    const srsMap = this.buildSRSMap(cardsWithMetadata)
+    const answerMap = buildAnswerMap(cards)
+    const cardMetaMap = buildCardMetaMap(cards)
+    const difficultyMap = buildDifficultyMap(cardsWithMetadata)
+    const srsMap = buildSRSMap(cardsWithMetadata)
 
     // Remove broken duplicateIndexMap precomputation (we update duplicates at DB level)
     let duplicateIndexMap: Record<string, number[]> | undefined
@@ -127,7 +162,7 @@ export class SessionsDO {
       session_id,
       mode: payload.mode as any,
       started_at,
-      session_type: this.computeSessionType(payload.mode),
+      session_type: computeSessionType(payload.mode),
       practice_name: payload.mode === 'multi_set_srs' ? 'Selected Sets' :
             payload.mode === 'multi_set_all' || payload.mode === 'multi_set_difficult' ?
               `Multi-Set (${payload.selected_sets?.length || 0} sets)` : undefined,
@@ -147,7 +182,7 @@ export class SessionsDO {
     await this.env.DB.prepare(
       `INSERT OR REPLACE INTO sessions (id, practice_name, session_type, started_at)
        VALUES (?, ?, ?, ?)`
-    ).bind(session_id, state.practice_name ?? null, state.session_type, this.nowUtc()).run()
+    ).bind(session_id, state.practice_name ?? null, state.session_type, nowUtc()).run()
 
     if (order.length === 0) {
       return Response.json({ session_id, done: true, progress: { current: 0, total: 0 } })
@@ -170,19 +205,19 @@ export class SessionsDO {
     const idx = order[pos]
     const card = state.cards[idx]
     // Use fast Map lookup instead of D1 query (0.1ms vs 500ms)
-    const isCorrect = this.validateAnswerFast(state, card.question, body.answer)
+    const isCorrect = validateAnswerFast(state, card.question, body.answer)
     const startTs = (await this.state.storage.get<number>('question_start')) || Date.now()
     const responseTimeMs = body.response_time_ms || (Date.now() - startTs)
     const duration = Math.round(responseTimeMs / 100) / 10
 
     // Real-time difficulty assessment based on response time and accuracy
-    const responseDifficulty = this.assessResponseDifficulty(responseTimeMs, isCorrect)
-    
+    const responseDifficulty = assessResponseDifficulty(responseTimeMs, isCorrect)
+
     // Get pre-computed card difficulty for smarter feedback
-    const cardDifficulty = this.getDifficultyFast(state, card.question)
-    
+    const cardDifficulty = getDifficultyFast(state, card.question)
+
     // Calculate adaptive feedback duration using both response and card difficulty
-    const feedbackDuration = this.calculateAdaptiveFeedbackDuration(responseTimeMs, responseDifficulty, cardDifficulty, isCorrect)
+    const feedbackDuration = calculateAdaptiveFeedbackDuration(responseTimeMs, responseDifficulty, cardDifficulty, isCorrect)
 
     // Update counts for this specific card only (no more bulk category updates)
     const doAll = false
@@ -215,7 +250,7 @@ export class SessionsDO {
     // SRS only for the exact card in SRS modes
     if (state.mode === 'multi_set_srs') {
       // Use fast Map lookup for current SRS state (0.1ms vs 100-500ms D1 query)
-      const currentSRS = this.getSRSDataFast(state, card.question)
+      const currentSRS = getSRSDataFast(state, card.question)
       const next = updateSrs(currentSRS, isCorrect)
       stmts.push(
         this.env.DB.prepare(
@@ -228,7 +263,7 @@ export class SessionsDO {
       this.env.DB.prepare(
         `INSERT OR IGNORE INTO session_events (session_id, position, card_id, category_key, set_key, question, user_answer, correct_answer, correct, duration_seconds, created_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-      ).bind(state.session_id, pos, card.id, card.category_key, card.set_key, card.question, body.answer, card.answer, isCorrect ? 1 : 0, duration, this.nowUtc())
+      ).bind(state.session_id, pos, card.id, card.category_key, card.set_key, card.question, body.answer, card.answer, isCorrect ? 1 : 0, duration, nowUtc())
     )
     await this.env.DB.batch(stmts)
 
@@ -240,7 +275,7 @@ export class SessionsDO {
     if (state.position >= order.length) {
       await this.env.DB.prepare(
         `UPDATE sessions SET ended_at = ?, duration_seconds = ?, correct_count = ?, total = ? WHERE id = ?`
-      ).bind(this.nowUtc(), Math.round((Date.now() - new Date(state.started_at).getTime()) / 100) / 10, state.correct_count, order.length, state.session_id).run()
+      ).bind(nowUtc(), Math.round((Date.now() - new Date(state.started_at).getTime()) / 100) / 10, state.correct_count, order.length, state.session_id).run()
       return Response.json({ done: true, progress: { current: order.length, total: order.length }, results: state.results, result: { correct: state.correct_count, total: order.length } })
     }
     const nextIdx = order[state.position]
@@ -276,7 +311,7 @@ export class SessionsDO {
       await this.env.DB.prepare(
         `UPDATE sessions SET ended_at = ?, duration_seconds = ?, correct_count = ?, total = ? WHERE id = ?`
       ).bind(
-        this.nowUtc(),
+        nowUtc(),
         durationSeconds,
         state.correct_count,
         state.order.length,
@@ -296,231 +331,12 @@ export class SessionsDO {
     })
   }
 
-  private matchesDifficulty(r: any, requested: Set<'easy' | 'medium' | 'hard'>): boolean {
-    const c = Number(r.correct_count || 0)
-    const ic = Number(r.incorrect_count || 0)
-    const rv = Number(r.reviewed_count || 0)
-    const attempts = rv > 0 ? rv : (c + ic)
-    let status: 'easy' | 'medium' | 'hard'
-    if (attempts <= 10) status = 'hard'
-    else {
-      const accuracy = (c / attempts) * 100
-      if (accuracy > 90) status = 'easy'
-      else if (accuracy > 80) status = 'medium'
-      else status = 'hard'
-    }
-    return requested.has(status)
-  }
 
-  private nowUtc(): string {
-    const d = new Date()
-    const pad = (n: number) => String(n).padStart(2, '0')
-    return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`
-  }
 
-  private computeSessionType(mode: string): string {
-    switch (mode) {
-      case 'multi_set_all': return 'Multi-Set Review'
-      case 'multi_set_difficult': return 'Multi-Set Practice by Difficulty'
-      case 'multi_set_srs': return 'SRS Review'
-      case 'review_incorrect': return 'Review Incorrect'
-      default: return mode
-    }
-  }
-
-  private assessResponseDifficulty(responseTimeMs: number, isCorrect: boolean): 'easy' | 'medium' | 'hard' {
-    // Base difficulty on response time: 2s = easy, 4s = medium, 6s+ = hard
-    const durationSec = responseTimeMs / 1000
-    let timeDifficulty: 'easy' | 'medium' | 'hard'
-    if (durationSec <= 2) timeDifficulty = 'easy'
-    else if (durationSec <= 4) timeDifficulty = 'medium'  
-    else timeDifficulty = 'hard'
-
-    // If incorrect, bump up difficulty by one level
-    if (!isCorrect) {
-      if (timeDifficulty === 'easy') timeDifficulty = 'medium'
-      else if (timeDifficulty === 'medium') timeDifficulty = 'hard'
-      // hard stays hard
-    }
-
-    return timeDifficulty
-  }
-
-  private calculateFeedbackDuration(responseTimeMs: number, difficulty: 'easy' | 'medium' | 'hard', isCorrect: boolean): number {
-    const baseTime = 2000 // 2 seconds base
-    const responseContribution = responseTimeMs * 0.3 // 30% of response time
-    
-    const difficultyMultiplier = difficulty === 'easy' ? 1 : difficulty === 'medium' ? 2 : 3
-    const difficultyTime = difficultyMultiplier * 1000 // 1s, 2s, or 3s
-    
-    // Incorrect answers get extra time for consolidation
-    const correctnessBonus = isCorrect ? 0 : 1500 // +1.5s for incorrect
-    
-    const totalTime = Math.max(
-      baseTime + responseContribution + correctnessBonus,
-      difficultyTime
-    )
-    
-    return Math.min(totalTime, 6000) // Cap at 6 seconds
-  }
-
-  private calculateAdaptiveFeedbackDuration(responseTimeMs: number, responseDifficulty: 'easy' | 'medium' | 'hard', cardDifficulty: 'easy' | 'medium' | 'hard', isCorrect: boolean): number {
-    const baseTime = 1500 // Base feedback time
-    const responseContribution = Math.min(responseTimeMs * 0.25, 2000) // Cap response contribution
-    
-    // Combine response difficulty with historical card difficulty
-    const combinedDifficulty = responseDifficulty === 'hard' || cardDifficulty === 'hard' ? 'hard' :
-                              responseDifficulty === 'medium' || cardDifficulty === 'medium' ? 'medium' : 'easy'
-    
-    const difficultyMultiplier = combinedDifficulty === 'easy' ? 1 : combinedDifficulty === 'medium' ? 1.5 : 2.5
-    const difficultyTime = difficultyMultiplier * 1000
-    
-    // Incorrect answers on hard cards get more time for consolidation
-    const correctnessBonus = isCorrect ? 0 : (cardDifficulty === 'hard' ? 2000 : 1500)
-    
-    const totalTime = Math.max(
-      baseTime + responseContribution + correctnessBonus,
-      difficultyTime
-    )
-    
-    return Math.min(totalTime, 6000) // Cap at 6 seconds
-  }
-
-  // Fast lookup map builders
-  private buildAnswerMap(cards: SessionCard[]): Map<string, string> {
-    const map = new Map<string, string>()
-    for (const card of cards) {
-      map.set(card.question, card.answer)
-    }
-    return map
-  }
-
-  private buildCardMetaMap(cards: SessionCard[]): Map<string, { id: number; category_key: string; set_key: string }> {
-    const map = new Map<string, { id: number; category_key: string; set_key: string }>()
-    for (const card of cards) {
-      map.set(card.question, { id: card.id, category_key: card.category_key, set_key: card.set_key })
-    }
-    return map
-  }
-
-  private buildDifficultyMap(cardsWithMetadata: Array<{ question: string; correct_count?: number; incorrect_count?: number; reviewed_count?: number }>): Map<string, 'easy' | 'medium' | 'hard'> {
-    const map = new Map<string, 'easy' | 'medium' | 'hard'>()
-    for (const card of cardsWithMetadata) {
-      const c = Number(card.correct_count || 0)
-      const ic = Number(card.incorrect_count || 0)
-      const rv = Number(card.reviewed_count || 0)
-      const attempts = rv > 0 ? rv : (c + ic)
-      let difficulty: 'easy' | 'medium' | 'hard'
-      if (attempts <= 10) difficulty = 'hard'
-      else {
-        const accuracy = (c / attempts) * 100
-        if (accuracy > 90) difficulty = 'easy'
-        else if (accuracy > 80) difficulty = 'medium'
-        else difficulty = 'hard'
-      }
-      map.set(card.question, difficulty)
-    }
-    return map
-  }
-
-  private buildSRSMap(cardsWithMetadata: Array<{ question: string; easiness_factor?: number; interval_hours?: number; repetitions?: number }>): Map<string, { easiness_factor: number; interval_hours: number; repetitions: number }> {
-    const map = new Map<string, { easiness_factor: number; interval_hours: number; repetitions: number }>()
-    for (const card of cardsWithMetadata) {
-      map.set(card.question, extractSrsData(card))
-    }
-    return map
-  }
-
-  // Fast answer validation using Map lookup instead of D1 query
-  private validateAnswerFast(state: SessionState, question: string, userAnswer: string): boolean {
-    if (!state.answerMap) {
-      // Fallback to card data if maps weren't built (backward compatibility)
-      const card = state.cards.find(c => c.question === question)
-      return card ? validateAnswer(userAnswer, card.answer) : false
-    }
-    const correctAnswer = state.answerMap.get(question)
-    return correctAnswer ? validateAnswer(userAnswer, correctAnswer) : false
-  }
-
-  // Fast difficulty lookup
-  private getDifficultyFast(state: SessionState, question: string): 'easy' | 'medium' | 'hard' {
-    return state.difficultyMap?.get(question) || 'hard'
-  }
-
-  // Fast SRS data lookup
-  private getSRSDataFast(state: SessionState, question: string): { easiness_factor: number; interval_hours: number; repetitions: number } {
-    return state.srsMap?.get(question) || { easiness_factor: 2.5, interval_hours: 0, repetitions: 0 }
-  }
 
   private async playAgain(): Promise<Response> {
-    const currentState = await this.state.storage.get<SessionState>('state')
-    if (!currentState) {
-      return Response.json({ error: 'Session not found' }, { status: 404 })
-    }
-
-    // Create a new session ID (this DO will handle the new session)
-    const newSessionId = this.state.id.toString()
-    const started_at = new Date().toISOString()
-
-    // Use the same cards from the original session
-    const cards = currentState.cards
-
-    // Create a new shuffled order
-    const order = cards.map((_, i) => i)
-    for (let i = order.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[order[i], order[j]] = [order[j], order[i]]
-    }
-
-    // Build fast lookup maps for the same cards
-    const answerMap = this.buildAnswerMap(cards)
-    const cardMetaMap = this.buildCardMetaMap(cards)
-    const difficultyMap = currentState.difficultyMap || new Map()
-    const srsMap = currentState.srsMap || new Map()
-
-    // Create new session state with same mode and practice name
-    const newState: SessionState = {
-      session_id: newSessionId,
-      mode: currentState.mode,
-      started_at,
-      session_type: currentState.session_type,
-      practice_name: currentState.practice_name ? `${currentState.practice_name} (Play Again)` : 'Play Again',
-      position: 0,
-      order,
-      cards,
-      answerMap,
-      cardMetaMap,
-      difficultyMap,
-      srsMap,
-      correct_count: 0,
-      results: [],
-    }
-
-    // Store the new session state
-    await this.state.storage.put('state', newState)
-
-    // Write session header to D1
-    await this.env.DB.prepare(
-      `INSERT OR REPLACE INTO sessions (id, practice_name, session_type, started_at)
-       VALUES (?, ?, ?, ?)`
-    ).bind(newSessionId, newState.practice_name ?? null, newState.session_type, this.nowUtc()).run()
-
-    if (order.length === 0) {
-      return Response.json({ session_id: newSessionId, done: true, progress: { current: 0, total: 0 } })
-    }
-
-    // Return the first question
-    const firstIdx = order[0]
-    const firstCard = cards[firstIdx]
-    const result = {
-      session_id: newSessionId,
-      done: false,
-      card: { index: firstIdx, question: firstCard?.question || '' },
-      progress: { current: 0, total: order.length }
-    }
-
-    await this.state.storage.put('question_start', Date.now())
-    return Response.json(result)
+    return handlePlayAgain(this.state, this.env)
   }
+
 }
 

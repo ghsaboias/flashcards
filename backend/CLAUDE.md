@@ -63,9 +63,10 @@ bun run schema:apply  # Execute ./schema.sql against bound DB
   - Response: `{ summary, daily }`
 
 ### High-Intensity Learning
-- `POST /api/sessions/auto-start` — **Intelligent session creation** (Recommended)
-  - Body: `{ user_level: 'beginner'|'intermediate'|'advanced', focus_mode: 'review'|'challenge', domain_id?: string }`
-  - Features: Smart content selection, adaptive difficulty, 20-question cap
+- `POST /api/sessions/auto-start` — **Intelligent session creation with connection-aware learning** (Recommended)
+  - Body: `{ user_level: 'beginner'|'intermediate'|'advanced', focus_mode: 'review'|'challenge', domain_id?: string, connection_aware?: boolean }`
+  - Features: Smart content selection, adaptive difficulty, 20-question cap, **semantic character relationships**
+  - **Connection-Aware Mode**: When `connection_aware: true`, characters are selected based on semantic relationships rather than random selection
   - Response: `{ session_id, done, card?, progress }`
 
 ### Traditional Sessions
@@ -154,6 +155,33 @@ CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,
   value TEXT
 );
+
+-- Connection-aware learning tables
+CREATE TABLE IF NOT EXISTS semantic_clusters (
+  id TEXT PRIMARY KEY,
+  domain_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  anchor_characters TEXT, -- JSON array of character IDs
+  unlock_prerequisites TEXT, -- JSON array of prerequisite cluster IDs
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  FOREIGN KEY (domain_id) REFERENCES domains(id),
+  UNIQUE(domain_id, name)
+);
+
+-- Character relationships for semantic learning
+CREATE TABLE IF NOT EXISTS character_connections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  domain_id TEXT NOT NULL,
+  source_char TEXT NOT NULL,
+  target_char TEXT NOT NULL,
+  connection_type TEXT NOT NULL CHECK(connection_type IN ('semantic', 'radical', 'compound', 'phonetic')),
+  strength REAL NOT NULL DEFAULT 1.0, -- Relationship strength (0-1)
+  compound_word TEXT, -- If connection_type='compound', the resulting word
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  FOREIGN KEY (domain_id) REFERENCES domains(id),
+  UNIQUE(domain_id, source_char, target_char, connection_type)
+);
 ```
 
 ### Common Queries
@@ -195,12 +223,17 @@ ORDER BY set_key;
   - Performance analytics and timing tracking
   - Progressive unlock enforcement
   - Domain-aware content filtering
+  - **Connection-aware character selection based on semantic relationships**
 
 ### Key Features
 - **Intelligent Auto-Start**: Selects optimal cards based on user level and domain
+- **Connection-Aware Learning**: Semantic character clustering using `character_connections` table - FIXED
+- **Struggling Character Prioritization**: Identifies characters with <80% accuracy for targeted practice
+- **Semantic Ordering**: Preserves meaningful character relationships instead of random shuffling
 - **Adaptive Timing**: Calculates feedback duration (2-6s) based on difficulty/speed
 - **Priority Scoring**: SRS due (+100), struggling sets (+80), active learning (+60)
 - **Session Limits**: 20-question cap, max 2 sets per session
+- **Database Query Fix**: Resolved parameter binding error in connection-aware selection logic
 
 ## Configuration (wrangler.toml)
 - `main = "src/worker.ts"`
