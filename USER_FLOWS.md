@@ -4,29 +4,34 @@ Based on my deep exploration of your codebase, here's a comprehensive mapping of
 
 ## **🎯 Entry Points & Mode Selection**
 
-### **Primary Entry**: High-Intensity Mode (Default)
+### **Home Panels** (default landing)
 ```
-App Launch → High-Intensity Mode Interface
-├── User Level Selection: [Beginner | Intermediate | Advanced]
-├── Focus Mode: [Challenge Mode | Review Mode]
-├── Content Selection: [Single Set | Multi-Set]
-│   ├── Single Set → Dropdown selection from HSK sets
-│   └── Multi-Set → Checkbox selection of multiple sets
-└── Actions:
-    ├── 🚀 Start Practice → `beginAutoSession()` → API `/api/sessions/auto-start`
-    └── Advanced Options → Switch to Traditional Mode
+Home → Semantic Sessions panel
+├── Start Semantic Session → `beginConnectionAwareSession()` → `/session/:id`
+├── Knowledge Graph → `/connection-aware`
+└── Toggle Advanced → opens Practice Modes panel
+
+Home → Cluster Picker panel (visible when discovery is required)
+├── Choose Cluster → `setSelectedCluster()` / `setCurrentPhase()`
+└── Start Phase → `beginConnectionAwareSession()`
+
+Home → Practice Modes panel
+├── Multi-set / Difficulty / SRS → `beginMultiSetSession()` family
+├── Browse / Drawing shortcuts → `/browse/:set`, `/drawing/:set`
+└── Stats shortcut → `/stats`
 ```
 
-### **Secondary Entry**: Traditional Mode
+### **Dedicated Routes**
 ```
-Advanced Options → Traditional Mode Interface
-├── Content Type: [Set | Category | Multi-Set] radio buttons
-├── Content Selection (dynamic based on type):
-│   ├── Set → Dropdown of HSK sets
-│   ├── Category → Dropdown of HSK categories
-│   └── Multi-Set → Checkbox list of sets
-├── Difficulty Filters: [Hard | Medium | Easy] checkboxes
-└── Practice Mode Selection (8 different modes)
+Semantic nav → `/connection-aware`
+├── Demo overview + phase progress
+└── Same cluster actions as Home
+
+Practice nav → `/practice`
+└── Renders the Home Practice Modes panel for bookmarked users
+
+Stats nav → `/stats`
+└── Performance, SRS, accuracy dashboards
 ```
 
 ## **📚 Practice Mode Flows**

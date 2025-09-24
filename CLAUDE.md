@@ -1,15 +1,110 @@
-# HSK Flashcards Web App - AI Development Guide
+# HSK Flashcards Web App - Personal Learning System
 
 ## Project Overview
 
-A modern multi-domain spaced repetition system (SRS) for learning Chinese characters, world geography, and any flashcard content. Built with React 19 frontend and Cloudflare Workers backend.
+A personal spaced repetition system (SRS) optimized for solo Chinese character learning. Built with React 19 frontend and Cloudflare Workers backend. This is a single-user system where my learning experience, feedback, and progress are the primary optimization targets.
 
-**Live App**: https://game.fasttakeoff.org  
-**Repository**: https://github.com/ghsaboias/flashcards  
-**CLI Version**: https://github.com/ghsaboias/flashcards-cli  
+**Live App**: https://game.fasttakeoff.org
+**Repository**: https://github.com/ghsaboias/flashcards
+**CLI Version**: https://github.com/ghsaboias/flashcards-cli
 **Branch**: `master`
 
-## Efficient Learning Principles ✅ IMPLEMENTED
+### Development Philosophy
+- **Solo User Focus**: All decisions optimize for my personal learning effectiveness
+- **Learning-First Design**: Visual engagement and understanding matter more than broad usability
+- **Experimentation-Friendly**: Can implement advanced features without worrying about user confusion
+- **Showcase Potential**: Demonstrates research-based learning system design
+
+## Knowledge Graph Quest (Chinese Learning)
+
+**NEW: Revolutionary Connection-Aware Learning System** - Goes beyond traditional SRS to leverage semantic relationships between Chinese characters.
+
+### Home Hub Layout
+- **Semantic Sessions** panel surfaces the connected-learning start button and knowledge graph shortcut
+- **Cluster Picker** shows available playlists with progress and phase-based starts
+- **Practice Modes** consolidates multi-set drills, difficulty filters, SRS, browse, drawing, and stats access
+- Primary navigation now highlights `Home`, `Semantic`, `Practice`, and `Stats`
+
+### **Research-Based Foundation**
+Built on learning science research including Justin Skycak's methods, guided inquiry, triangulation, and mental model anchoring:
+- **Problem Identified**: Random character drilling destroys semantic relationships, causing learning plateaus
+- **Solution Designed**: Network-based learning system with full visual integration for maximum understanding
+- **Current Status**: Backend complete, ready for visual graph integration to transform learning experience
+
+### **5-Phase Learning System**
+1. **Discovery**: Visual cluster selection from 14 semantic domains (numbers, family, emotions, etc.)
+2. **Anchor**: Master 3-5 hub characters with highest connectivity per cluster
+3. **Expansion**: Unlock characters connected to mastered ones through semantic/radical relationships
+4. **Integration**: Practice combinations across multiple mastered clusters
+5. **Mastery**: Context usage, speed challenges, real-world application
+
+### **Knowledge Graph Quest Implementation: 100% COMPLETE & DEPLOYED**
+
+**COMPLETE: Phase 1 - Visual Cluster Selection Integration**
+- Beautiful gradient cluster cards with progress bars and difficulty badges
+- 5-phase learning system visualization (Discovery → Anchor → Expansion → Integration → Mastery)
+- Semantic domain selection from 6 clusters (emotions, numbers, family, time, food, actions)
+- Navigation integration with `Semantic` entry in main nav
+
+**COMPLETE: Phase 2 - Practice Session Network Integration**
+- **MiniNetworkViewer**: Shows character relationships during practice sessions
+- **Context-Aware Display**: Appears only during connection-aware sessions
+- **Visual Connections**: SVG network showing current character + related characters
+- **Connection Types**: Semantic (blue), compound (green), radical (yellow) relationships
+- **Session Integration**: Seamlessly integrated into PracticeSession component
+
+**COMPLETE: Phase 3 - Real-time Progress Visualization**
+- **LiveProgressNetwork**: Advanced SVG network with animated progress updates
+- **Real-time Stats**: Live counters for mastered characters, learning progress, active links
+- **Mastery Celebrations**: Animated rings when characters reach 90%+ accuracy
+- **Connection Lighting**: Links activate when both endpoints become mastered
+- **Interactive Navigation**: Click "Explore Network Visualization" from cluster selection
+
+**VISUAL TRANSFORMATION COMPLETE**
+The complete Knowledge Graph Quest experience now provides a stunning visual learning journey from cluster selection through practice sessions to real-time progress tracking, making semantic relationships transparent and engaging.
+
+### **Network Intelligence Features**
+- **522 Characters**: All HSK Level 1 characters with computed hub scores
+- **21 MVP Connections**: High-impact relationships populated (semantic, compound, radical)
+- **14 Semantic Clusters**: emotions, numbers, family, time, food, transport, body, appearance, places, actions, etc.
+- **14 Radical Families**: 木, 口, 车, 手, 土, 门, 女, 心, 水, 人, etc.
+- **Visual Network Explorer**: Interactive D3.js graph showing all character relationships
+
+### **Implementation Status**
+- **Network Data Processing**: Hub scores and cluster analysis complete
+- **Session Algorithm**: Connection-aware character selection logic
+- **Visual Interfaces**: Cluster selector and network visualization
+- **Integration Framework**: Complete React app integration
+- **Production Deployment**: Frontend toggle + Durable Object logic fully operational
+
+**Files**: `session_generator.js`, `chinese_network.html`, `cluster_selector.html`, `KNOWLEDGE_GRAPH_QUEST.md`, `INTEGRATION_REFERENCE.md`
+
+### **Implementation Complete: Connection-Aware Learning Deployed**
+
+**COMPLETED: Frontend Integration**
+- Connection-aware toggle in HighIntensityMode component with radio button selection
+- Modified `useSessionManager` to pass `connection_aware` parameter to backend
+- Updated API client and TypeScript types for full type safety
+- Seamless user selection between random drilling and semantic learning modes
+
+**COMPLETED: Backend Intelligence**
+- Connection-aware character selection in SessionsDO with semantic clustering
+- Smart queries utilizing `character_connections` table (semantic, compound, radical)
+- Struggling character prioritization (<80% accuracy) with connected character expansion
+- Preserved semantic ordering instead of random shuffling in connection-aware mode
+
+**COMPLETED: User Experience**
+- Connection-aware learning set as default for Chinese domain (new user optimization)
+- Educational messaging explaining semantic learning research and plateau prevention
+- Visual distinction between learning modes with real-time feedback
+- Graceful fallback to random mode when connection data unavailable
+
+**IMPACT: Research-Based Learning Now Accessible**
+The connection-aware learning system successfully addresses the identified plateau problem by preserving semantic relationships during character practice, making the research-backed solution accessible to all users through an intuitive interface.
+
+---
+
+## Efficient Learning Principles - IMPLEMENTED
 
 These **efficient learning principles** have been fully implemented in the HSK Flashcards app:
 
@@ -55,21 +150,21 @@ These **efficient learning principles** have been fully implemented in the HSK F
 - Requires systematic approach over motivation-based learning
 - Clear, measurable performance goals
 
-### Implementation Status ✅ COMPLETE
+### Implementation Status - COMPLETE
 
 **High-Intensity Learning System:**
-- ✅ **Exercise Density**: 20+ questions per 30 minutes with streamlined interface
-- ✅ **Adaptive Feedback**: 2-6 second timing based on difficulty and response speed
-- ✅ **Progressive Unlocks**: 70-85% accuracy gates for systematic advancement
-- ✅ **Knowledge Gap Focus**: Completion screen emphasizes struggling concepts
-- ✅ **Memory Anchoring**: Immediate re-testing and spaced repetition integration
+- **Exercise Density**: 20+ questions per 30 minutes with streamlined interface
+- **Adaptive Feedback**: 2-6 second timing based on difficulty and response speed
+- **Progressive Unlocks**: 70-85% accuracy gates for systematic advancement
+- **Knowledge Gap Focus**: Completion screen emphasizes struggling concepts
+- **Memory Anchoring**: Immediate re-testing and spaced repetition integration
 
 **Technical Implementation:**
-- ✅ **Auto-Start API**: `/api/sessions/auto-start` with intelligent content selection
-- ✅ **Adaptive Timing**: Backend calculates optimal feedback duration per question
-- ✅ **Progressive System**: Unlock criteria enforced at database level
-- ✅ **High-Intensity UI**: Minimal interface with full-screen question display
-- ✅ **Performance Tracking**: Response time analytics and difficulty assessment
+- **Auto-Start API**: `/api/sessions/auto-start` with intelligent content selection
+- **Adaptive Timing**: Backend calculates optimal feedback duration per question
+- **Progressive System**: Unlock criteria enforced at database level
+- **High-Intensity UI**: Minimal interface with full-screen question display
+- **Performance Tracking**: Response time analytics and difficulty assessment
 
 ## Core Rules
 - Never commit, push, or deploy unless explicitly requested
@@ -141,7 +236,7 @@ flashcards/
         ├── 📁 pages/               # Page components (URL-based routing, React.lazy)
         │   ├── 📄 HomePage.tsx         # High-intensity quick start (eager load)
         │   ├── 📄 PracticePage.tsx     # Traditional practice modes (lazy)
-        │   ├── 📄 SessionPage.tsx      # Active practice sessions (lazy)
+        │   ├── 📄 SessionPage.tsx      # Active practice sessions with mini-network (lazy)
         │   ├── 📄 CompletePage.tsx     # Session results & analytics (lazy)
         │   ├── 📄 StatsPage.tsx        # Analytics dashboard (lazy)
         │   ├── 📄 BrowsePage.tsx       # Card browsing by set (lazy)
@@ -155,14 +250,17 @@ flashcards/
         │   ├── 📄 DomainSelector.tsx    # Multi-domain selection dropdown
         │   ├── 📄 HighIntensityMode.tsx # High-intensity practice mode
         │   ├── 📄 KeyboardHandler.tsx   # Keyboard shortcuts handler
-        │   ├── 📄 PracticeSession.tsx   # Practice session component
+        │   ├── 📄 PracticeSession.tsx   # Practice session component with mini-network
         │   ├── 📄 SessionComplete.tsx   # Session completion screen
-        │   ├── 📄 SrsTable.tsx          # SRS schedule table
         │   ├── 📄 StatsOverview.tsx     # Statistics overview
-        │   ├── 📄 StatsTable.tsx        # Statistics table
         │   ├── 📄 TraditionalModes.tsx  # Traditional practice modes
         │   ├── 📄 UnifiedTable.tsx      # Unified SRS/stats table
-        │   └── 📄 DrawingCanvas.tsx     # Character drawing (lazy loaded)
+        │   ├── 📄 DrawingCanvas.tsx     # Character drawing (lazy loaded)
+        │   ├── 📄 ClusterSelector.tsx   # Beautiful cluster cards with progress bars
+        │   ├── 📄 PhaseProgressBar.tsx  # 5-phase learning system visualization
+        │   ├── 📄 MiniNetworkViewer.tsx # Compact network during practice sessions
+        │   ├── 📄 LiveProgressNetwork.tsx # Advanced real-time progress visualization
+        │   └── 📄 SessionRecovery.tsx   # Simple session recovery prompt
         ├── 📁 contexts/            # React Context providers (useMemo optimized)
         │   ├── 📄 SessionContext.tsx    # Session state context
         │   ├── 📄 AppContext.tsx        # Global app context provider
@@ -173,7 +271,8 @@ flashcards/
         │   ├── 📄 useAudioControls.ts   # Audio controls hook
         │   ├── 📄 useSessionContext.ts  # Session context hook
         │   ├── 📄 useSessionManager.ts  # Session management hook
-        │   └── 📄 useAppContext.ts      # Global app context hook
+        │   ├── 📄 useAppContext.ts      # Global app context hook
+        │   └── 📄 useSessionPersistence.ts # Simple session persistence hook
         ├── 📁 types/               # TypeScript type definitions
         │   ├── 📄 api-types.ts          # API response types
         │   ├── 📄 component-props.ts    # Component prop types
@@ -186,17 +285,21 @@ flashcards/
         │   ├── 📄 srs-date-utils.ts     # SRS date utilities
         │   ├── 📄 stats-aggregation.ts  # Statistics aggregation
         │   ├── 📄 text-utils.ts         # Text processing utilities
-        │   └── 📄 performance-monitor.ts # Performance monitoring utility
+        │   └── 📄 performance-simple.ts # Simple performance monitoring utility
+        ├── 📁 tests/               # Test utilities
+        │   └── 📄 navigationFlow-simple.test.ts # Essential navigation tests
         └── 📁 assets/              # Static assets
 
-🔗 **Detailed Architecture**: See [`frontend/CLAUDE.md`](frontend/CLAUDE.md) for component architecture, performance optimizations, and development patterns.
+**Detailed Architecture**: See [`frontend/CLAUDE.md`](frontend/CLAUDE.md) for component architecture, performance optimizations, and development patterns.
 
-## 📊 Codebase Statistics
-- **Total Lines of Code:** ~4,400 lines (TypeScript/React)
-- **Backend Total:** ~1,000+ lines across 8 files (modularized utilities)
-- **Frontend Total:** ~3,400+ lines across 40+ files (page-based architecture)
-- **Architecture:** Page-based React Router app with layouts, modular backend with extracted utilities
-- **Migration Impact:** Added ~1,000 lines of page components, eliminated ~200 lines of conditional rendering
+## Codebase Statistics
+- **Total Lines of Code:** ~4,000+ lines (TypeScript/React) - **Reduced by 1,200+ lines through cleanup**
+- **Backend Total:** ~1,000+ lines across 8 files (modularized utilities, connection-aware queries)
+- **Frontend Total:** ~3,500+ lines across 40+ files (page-based architecture + Knowledge Graph Quest + Network Visualization)
+- **Architecture:** Page-based React Router app with layouts, modular backend, advanced SVG visualizations
+- **Knowledge Graph Impact:** ~550 lines across 3 network components (ClusterSelector, MiniNetworkViewer, LiveProgressNetwork)
+- **Network Visualization:** ~450 lines for NetworkPage with exact physics matching standalone HTML version
+- **Code Quality:** Eliminated enterprise-level complexity, maintained all core functionality
 ```
 
 ## Module Documentation & Cross-References
@@ -206,7 +309,7 @@ flashcards/
 - **Frontend**: [`frontend/CLAUDE.md`](frontend/CLAUDE.md) — Component architecture, performance optimization, bundle analysis
 - **Changes**: [`CHANGELOG.md`](CHANGELOG.md) — Historical improvements and fixes
 
-### 🔗 Cross-Reference Guide
+### Cross-Reference Guide
 - **API Endpoints**: See [`backend/CLAUDE.md > API Endpoints`](backend/CLAUDE.md#api-endpoints) for complete REST API documentation
 - **Database Schema**: See [`backend/CLAUDE.md > Database (D1)`](backend/CLAUDE.md#database-d1) for table structure and common queries
 - **Performance Details**: See [`frontend/CLAUDE.md > Performance Optimization`](frontend/CLAUDE.md#performance-optimization) for bundle analysis and React optimizations
@@ -229,7 +332,7 @@ cd backend && bun install && bun run dev
 cd frontend && bun run build && cd ../backend && bun run dev
 ```
 
-### 📋 Module-Specific Commands
+### Module-Specific Commands
 **→ Frontend**: See [`frontend/CLAUDE.md > Quick Commands`](frontend/CLAUDE.md#quick-commands) for:
 - Vite development server setup and optimization
 - Bundle analysis and performance monitoring
@@ -272,28 +375,29 @@ The build process:
 - **Deployment**: Cloudflare Pages with Workers integration
 - **Features**: Adaptive SRS algorithm, progressive unlocks, Chinese pinyin support, audio TTS
 
-## React Router Migration ✅ COMPLETE
+## React Router Migration - COMPLETE
 
 The frontend has been fully migrated from conditional rendering to a high-performance page-based architecture with advanced optimization:
 
 ### URL Routes
 - **`/`** - HomePage: High-intensity quick start (eagerly loaded)
 - **`/practice`** - PracticePage: Traditional practice modes (lazy loaded)
-- **`/session/:id`** - SessionPage: Active practice sessions (lazy loaded)
+- **`/session/:id`** - SessionPage: Active practice sessions with mini-network visualization (lazy loaded)
 - **`/complete/:id`** - CompletePage: Session results & analytics (lazy loaded)
 - **`/stats`** - StatsPage: Comprehensive analytics dashboard (lazy loaded)
 - **`/browse/:set`** - BrowsePage: Card browsing by set (lazy loaded)
 - **`/drawing/:set`** - DrawingPage: Character drawing practice (lazy loaded)
+- **`/network`** - **NetworkPage**: Interactive D3.js character network visualization with exact physics matching standalone HTML version (lazy loaded)
 
 ### Architecture Benefits
-- ✅ **URL-based navigation**: Bookmarkable sessions, browser back/forward support
-- ✅ **Eliminated mode flags**: Removed `isHighIntensityMode`, `inBrowseMode`, `inDrawingMode`
-- ✅ **Clean separation**: Global app context vs page-specific session state
-- ✅ **Professional UX**: Navigation breadcrumbs, error boundaries, loading states
-- ✅ **Developer experience**: Easier testing, simpler component structure
-- ✅ **Performance optimization**: Route-based code splitting with React.lazy()
-- ✅ **Render optimization**: React.memo() on all components to prevent unnecessary re-renders
-- ✅ **Context optimization**: Memoized provider values to eliminate cascading re-renders
+- **URL-based navigation**: Bookmarkable sessions, browser back/forward support
+- **Eliminated mode flags**: Removed `isHighIntensityMode`, `inBrowseMode`, `inDrawingMode`, `showClusterSelection`
+- **Clean separation**: Global app context vs page-specific session state
+- **Professional UX**: Navigation breadcrumbs, error boundaries, loading states
+- **Developer experience**: Easier testing, simpler component structure
+- **Performance optimization**: Route-based code splitting with React.lazy()
+- **Render optimization**: React.memo() on all components to prevent unnecessary re-renders
+- **Context optimization**: Memoized provider values to eliminate cascading re-renders
 
 ### Performance Features
 - **Lazy Loading**: All pages except HomePage use React.lazy() for optimal initial bundle size
@@ -342,13 +446,13 @@ The frontend has been fully migrated from conditional rendering to a high-perfor
 
 ## Code Quality Standards
 
-- ✅ **Zero TypeScript errors**
-- ✅ **Zero ESLint warnings** 
-- ✅ **Zero build warnings**
-- ✅ **Optimized bundle sizes** with lazy loading
-- ✅ **Code splitting** for better performance
+- **Zero TypeScript errors**
+- **Zero ESLint warnings**
+- **Zero build warnings**
+- **Optimized bundle sizes** with lazy loading
+- **Code splitting** for better performance
 
-## Performance Optimizations ✅ ADVANCED
+## Performance Optimizations - ADVANCED
 
 ### Bundle Optimization Results
 **Dramatic Performance Improvement Achieved:**
@@ -389,11 +493,11 @@ The frontend has been fully migrated from conditional rendering to a high-perfor
 
 ### Key Endpoints Overview
 - **Multi-Domain**: `GET /api/domains` - List knowledge domains (Chinese, Geography)
-- **Auto-Start**: `POST /api/sessions/auto-start` - Intelligent session creation 🔥
+- **Auto-Start**: `POST /api/sessions/auto-start` - Intelligent session creation
 - **Sessions**: `POST /api/sessions/start`, `GET /api/sessions/{id}`, `POST /api/sessions/{id}/answer`
 - **Data**: `GET /api/sets`, `GET /api/srs/set`, `GET /api/stats/set`, `GET /api/performance`
 
-### 📋 Complete Documentation
+### Complete Documentation
 **→ See [`backend/CLAUDE.md > API Endpoints`](backend/CLAUDE.md#api-endpoints) for:**
 - Complete endpoint documentation with request/response schemas
 - Authentication patterns and Bearer token setup
@@ -401,7 +505,7 @@ The frontend has been fully migrated from conditional rendering to a high-perfor
 - High-intensity learning vs traditional session modes
 - Durable Objects session management details
 
-### 🏗️ Backend Architecture
+### Backend Architecture
 **→ See [`backend/CLAUDE.md > Overview`](backend/CLAUDE.md#overview) for:**
 - Cloudflare Workers + Hono framework architecture
 - D1 database configuration and binding
@@ -421,7 +525,7 @@ The frontend has been fully migrated from conditional rendering to a high-perfor
 - **Sets**: `HSK1_Set_01` … `HSK1_Set_10`, `Geography_Countries`, etc.
 - **Session Types**: Review All, SRS Review, Practice by Difficulty, Multi-Set modes
 
-### 📋 Complete Schema Documentation
+### Complete Schema Documentation
 **→ See [`backend/CLAUDE.md > Database (D1)`](backend/CLAUDE.md#database-d1) for:**
 - Complete table definitions and relationships
 - Multi-domain architecture with foreign keys
@@ -529,7 +633,7 @@ When testing the app with Puppeteer MCP tools, use these patterns for reliable e
 
 **Button Clicking:**
 ```javascript
-// ✅ RECOMMENDED: Find by text content using evaluate
+// RECOMMENDED: Find by text content using evaluate
 const button = [...document.querySelectorAll('button')].find(btn => btn.textContent.includes('Start'));
 if (button) {
   button.click();
@@ -541,39 +645,39 @@ if (button) {
 
 **Element Selection Patterns:**
 ```javascript
-// ✅ Class-based selection
+// Class-based selection
 document.querySelector('.btn-primary')
 
-// ✅ Attribute-based selection
+// Attribute-based selection
 document.querySelector('button[type="submit"]')
 
-// ✅ Text content search
+// Text content search
 [...document.querySelectorAll('button')].find(btn => btn.textContent.includes('Exit'))
 
-// ❌ AVOID: CSS4 selectors (not supported)
+// AVOID: CSS4 selectors (not supported)
 button:has-text("Start")     // SyntaxError
 button:contains("Exit")      // SyntaxError
 ```
 
 **Navigation Testing:**
 ```javascript
-// ✅ Direct URL navigation for testing different pages
+// Direct URL navigation for testing different pages
 // puppeteer_navigate: http://localhost:8787/practice
 // puppeteer_navigate: http://localhost:8787/session/123
 
-// ✅ Check current URL
+// Check current URL
 window.location.pathname  // Returns "/practice", "/session/123", etc.
 ```
 
 **Form Interaction:**
 ```javascript
-// ✅ Checkbox selection
+// Checkbox selection
 document.querySelectorAll('input[type="checkbox"]')[0].click()
 
-// ✅ Text input
+// Text input
 document.querySelector('input[type="text"]').value = 'answer'
 
-// ✅ Select dropdown
+// Select dropdown
 document.querySelector('select').value = 'option'
 ```
 

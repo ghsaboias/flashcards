@@ -31,6 +31,7 @@
 - Demand immediate practice after information exposure
 - Avoid open-ended exploration that breaks systematic progression
 - Track performance and adjust difficulty to stay at edge of ability
+- Start with **Semantic Sessions** for guided anchors, then switch to **Practice Modes** for targeted drills
 
 ### **For Wide/Flat Domains (like Music/Language)**
 - Establish memory anchors across the entire knowledge space first

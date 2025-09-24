@@ -1,9 +1,42 @@
 # Repository Guidelines
 
+## 🆕 Knowledge Graph Quest Integration
+
+**NEW: Connection-Aware Chinese Learning System** - Advanced learning methodology now available for integration.
+
+### **Available Components & Tools**
+- **`session_generator.js`** - Connection-aware character selection algorithm (replaces random drilling)
+- **`chinese_network.html`** - Interactive D3.js visualization of character relationships
+- **`cluster_selector.html`** - Beautiful UI for semantic domain selection
+- **`process_hsk_data.py`** - Enhanced data processing with hub score calculation
+- **`hsk_network_data.json`** - Network data with semantic clusters and radical families
+
+### **Integration Points**
+- **Session Management**: `useSessionManager.ts` can leverage session generator for intelligent card selection
+- **API Enhancement**: Extend existing endpoints to support cluster-based progression
+- **UI Components**: Cluster selector can replace or augment domain selection
+- **Database Schema**: Ready for cluster progress and connection practice tables
+
+### Home Organization & Navigation
+- **Semantic Sessions**: guided start for connection-aware practice; quick access to the knowledge graph
+- **Cluster Picker**: manual cluster selection with progress and phase shortcuts
+- **Practice Modes**: multi-set, difficulty, SRS, browse, drawing, and stats entry in one toolbox
+- **Navigation**: desktop & mobile nav now surface `Home`, `Semantic`, `Practice`, `Stats`
+
+### **Learning Science Foundation**
+Implements research-backed methods (Justin Skycak, guided inquiry, triangulation, mental model anchoring) to solve the random drilling plateau problem by respecting the 3,194 semantic relationships between HSK Level 1 characters.
+
+### **Documentation**
+- **`KNOWLEDGE_GRAPH_QUEST.md`** - Complete game design specification
+- **`INTEGRATION_REFERENCE.md`** - Technical integration guide
+- **`Sessions/Socratic_Learning_Session_Template.md`** - Methodology documentation
+
+---
+
 ## Project Structure & Module Organization
 `frontend/` holds the Vite + React TypeScript client, restructured with:
 - `src/components/` - React components with updated imports
-- `src/hooks/` - Custom hooks including `useSessionManager.ts` (474 lines) and `useSessionContext.ts`
+- `src/hooks/` - Custom hooks including the modular session manager stack (`useSessionStateStore.ts`, `useSessionLifecycle.ts`, `useSessionData.ts`, `useConnectionAwareSession.ts`) and `useSessionContext.ts`
 - `src/contexts/` - React Context providers like `SessionContext.tsx`
 - `src/types/` - TypeScript definitions (`api-types.ts`, `component-props.ts`, `session-types.ts`)
 - `src/utils/` - Utility functions including `api-client.ts` (replaces `api.ts`), `session-utils.ts`, `stats-aggregation.ts`, and more
