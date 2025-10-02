@@ -56,6 +56,7 @@ flashcards/
 3. When regenerating network data, commit curated JSON only—avoid ad-hoc CSV exports.
 4. Manual smoke tests: run the frontend dev server, confirm quick start toggles both modes, and verify `/network` loads.
 5. Autobuild check before sharing work: `bunx tsc -b && bunx vite build` then `bunx eslint .` inside `frontend`.
+6. **Commit messages**: Keep them clean and professional. NEVER add Claude Code attribution or co-author tags.
 
 ## Testing Notes
 - Automated tests are minimal; `frontend/src/tests/navigationFlow-simple.test.ts` documents the expected manual checks.
