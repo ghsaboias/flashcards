@@ -56,9 +56,10 @@ const SessionPage = memo(function SessionPage() {
   // Navigate to completion page when session is done
   useEffect(() => {
     if (sessionComplete && sessionState.sessionId) {
+      clearSavedSession()
       navigate(`/complete/${sessionState.sessionId}`)
     }
-  }, [sessionComplete, sessionState.sessionId, navigate])
+  }, [sessionComplete, sessionState.sessionId, navigate, clearSavedSession])
 
   // Load session if ID doesn't match current session
   useEffect(() => {
