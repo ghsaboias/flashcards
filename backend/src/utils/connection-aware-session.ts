@@ -11,6 +11,8 @@ export async function applyConnectionAwareSelection(
   env: Env
 ): Promise<SessionCard[]> {
   try {
+    const TARGET_SIZE = 20
+
     // Get characters that need review based on performance
     const struggleCharacters = await getStruggleCharacters(cards, domainId, env)
 
@@ -22,17 +24,24 @@ export async function applyConnectionAwareSelection(
     // Find connected characters for struggling ones
     const connectedCards = await getConnectedCharacters(struggleCharacters, cards, domainId, env)
 
-    // Limit to session size (20 characters max)
-    const targetSize = Math.min(20, cards.length)
+    // Combine: struggling chars + their semantic connections
+    let selectedCards = [...struggleCharacters, ...connectedCards]
 
-    // Prioritize: struggling chars + their semantic connections
-    const selectedCards = [...struggleCharacters, ...connectedCards]
-      .slice(0, targetSize)
+    // If we have fewer than TARGET_SIZE, fill with remaining cards (semantically clustered)
+    if (selectedCards.length < TARGET_SIZE && cards.length > selectedCards.length) {
+      const selectedQuestions = new Set(selectedCards.map(c => c.question))
+      const remainingCards = cards.filter(c => !selectedQuestions.has(c.question))
 
-    return selectedCards.length > 0 ? selectedCards : cards.slice(0, targetSize)
+      // Add remaining cards until we hit TARGET_SIZE
+      const needed = TARGET_SIZE - selectedCards.length
+      selectedCards = [...selectedCards, ...remainingCards.slice(0, needed)]
+    }
+
+    // Ensure exactly TARGET_SIZE (or all available cards if less)
+    return selectedCards.slice(0, Math.min(TARGET_SIZE, cards.length))
   } catch (error) {
     console.error('Connection-aware selection failed, falling back to random:', error)
-    return cards
+    return cards.slice(0, 20)
   }
 }
 
@@ -130,7 +139,9 @@ export async function clusterBySemantics(
   domainId: string,
   env: Env
 ): Promise<SessionCard[]> {
-  if (cards.length <= 5) return cards
+  const TARGET_SIZE = 20
+
+  if (cards.length <= 5) return cards.slice(0, TARGET_SIZE)
 
   try {
     // Get semantic connections between our cards
@@ -148,7 +159,7 @@ export async function clusterBySemantics(
     `).bind(domainId, ...questions, ...questions).all()
 
     if (!results || results.length === 0) {
-      return cards // No connections found, return original order
+      return cards.slice(0, TARGET_SIZE) // No connections found, return first 20
     }
 
     // Build adjacency map
@@ -171,13 +182,26 @@ export async function clusterBySemantics(
       if (cluster.length > 0) {
         clusters.push(cluster)
       }
+
+      // Stop early if we have enough cards
+      if (visited.size >= TARGET_SIZE) break
     }
 
     // Flatten clusters while preserving grouping
-    return clusters.flat().slice(0, 20)
+    const clustered = clusters.flat()
+
+    // If we have fewer than TARGET_SIZE, fill with remaining cards
+    if (clustered.length < TARGET_SIZE && cards.length > clustered.length) {
+      const selectedQuestions = new Set(clustered.map(c => c.question))
+      const remainingCards = cards.filter(c => !selectedQuestions.has(c.question))
+      const needed = TARGET_SIZE - clustered.length
+      return [...clustered, ...remainingCards.slice(0, needed)]
+    }
+
+    return clustered.slice(0, TARGET_SIZE)
   } catch (error) {
     console.error('Semantic clustering failed:', error)
-    return cards
+    return cards.slice(0, TARGET_SIZE)
   }
 }
 

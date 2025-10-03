@@ -43,6 +43,170 @@ flashcards/
     └── process_hsk_data.py
 ```
 
+## Database Schema (D1)
+
+**Database ID**: `98e5c374-ba8d-4cce-8490-10a3414fba0a`
+
+### Core Tables
+
+```sql
+-- Multi-domain support
+CREATE TABLE domains (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  icon TEXT,
+  has_audio BOOLEAN DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now'))
+);
+
+-- Flashcards with domain association and network metadata
+CREATE TABLE cards (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  category_key TEXT NOT NULL,
+  set_key TEXT NOT NULL,
+  question TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  correct_count INTEGER NOT NULL DEFAULT 0,
+  incorrect_count INTEGER NOT NULL DEFAULT 0,
+  reviewed_count INTEGER NOT NULL DEFAULT 0,
+  easiness_factor REAL NOT NULL DEFAULT 2.5,
+  interval_hours INTEGER NOT NULL DEFAULT 0,
+  repetitions INTEGER NOT NULL DEFAULT 0,
+  next_review_date TEXT NOT NULL DEFAULT '1970-01-01 00:00:00',
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  domain_id TEXT REFERENCES domains(id),
+  hub_score REAL DEFAULT 0.0,
+  cluster_role TEXT DEFAULT 'leaf' CHECK(cluster_role IN ('anchor', 'branch', 'leaf')),
+  semantic_domain TEXT,
+  radical_family TEXT,
+  UNIQUE(category_key, set_key, question, answer)
+);
+
+-- Session tracking
+CREATE TABLE sessions (
+  id TEXT PRIMARY KEY,
+  practice_name TEXT,
+  session_type TEXT,
+  started_at TEXT NOT NULL,
+  ended_at TEXT,
+  duration_seconds REAL,
+  correct_count INTEGER,
+  total INTEGER
+);
+
+-- Detailed session events
+CREATE TABLE session_events (
+  session_id TEXT NOT NULL,
+  position INTEGER NOT NULL,
+  card_id INTEGER,
+  category_key TEXT,
+  set_key TEXT,
+  question TEXT NOT NULL,
+  user_answer TEXT,
+  correct_answer TEXT,
+  correct INTEGER NOT NULL,
+  duration_seconds REAL NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (session_id, position),
+  FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE
+);
+
+-- Key-value config store
+CREATE TABLE settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+```
+
+### Connection-Aware Learning Tables
+
+```sql
+-- Semantic clusters for progressive unlock
+CREATE TABLE semantic_clusters (
+  id TEXT PRIMARY KEY,
+  domain_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  anchor_characters TEXT, -- JSON array of character IDs
+  unlock_prerequisites TEXT, -- JSON array of prerequisite cluster IDs
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  FOREIGN KEY (domain_id) REFERENCES domains(id),
+  UNIQUE(domain_id, name)
+);
+
+-- Character relationships
+CREATE TABLE character_connections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  domain_id TEXT NOT NULL,
+  source_char TEXT NOT NULL,
+  target_char TEXT NOT NULL,
+  connection_type TEXT NOT NULL CHECK(connection_type IN ('semantic', 'radical', 'compound', 'phonetic')),
+  strength REAL NOT NULL DEFAULT 1.0,
+  compound_word TEXT,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  FOREIGN KEY (domain_id) REFERENCES domains(id),
+  UNIQUE(domain_id, source_char, target_char, connection_type)
+);
+
+-- User progress through clusters
+CREATE TABLE cluster_progress (
+  user_id TEXT NOT NULL DEFAULT 'default_user',
+  domain_id TEXT NOT NULL,
+  cluster_id TEXT NOT NULL,
+  current_phase TEXT NOT NULL DEFAULT 'discovery' CHECK(current_phase IN ('discovery', 'anchor', 'expansion', 'integration', 'mastery')),
+  completion_percentage REAL NOT NULL DEFAULT 0.0,
+  anchors_mastered INTEGER NOT NULL DEFAULT 0,
+  total_anchors INTEGER NOT NULL DEFAULT 0,
+  unlock_date TEXT,
+  last_practiced TEXT,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  PRIMARY KEY (user_id, domain_id, cluster_id),
+  FOREIGN KEY (domain_id) REFERENCES domains(id),
+  FOREIGN KEY (cluster_id) REFERENCES semantic_clusters(id)
+);
+
+-- Connection practice tracking
+CREATE TABLE connection_practice (
+  user_id TEXT NOT NULL DEFAULT 'default_user',
+  domain_id TEXT NOT NULL,
+  source_char TEXT NOT NULL,
+  target_char TEXT NOT NULL,
+  connection_type TEXT NOT NULL,
+  times_practiced INTEGER NOT NULL DEFAULT 0,
+  times_correct INTEGER NOT NULL DEFAULT 0,
+  success_rate REAL GENERATED ALWAYS AS (
+    CASE WHEN times_practiced > 0
+    THEN ROUND((times_correct * 100.0) / times_practiced, 2)
+    ELSE 0.0 END
+  ) STORED,
+  first_practiced TEXT,
+  last_practiced TEXT,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')),
+  PRIMARY KEY (user_id, domain_id, source_char, target_char, connection_type),
+  FOREIGN KEY (domain_id) REFERENCES domains(id)
+);
+```
+
+### Indexes
+
+```sql
+CREATE INDEX idx_cards_category ON cards(category_key);
+CREATE INDEX idx_cards_set ON cards(set_key);
+CREATE INDEX idx_cards_q_a ON cards(question, answer);
+CREATE INDEX idx_cards_next_review ON cards(next_review_date);
+CREATE INDEX idx_cards_hub_score ON cards(hub_score DESC);
+CREATE INDEX idx_cards_cluster_role ON cards(cluster_role);
+CREATE INDEX idx_cards_semantic_domain ON cards(semantic_domain);
+CREATE INDEX idx_connections_source ON character_connections(source_char);
+CREATE INDEX idx_connections_target ON character_connections(target_char);
+CREATE INDEX idx_connections_type ON character_connections(connection_type);
+CREATE INDEX idx_connection_practice_user_domain ON connection_practice(user_id, domain_id);
+CREATE INDEX idx_connection_practice_success_rate ON connection_practice(success_rate);
+```
+
 ## Cross-Reference Guides
 - **Frontend details** – `frontend/CLAUDE.md`
 - **Backend APIs & schema** – `backend/CLAUDE.md`
