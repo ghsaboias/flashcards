@@ -221,6 +221,7 @@ CREATE INDEX idx_connection_practice_success_rate ON connection_practice(success
 4. Manual smoke tests: run the frontend dev server, confirm quick start toggles both modes, and verify `/network` loads.
 5. Autobuild check before sharing work: `bunx tsc -b && bunx vite build` then `bunx eslint .` inside `frontend`.
 6. **Commit messages**: Keep them clean and professional. NEVER add Claude Code attribution or co-author tags.
+7. **Deployment**: NEVER run `bunx wrangler deploy` manually. Git integration auto-deploys on push to master.
 
 ## Testing Notes
 - Automated tests are minimal; `frontend/src/tests/navigationFlow-simple.test.ts` documents the expected manual checks.
