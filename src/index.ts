@@ -204,9 +204,12 @@ function renderStudy(deck: { id: number; name: string }): string {
     .result-value.correct { color: #4ade80; }
     .result-value.incorrect { color: #f87171; }
     .result-value.actual { color: #60a5fa; }
-    .grades { display: flex; gap: 0.5rem; margin-top: 1.5rem; width: 100%; max-width: 600px; }
-    .grades button { flex: 1; padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: opacity 0.2s; }
-    .grades button:hover { opacity: 0.8; }
+    .grades { display: flex; gap: 1.5rem; margin-top: 1.5rem; width: 100%; max-width: 600px; }
+    .grade-group { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+    .grade-group-label { font-size: 0.75rem; color: #666; text-align: center; text-transform: uppercase; letter-spacing: 0.05em; }
+    .grade-buttons { display: flex; gap: 0.5rem; }
+    .grade-buttons button { flex: 1; padding: 1rem; border: none; border-radius: 8px; font-size: 0.875rem; cursor: pointer; transition: opacity 0.2s; }
+    .grade-buttons button:hover { opacity: 0.8; }
     .grade-0 { background: #dc2626; color: white; }
     .grade-2 { background: #f97316; color: white; }
     .grade-3 { background: #ca8a04; color: white; }
@@ -247,11 +250,21 @@ function renderStudy(deck: { id: number; name: string }): string {
     </div>
   </div>
   <div class="grades" id="grades" style="display: none;">
-    <button class="grade-0" onclick="answer(0)">Blank</button>
-    <button class="grade-2" onclick="answer(2)">Wrong</button>
-    <button class="grade-3" onclick="answer(3)">Hard</button>
-    <button class="grade-4" onclick="answer(4)">Good</button>
-    <button class="grade-5" onclick="answer(5)">Easy</button>
+    <div class="grade-group">
+      <div class="grade-group-label">Incorrect</div>
+      <div class="grade-buttons">
+        <button class="grade-0" onclick="answer(0)">Blackout</button>
+        <button class="grade-2" onclick="answer(2)">Recognized</button>
+      </div>
+    </div>
+    <div class="grade-group">
+      <div class="grade-group-label">Correct</div>
+      <div class="grade-buttons">
+        <button class="grade-3" onclick="answer(3)">Hard</button>
+        <button class="grade-4" onclick="answer(4)">Medium</button>
+        <button class="grade-5" onclick="answer(5)">Easy</button>
+      </div>
+    </div>
   </div>
   <script>
     let cards = [];
