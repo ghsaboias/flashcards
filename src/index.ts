@@ -1,4 +1,5 @@
 import { sm2, getDueDate, DEFAULT_STATE, Grade } from "./lib/sm2";
+import { version as VERSION } from "../package.json";
 
 interface Env {
   DB: D1Database;
@@ -153,7 +154,8 @@ function renderHome(decks: { id: number; name: string; type: string; card_count:
   <title>Flashcards</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; background: #0a0a0a; color: #fafafa; min-height: 100vh; padding: 2rem; }
+    body { font-family: system-ui, sans-serif; background: #0a0a0a; color: #fafafa; min-height: 100vh; padding: 2rem; position: relative; }
+    .version { position: absolute; top: 1rem; right: 1rem; color: #444; font-size: 0.75rem; }
     h1 { margin-bottom: 2rem; }
     .decks { display: grid; gap: 1rem; max-width: 600px; }
     .deck { display: block; padding: 1.5rem; background: #1a1a1a; border-radius: 8px; text-decoration: none; color: inherit; transition: background 0.2s; }
@@ -163,6 +165,7 @@ function renderHome(decks: { id: number; name: string; type: string; card_count:
   </style>
 </head>
 <body>
+  <span class="version">v${VERSION}</span>
   <h1>Flashcards</h1>
   <div class="decks">${deckList}</div>
 </body>
@@ -205,7 +208,9 @@ function renderStudy(deck: { id: number; name: string }): string {
     .grades button { flex: 1; padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: opacity 0.2s; }
     .grades button:hover { opacity: 0.8; }
     .grade-0 { background: #dc2626; color: white; }
+    .grade-2 { background: #f97316; color: white; }
     .grade-3 { background: #ca8a04; color: white; }
+    .grade-4 { background: #65a30d; color: white; }
     .grade-5 { background: #16a34a; color: white; }
     .done { text-align: center; }
     .done h2 { margin-bottom: 1rem; }
@@ -242,8 +247,10 @@ function renderStudy(deck: { id: number; name: string }): string {
     </div>
   </div>
   <div class="grades" id="grades" style="display: none;">
-    <button class="grade-0" onclick="answer(0)">Again</button>
+    <button class="grade-0" onclick="answer(0)">Blank</button>
+    <button class="grade-2" onclick="answer(2)">Wrong</button>
     <button class="grade-3" onclick="answer(3)">Hard</button>
+    <button class="grade-4" onclick="answer(4)">Good</button>
     <button class="grade-5" onclick="answer(5)">Easy</button>
   </div>
   <script>
