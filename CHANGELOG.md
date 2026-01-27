@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+- Grade buttons grouped into Incorrect/Correct sections
+- Renamed: Blackout, Recognized | Hard, Medium, Easy
+
 ## 0.2.0
 - 5-grade buttons (Blank/Wrong/Hard/Good/Easy)
 - Version display on homepage
