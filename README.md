@@ -25,7 +25,6 @@ npm run dev
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Start local dev server |
-| `npm run deploy` | Deploy to Cloudflare |
 | `npm run fetch:countries` | Fetch country data from API |
 | `npm run seed:local` | Seed local database |
 | `npm run seed` | Seed remote database |
