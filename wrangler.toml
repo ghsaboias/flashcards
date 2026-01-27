@@ -1,0 +1,8 @@
+name = "flashcards"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "flashcards-db"
+database_id = "a3ab961b-8d37-4585-bf38-0e1a2dc8d558"
