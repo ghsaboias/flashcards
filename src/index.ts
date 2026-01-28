@@ -173,10 +173,16 @@ function renderHome(decks: { id: number; name: string; type: string; card_count:
   <title>Flashcards</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; background: #0a0a0a; color: #fafafa; min-height: 100vh; padding: 2rem; position: relative; }
+    body { font-family: system-ui, sans-serif; background: #0a0a0a; color: #fafafa; min-height: 100vh; padding: 2rem; display: flex; flex-direction: column; align-items: center; position: relative; }
     .version { position: absolute; top: 1rem; right: 1rem; color: #444; font-size: 0.75rem; }
-    h1 { margin-bottom: 2rem; }
-    .decks { display: grid; gap: 1rem; max-width: 600px; }
+    .container { width: 100%; max-width: 600px; }
+    header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+    h1 { font-size: 1.75rem; }
+    .mode-toggle { display: flex; gap: 0.25rem; background: #1a1a1a; border-radius: 6px; padding: 0.25rem; }
+    .mode-toggle button { padding: 0.375rem 0.75rem; border: none; border-radius: 4px; font-size: 0.75rem; cursor: pointer; background: transparent; color: #888; transition: all 0.2s; }
+    .mode-toggle button.active { background: #333; color: #fff; }
+    .mode-toggle button:hover:not(.active) { color: #fff; }
+    .decks { display: grid; gap: 1rem; }
     .deck { display: block; padding: 1.5rem; background: #1a1a1a; border-radius: 8px; text-decoration: none; color: inherit; transition: background 0.2s; }
     .deck:hover { background: #252525; }
     .deck h2 { font-size: 1.25rem; margin-bottom: 0.5rem; }
@@ -185,8 +191,26 @@ function renderHome(decks: { id: number; name: string; type: string; card_count:
 </head>
 <body>
   <span class="version">v${VERSION}</span>
-  <h1>Flashcards</h1>
-  <div class="decks">${deckList}</div>
+  <div class="container">
+    <header>
+      <h1>Flashcards</h1>
+      <div class="mode-toggle">
+        <button id="learnMode" onclick="setMode('learn')">Learn</button>
+        <button id="recallMode" onclick="setMode('recall')">Recall</button>
+      </div>
+    </header>
+    <div class="decks">${deckList}</div>
+  </div>
+  <script>
+    const mode = localStorage.getItem('flashcards-default-mode') || 'learn';
+    document.getElementById(mode + 'Mode').classList.add('active');
+
+    function setMode(m) {
+      localStorage.setItem('flashcards-default-mode', m);
+      document.getElementById('learnMode').classList.toggle('active', m === 'learn');
+      document.getElementById('recallMode').classList.toggle('active', m === 'recall');
+    }
+  </script>
 </body>
 </html>`;
 }
@@ -316,7 +340,7 @@ function renderStudy(deck: { id: number; name: string }): string {
     let cards = [];
     let current = 0;
     let revealed = false;
-    let mode = localStorage.getItem('flashcards-mode-' + DECK_ID) || 'learn';
+    let mode = localStorage.getItem('flashcards-mode-' + DECK_ID) || localStorage.getItem('flashcards-default-mode') || 'learn';
 
     const input = document.getElementById('userAnswer');
     input.addEventListener('keydown', (e) => {

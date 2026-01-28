@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+- Centered home page content horizontally
+- Added Learn/Recall mode toggle to home page (sets default for all decks)
+
 ## 0.4.0
 - Learn mode: multiple choice answers (no SM-2 progression)
 - Recall mode: type answer with SM-2 progression
