@@ -73,11 +73,30 @@ export default {
           LEFT JOIN review_state rs ON rs.card_id = c.id AND rs.user_id = 'default'
           WHERE c.deck_id = ?
             AND (rs.due_date IS NULL OR rs.due_date <= ?)
-          ORDER BY rs.due_date ASC NULLS FIRST
+          ORDER BY
+            CASE WHEN rs.due_date IS NULL THEN 1 ELSE 0 END,
+            rs.due_date ASC,
+            RANDOM()
           LIMIT 20
         `).bind(deckId, today).all();
 
         return json(results);
+      }
+
+      // GET /decks/:id/choices/:cardId - get 3 wrong choices for a card
+      const choicesMatch = path.match(/^\/decks\/(\d+)\/choices\/(\d+)$/);
+      if (method === "GET" && choicesMatch) {
+        const deckId = choicesMatch[1];
+        const cardId = choicesMatch[2];
+
+        const { results } = await env.DB.prepare(`
+          SELECT back FROM cards
+          WHERE deck_id = ? AND id != ?
+          ORDER BY RANDOM()
+          LIMIT 3
+        `).bind(deckId, cardId).all();
+
+        return json(results.map((r: any) => r.back));
       }
 
       // POST /cards/:id/answer - submit answer grade
@@ -186,7 +205,11 @@ function renderStudy(deck: { id: number; name: string }): string {
     header a { color: #888; text-decoration: none; }
     header a:hover { color: #fff; }
     h1 { font-size: 1.5rem; flex: 1; }
-    .progress { color: #666; font-size: 0.875rem; }
+    .mode-toggle { display: flex; gap: 0.25rem; background: #1a1a1a; border-radius: 6px; padding: 0.25rem; }
+    .mode-toggle button { padding: 0.375rem 0.75rem; border: none; border-radius: 4px; font-size: 0.75rem; cursor: pointer; background: transparent; color: #888; transition: all 0.2s; }
+    .mode-toggle button.active { background: #333; color: #fff; }
+    .mode-toggle button:hover:not(.active) { color: #fff; }
+    .progress { color: #666; font-size: 0.875rem; margin-left: 0.5rem; }
     .card-container { width: 100%; max-width: 600px; height: 300px; perspective: 1000px; cursor: pointer; }
     .card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s; }
     .card.flipped { transform: rotateY(180deg); }
@@ -209,13 +232,14 @@ function renderStudy(deck: { id: number; name: string }): string {
     .grade-group { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
     .grade-group-label { font-size: 0.75rem; color: #666; text-align: center; text-transform: uppercase; letter-spacing: 0.05em; }
     .grade-buttons { display: flex; gap: 0.25rem; }
-    .grade-buttons button { flex: 1; padding: 0.75rem 0.25rem; border: none; border-radius: 8px; font-size: 0.75rem; cursor: pointer; transition: opacity 0.2s; }
+    .grade-buttons button { flex: 1; padding: 0.75rem 0.25rem; border: none; border-radius: 8px; font-size: 0.75rem; cursor: pointer; transition: opacity 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
     @media (min-width: 480px) {
       .grades { gap: 1.5rem; }
       .grade-buttons { gap: 0.5rem; }
       .grade-buttons button { padding: 1rem; font-size: 0.875rem; }
     }
     .grade-buttons button:hover { opacity: 0.8; }
+    .grade-buttons button .key { opacity: 0.5; font-size: 0.65em; }
     .grade-0 { background: #dc2626; color: white; }
     .grade-2 { background: #f97316; color: white; }
     .grade-3 { background: #ca8a04; color: white; }
@@ -224,12 +248,24 @@ function renderStudy(deck: { id: number; name: string }): string {
     .done { text-align: center; }
     .done h2 { margin-bottom: 1rem; }
     .done a { color: #60a5fa; }
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem; width: 100%; max-width: 600px; }
+    .choices button { padding: 1rem; border: 2px solid #333; border-radius: 8px; background: #1a1a1a; color: #fafafa; font-size: 1rem; cursor: pointer; transition: all 0.2s; }
+    .choices button:hover:not(:disabled) { border-color: #60a5fa; }
+    .choices button:disabled { cursor: default; }
+    .choices button.correct { border-color: #4ade80; background: #14532d; }
+    .choices button.wrong { border-color: #f87171; background: #7f1d1d; }
+    .next-btn { margin-top: 1.5rem; padding: 1rem 2rem; border: none; border-radius: 8px; background: #3b82f6; color: white; font-size: 1rem; cursor: pointer; }
+    .next-btn:hover { background: #2563eb; }
   </style>
 </head>
 <body>
   <header>
     <a href="/">← Back</a>
     <h1>${deck.name}</h1>
+    <div class="mode-toggle">
+      <button id="learnMode" class="active" onclick="setMode('learn')">Learn</button>
+      <button id="recallMode" onclick="setMode('recall')">Recall</button>
+    </div>
     <span class="progress" id="progress"></span>
   </header>
   <div class="card-container" onclick="reveal()">
@@ -243,6 +279,8 @@ function renderStudy(deck: { id: number; name: string }): string {
       </div>
     </div>
   </div>
+  <div class="choices" id="choices" style="display: none;"></div>
+  <button class="next-btn" id="nextBtn" style="display: none;" onclick="nextCard()">Next</button>
   <div class="answer-input" id="answerInput" style="display: none;">
     <input type="text" id="userAnswer" placeholder="Type your answer..." autocomplete="off">
   </div>
@@ -260,44 +298,67 @@ function renderStudy(deck: { id: number; name: string }): string {
     <div class="grade-group">
       <div class="grade-group-label">Incorrect</div>
       <div class="grade-buttons">
-        <button class="grade-0" onclick="answer(0)">Blackout</button>
-        <button class="grade-2" onclick="answer(2)">Recognized</button>
+        <button class="grade-0" onclick="answer(0)">Blackout<span class="key">1</span></button>
+        <button class="grade-2" onclick="answer(2)">Recognized<span class="key">2</span></button>
       </div>
     </div>
     <div class="grade-group">
       <div class="grade-group-label">Correct</div>
       <div class="grade-buttons">
-        <button class="grade-3" onclick="answer(3)">Hard</button>
-        <button class="grade-4" onclick="answer(4)">Medium</button>
-        <button class="grade-5" onclick="answer(5)">Easy</button>
+        <button class="grade-3" onclick="answer(3)">Hard<span class="key">3</span></button>
+        <button class="grade-4" onclick="answer(4)">Medium<span class="key">4</span></button>
+        <button class="grade-5" onclick="answer(5)">Easy<span class="key">5</span></button>
       </div>
     </div>
   </div>
   <script>
+    const DECK_ID = ${deck.id};
     let cards = [];
     let current = 0;
     let revealed = false;
+    let mode = localStorage.getItem('flashcards-mode-' + DECK_ID) || 'learn';
 
     const input = document.getElementById('userAnswer');
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !revealed) reveal();
     });
 
+    document.addEventListener('keydown', (e) => {
+      if (!revealed || mode !== 'recall') return;
+      const gradeMap = { '1': 0, '2': 2, '3': 3, '4': 4, '5': 5 };
+      if (gradeMap[e.key] !== undefined) answer(gradeMap[e.key]);
+    });
+
+    function setMode(m) {
+      mode = m;
+      localStorage.setItem('flashcards-mode-' + DECK_ID, m);
+      document.getElementById('learnMode').classList.toggle('active', m === 'learn');
+      document.getElementById('recallMode').classList.toggle('active', m === 'recall');
+      show();
+    }
+
     async function load() {
-      const res = await fetch('/decks/${deck.id}/review');
+      // Set initial mode from localStorage
+      document.getElementById('learnMode').classList.toggle('active', mode === 'learn');
+      document.getElementById('recallMode').classList.toggle('active', mode === 'recall');
+
+      const res = await fetch('/decks/' + DECK_ID + '/review');
       cards = await res.json();
       if (cards.length === 0) {
         document.querySelector('.card-container').innerHTML = '<div class="done" style="padding:2rem;text-align:center;"><h2>All done!</h2><p>No cards due for review.</p><p><a href="/">← Back to decks</a></p></div>';
+        document.querySelector('.mode-toggle').style.display = 'none';
         return;
       }
       show();
     }
 
-    function show() {
+    async function show() {
       if (current >= cards.length) {
         document.querySelector('.card-container').innerHTML = '<div class="done" style="padding:2rem;text-align:center;"><h2>Session complete!</h2><p><a href="/">← Back to decks</a></p></div>';
         document.getElementById('grades').style.display = 'none';
         document.getElementById('answerInput').style.display = 'none';
+        document.getElementById('choices').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('result').style.display = 'none';
         document.getElementById('progress').style.display = 'none';
         return;
@@ -312,12 +373,57 @@ function renderStudy(deck: { id: number; name: string }): string {
       cardEl.style.transition = '';
       document.getElementById('frontContent').innerHTML = isImage ? '<img src="' + card.front + '">' : card.front;
       document.getElementById('backContent').textContent = card.back;
-      document.getElementById('answerInput').style.display = 'block';
+
+      // Hide everything first
+      document.getElementById('answerInput').style.display = 'none';
+      document.getElementById('choices').style.display = 'none';
+      document.getElementById('nextBtn').style.display = 'none';
       document.getElementById('result').style.display = 'none';
       document.getElementById('grades').style.display = 'none';
-      input.value = '';
-      input.focus();
+
+      if (mode === 'learn') {
+        await loadChoices(card);
+      } else {
+        document.getElementById('answerInput').style.display = 'block';
+        input.value = '';
+        input.focus();
+      }
       revealed = false;
+    }
+
+    async function loadChoices(card) {
+      const res = await fetch('/decks/' + DECK_ID + '/choices/' + card.id);
+      const wrongChoices = await res.json();
+      const allChoices = [card.back, ...wrongChoices].sort(() => Math.random() - 0.5);
+
+      const choicesEl = document.getElementById('choices');
+      choicesEl.innerHTML = allChoices.map(c =>
+        '<button onclick="selectChoice(this, \\'' + c.replace(/'/g, "\\\\'") + '\\')">' + c + '</button>'
+      ).join('');
+      choicesEl.style.display = 'grid';
+    }
+
+    function selectChoice(btn, choice) {
+      if (revealed) return;
+      revealed = true;
+      const card = cards[current];
+      const isCorrect = choice === card.back;
+
+      // Disable all buttons and show correct/wrong
+      const buttons = document.querySelectorAll('.choices button');
+      buttons.forEach(b => {
+        b.disabled = true;
+        if (b.textContent === card.back) b.classList.add('correct');
+        else if (b === btn && !isCorrect) b.classList.add('wrong');
+      });
+
+      document.getElementById('card').classList.add('flipped');
+      document.getElementById('nextBtn').style.display = 'block';
+    }
+
+    function nextCard() {
+      current++;
+      show();
     }
 
     function normalize(s) {
@@ -325,7 +431,7 @@ function renderStudy(deck: { id: number; name: string }): string {
     }
 
     function reveal() {
-      if (revealed || current >= cards.length) return;
+      if (revealed || current >= cards.length || mode !== 'recall') return;
       revealed = true;
       const card = cards[current];
       const userVal = input.value;

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+- Learn mode: multiple choice answers (no SM-2 progression)
+- Recall mode: type answer with SM-2 progression
+- Mode toggle in header, preference saved per deck
+- Random card order for new cards, due-date order for reviewed cards
+- Keyboard shortcuts 1-5 for grade buttons in Recall mode
+
 ## 0.3.1
 - Session progress indicator (Card 1/20)
 - Fixed grade button overflow on mobile
