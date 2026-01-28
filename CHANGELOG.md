@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+- Session progress indicator (Card 1/20)
+- Fixed grade button overflow on mobile
+
 ## 0.3.0
 - Grade buttons grouped into Incorrect/Correct sections
 - Renamed: Blackout, Recognized | Hard, Medium, Easy

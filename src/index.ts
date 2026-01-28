@@ -185,7 +185,8 @@ function renderStudy(deck: { id: number; name: string }): string {
     header { width: 100%; max-width: 600px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
     header a { color: #888; text-decoration: none; }
     header a:hover { color: #fff; }
-    h1 { font-size: 1.5rem; }
+    h1 { font-size: 1.5rem; flex: 1; }
+    .progress { color: #666; font-size: 0.875rem; }
     .card-container { width: 100%; max-width: 600px; height: 300px; perspective: 1000px; cursor: pointer; }
     .card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s; }
     .card.flipped { transform: rotateY(180deg); }
@@ -204,11 +205,16 @@ function renderStudy(deck: { id: number; name: string }): string {
     .result-value.correct { color: #4ade80; }
     .result-value.incorrect { color: #f87171; }
     .result-value.actual { color: #60a5fa; }
-    .grades { display: flex; gap: 1.5rem; margin-top: 1.5rem; width: 100%; max-width: 600px; }
+    .grades { display: flex; gap: 1rem; margin-top: 1.5rem; width: 100%; max-width: 600px; }
     .grade-group { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
     .grade-group-label { font-size: 0.75rem; color: #666; text-align: center; text-transform: uppercase; letter-spacing: 0.05em; }
-    .grade-buttons { display: flex; gap: 0.5rem; }
-    .grade-buttons button { flex: 1; padding: 1rem; border: none; border-radius: 8px; font-size: 0.875rem; cursor: pointer; transition: opacity 0.2s; }
+    .grade-buttons { display: flex; gap: 0.25rem; }
+    .grade-buttons button { flex: 1; padding: 0.75rem 0.25rem; border: none; border-radius: 8px; font-size: 0.75rem; cursor: pointer; transition: opacity 0.2s; }
+    @media (min-width: 480px) {
+      .grades { gap: 1.5rem; }
+      .grade-buttons { gap: 0.5rem; }
+      .grade-buttons button { padding: 1rem; font-size: 0.875rem; }
+    }
     .grade-buttons button:hover { opacity: 0.8; }
     .grade-0 { background: #dc2626; color: white; }
     .grade-2 { background: #f97316; color: white; }
@@ -224,6 +230,7 @@ function renderStudy(deck: { id: number; name: string }): string {
   <header>
     <a href="/">← Back</a>
     <h1>${deck.name}</h1>
+    <span class="progress" id="progress"></span>
   </header>
   <div class="card-container" onclick="reveal()">
     <div class="card" id="card">
@@ -292,8 +299,10 @@ function renderStudy(deck: { id: number; name: string }): string {
         document.getElementById('grades').style.display = 'none';
         document.getElementById('answerInput').style.display = 'none';
         document.getElementById('result').style.display = 'none';
+        document.getElementById('progress').style.display = 'none';
         return;
       }
+      document.getElementById('progress').textContent = 'Card ' + (current + 1) + '/' + cards.length;
       const card = cards[current];
       const isImage = card.front.startsWith('http');
       const cardEl = document.getElementById('card');
