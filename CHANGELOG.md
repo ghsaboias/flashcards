@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2
+- Show only relevant grade buttons based on answer correctness
+- Keyboard shortcuts remapped: 1-2 for incorrect, 1-3 for correct
+
 ## 0.4.1
 - Centered home page content horizontally
 - Added Learn/Recall mode toggle to home page (sets default for all decks)

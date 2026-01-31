@@ -319,19 +319,19 @@ function renderStudy(deck: { id: number; name: string }): string {
     </div>
   </div>
   <div class="grades" id="grades" style="display: none;">
-    <div class="grade-group">
-      <div class="grade-group-label">Incorrect</div>
+    <div class="grade-group" id="incorrectGrades" style="display: none;">
+      <div class="grade-group-label">How wrong?</div>
       <div class="grade-buttons">
         <button class="grade-0" onclick="answer(0)">Blackout<span class="key">1</span></button>
         <button class="grade-2" onclick="answer(2)">Recognized<span class="key">2</span></button>
       </div>
     </div>
-    <div class="grade-group">
-      <div class="grade-group-label">Correct</div>
+    <div class="grade-group" id="correctGrades" style="display: none;">
+      <div class="grade-group-label">How hard?</div>
       <div class="grade-buttons">
-        <button class="grade-3" onclick="answer(3)">Hard<span class="key">3</span></button>
-        <button class="grade-4" onclick="answer(4)">Medium<span class="key">4</span></button>
-        <button class="grade-5" onclick="answer(5)">Easy<span class="key">5</span></button>
+        <button class="grade-3" onclick="answer(3)">Hard<span class="key">1</span></button>
+        <button class="grade-4" onclick="answer(4)">Medium<span class="key">2</span></button>
+        <button class="grade-5" onclick="answer(5)">Easy<span class="key">3</span></button>
       </div>
     </div>
   </div>
@@ -340,6 +340,7 @@ function renderStudy(deck: { id: number; name: string }): string {
     let cards = [];
     let current = 0;
     let revealed = false;
+    let wasCorrect = false;
     let mode = localStorage.getItem('flashcards-mode-' + DECK_ID) || localStorage.getItem('flashcards-default-mode') || 'learn';
 
     const input = document.getElementById('userAnswer');
@@ -349,7 +350,9 @@ function renderStudy(deck: { id: number; name: string }): string {
 
     document.addEventListener('keydown', (e) => {
       if (!revealed || mode !== 'recall') return;
-      const gradeMap = { '1': 0, '2': 2, '3': 3, '4': 4, '5': 5 };
+      const incorrectMap = { '1': 0, '2': 2 };
+      const correctMap = { '1': 3, '2': 4, '3': 5 };
+      const gradeMap = wasCorrect ? correctMap : incorrectMap;
       if (gradeMap[e.key] !== undefined) answer(gradeMap[e.key]);
     });
 
@@ -461,6 +464,7 @@ function renderStudy(deck: { id: number; name: string }): string {
       const userVal = input.value;
       const correctVal = card.back;
       const isMatch = normalize(userVal) === normalize(correctVal);
+      wasCorrect = isMatch;
 
       document.getElementById('card').classList.add('flipped');
       document.getElementById('yourAnswer').textContent = userVal || '(empty)';
@@ -469,6 +473,8 @@ function renderStudy(deck: { id: number; name: string }): string {
       document.getElementById('answerInput').style.display = 'none';
       document.getElementById('result').style.display = 'block';
       document.getElementById('grades').style.display = 'flex';
+      document.getElementById('incorrectGrades').style.display = isMatch ? 'none' : 'flex';
+      document.getElementById('correctGrades').style.display = isMatch ? 'flex' : 'none';
     }
 
     async function answer(grade) {
