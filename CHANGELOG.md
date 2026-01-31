@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.3
+- Add third wrong-answer grade: Blackout (0), Recognized (1), Almost (2)
+- Symmetric 3-button layout for both wrong and correct answers
+- Document SM-2 grades in CLAUDE.md
+
 ## 0.4.2
 - Show only relevant grade buttons based on answer correctness
 - Keyboard shortcuts remapped: 1-2 for incorrect, 1-3 for correct

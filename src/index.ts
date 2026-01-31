@@ -265,6 +265,7 @@ function renderStudy(deck: { id: number; name: string }): string {
     .grade-buttons button:hover { opacity: 0.8; }
     .grade-buttons button .key { opacity: 0.5; font-size: 0.65em; }
     .grade-0 { background: #dc2626; color: white; }
+    .grade-1 { background: #ea580c; color: white; }
     .grade-2 { background: #f97316; color: white; }
     .grade-3 { background: #ca8a04; color: white; }
     .grade-4 { background: #65a30d; color: white; }
@@ -323,7 +324,8 @@ function renderStudy(deck: { id: number; name: string }): string {
       <div class="grade-group-label">How wrong?</div>
       <div class="grade-buttons">
         <button class="grade-0" onclick="answer(0)">Blackout<span class="key">1</span></button>
-        <button class="grade-2" onclick="answer(2)">Recognized<span class="key">2</span></button>
+        <button class="grade-1" onclick="answer(1)">Recognized<span class="key">2</span></button>
+        <button class="grade-2" onclick="answer(2)">Almost<span class="key">3</span></button>
       </div>
     </div>
     <div class="grade-group" id="correctGrades" style="display: none;">
@@ -350,7 +352,7 @@ function renderStudy(deck: { id: number; name: string }): string {
 
     document.addEventListener('keydown', (e) => {
       if (!revealed || mode !== 'recall') return;
-      const incorrectMap = { '1': 0, '2': 2 };
+      const incorrectMap = { '1': 0, '2': 1, '3': 2 };
       const correctMap = { '1': 3, '2': 4, '3': 5 };
       const gradeMap = wasCorrect ? correctMap : incorrectMap;
       if (gradeMap[e.key] !== undefined) answer(gradeMap[e.key]);

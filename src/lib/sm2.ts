@@ -5,12 +5,8 @@ export interface ReviewState {
 }
 
 export type Grade = 0 | 1 | 2 | 3 | 4 | 5;
-// 0 = total blackout
-// 1 = incorrect, but recognized answer
-// 2 = incorrect, but easy to recall
-// 3 = correct with serious difficulty
-// 4 = correct with hesitation
-// 5 = perfect recall
+// Wrong:   0 = Blackout, 1 = Recognized, 2 = Almost
+// Correct: 3 = Hard, 4 = Medium, 5 = Easy
 
 export const DEFAULT_STATE: ReviewState = {
   interval: 0,
