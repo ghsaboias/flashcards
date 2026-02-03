@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.4
+- Add Capital → Country deck
+
 ## 0.4.3
 - Add third wrong-answer grade: Blackout (0), Recognized (1), Almost (2)
 - Symmetric 3-button layout for both wrong and correct answers

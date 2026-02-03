@@ -37,6 +37,15 @@ function buildDecks(countries: Country[]): Deck[] {
       .map((c) => ({ front: c.name, back: c.capital! })),
   });
 
+  // Capital → Country
+  decks.push({
+    name: "Capital → Country",
+    type: "capital-country",
+    cards: countries
+      .filter((c) => c.capital)
+      .map((c) => ({ front: c.capital!, back: c.name })),
+  });
+
   // Flag → Country
   decks.push({
     name: "Flag → Country",
