@@ -53,30 +53,6 @@ function buildDecks(countries: Country[]): Deck[] {
     cards: countries.map((c) => ({ front: c.flag_png, back: c.name })),
   });
 
-  // Country → Language(s)
-  decks.push({
-    name: "Country → Language",
-    type: "country-language",
-    cards: countries
-      .filter((c) => c.languages.length > 0)
-      .map((c) => ({
-        front: c.name,
-        back: c.languages.map((l) => l.name).join(", "),
-      })),
-  });
-
-  // Country → Currency
-  decks.push({
-    name: "Country → Currency",
-    type: "country-currency",
-    cards: countries
-      .filter((c) => c.currencies.length > 0)
-      .map((c) => ({
-        front: c.name,
-        back: c.currencies.map((cur) => `${cur.name} (${cur.symbol || cur.code})`).join(", "),
-      })),
-  });
-
   // Country → Region
   decks.push({
     name: "Country → Region",

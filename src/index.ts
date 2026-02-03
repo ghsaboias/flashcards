@@ -39,6 +39,13 @@ export default {
           FROM decks d
           LEFT JOIN cards c ON c.deck_id = d.id
           GROUP BY d.id
+          ORDER BY CASE d.type
+            WHEN 'country-capital' THEN 1
+            WHEN 'capital-country' THEN 2
+            WHEN 'flag-country' THEN 3
+            WHEN 'country-region' THEN 4
+            ELSE 5
+          END
         `).all();
 
         return html(renderHome(decks as any[]));

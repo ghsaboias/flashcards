@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.5
+- Remove Country → Language and Country → Currency decks
+- Reorder decks: Capital → Country now second
+
 ## 0.4.4
 - Add Capital → Country deck
 
